@@ -1,6 +1,8 @@
 -- digits(n,b) :: Integer -> [Integer]
-digits(n,b)=
-	if n==0 then []
-	else digits(quot n b)++[(n `mod` b)]
-int_digits(n)=digits(n,10)
-digisum(n)=sum(int_digits(n))
+
+digits 0 _ = [0]
+digits n b = reverse $ digits' n b
+
+digits' 0 _ = []
+digits' n b = let (q,r) = quotRem n b
+              in r:(digits' q b)

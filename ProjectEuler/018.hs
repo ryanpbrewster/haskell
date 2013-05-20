@@ -3,8 +3,6 @@
 -- Find the path from the top of the triangle to the bottom
 -- which has the largest sum
 
-import Data.String.Utils
-
 -- bestRow takes in two rows, the first one shorter than the second
 -- It returns the second row, modified by adding the maximum of the
 -- two numbers above
@@ -32,7 +30,7 @@ maxPath tri = maximum $ head tri
 problem018 :: FilePath -> IO Integer
 problem018 filename = do
     text <- readFile filename
-    let tri = [ map read (splitWs line) | line <- lines text ]
+    let tri = [ map read (words line) | line <- lines text ]
     return $ maxPath tri
 
 main = do
