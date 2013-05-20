@@ -2,6 +2,7 @@ module ProjectEuler.Prime
 ( test
 , primes
 , factors
+, divisors
 , sigma
 ) where
 
@@ -49,6 +50,18 @@ factorsBin n = let fs = factors n
                    -- --> fs_grouped = [ [5], [3,3,3], [2,2] ]
                    fs_grouped = group fs
                in [ (head g, length g) | g <- fs_grouped ]
+
+-- Returns a list of all the divisors of n
+-- Generates them using the prime factorization. This will help a lot
+-- for large numbers with lots of small prime factors
+divisors n = let fs_bin = factorsBin n
+             in divisors' fs_bin
+
+divisors' [] = [1]
+divisors' (x:xs) = let (f,c) = x -- the factor, and its associated count
+                       fs = take (c+1) $ iterate (f*) 1 -- fs = [1,f,f^2,...,f^c]
+                       divs = divisors' xs
+                   in [ f' * d | d <- divs, f' <- fs ]
 
 
 -- The DivisorSigma function. sigma k n = sum [ d^k, n `mod` d == 0 ]
