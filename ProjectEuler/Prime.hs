@@ -37,10 +37,10 @@ union = foldr merge []
 
 
 -- Returns a list of the factors of n
-factors n = factors' n 2
-    where factors' n k | n `mod` k == 0 = k:factors' (n `quot` k) k
-                       | k*k > n        = if n > 1 then [n] else []
-                       | otherwise      = factors' n (k+1)
+factors n = factors' n primes
+    where factors' n (p:ps) | n `mod` p == 0 = p:factors' (n `quot` p) (p:ps)
+                            | p*p > n        = if n > 1 then [n] else []
+                            | otherwise      = factors' n ps
 
 
 factorsBin n = let fs = factors n
