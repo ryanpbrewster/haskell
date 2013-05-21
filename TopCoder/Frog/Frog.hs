@@ -1,4 +1,3 @@
--- NOT YET WORKING
 -- Frog.hs
 {-
  - You have a garden that is W x H

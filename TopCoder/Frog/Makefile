@@ -15,5 +15,5 @@ test.%: %.out %.test
 %.test: %.in
 	./frog.exe < $< > $@
 
-frog.exe: Frog.hs
-	ghc $< -o $@
+clean:
+	rm $(TEST_ANSWERS)
