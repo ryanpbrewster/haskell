@@ -21,6 +21,7 @@ trialDivisionTest n k | n `mod` k == 0 = False
  - Sieve of Eratosthenes, as declared in the epilogue of Melissa O'Neill's
  - article "The Genuine Sieve of Eratosthenes" in J. Functional Programming.
  -}
+primes :: [Integer]
 primes = 2:minus [3,5..] composites
     where composites = union [ multiples p | p <- primes ]
 multiples n = map (n*) [n..]
@@ -30,6 +31,7 @@ minus (x:xs) (y:ys) | x<y  = x:minus xs     (y:ys)
                     | x==y =   minus xs     ys
                     | x>y  =   minus (x:xs) ys
 
+union :: Ord a => [[a]] -> [a]
 union = foldr merge []
     where merge (x:xs) ys = x:merge' xs ys
           merge' (x:xs) (y:ys) | x < y  = x:merge' xs (y:ys)
@@ -49,7 +51,7 @@ factorsBin n = let fs = factors n
                    -- fs == [5, 3, 3, 3, 2, 2]
                    -- --> fs_grouped = [ [5], [3,3,3], [2,2] ]
                    fs_grouped = group fs
-               in [ (head g, length g) | g <- fs_grouped ]
+               in [ (head g, fromIntegral $ length g) | g <- fs_grouped ]
 
 -- Returns a list of all the divisors of n
 -- Generates them using the prime factorization. This will help a lot
@@ -70,4 +72,4 @@ sigma k n = let fs_bin = factorsBin n
             in product [ (r^(e+1)-1) `quot` (r-1) | (p,e) <- fs_bin, let r = p^k ]
 
 -- just for testing purposes
-sigma0BruteForce n = length [ d | d <- [1..n], n `mod` d == 0 ]
+sigmaBruteForce k n = sum [ d^k | d <- [1..n], n `mod` d == 0 ]
