@@ -1,4 +1,4 @@
-UTIL_FILES = Prime.hs
+UTIL_FILES = Prime.hs Math.hs
 SOLUTIONS = $(filter-out $(UTIL_FILES), $(wildcard *.hs))
 PROBLEMS_SOLVED = $(SOLUTIONS:%.hs=%)
 EXECUTABLES = $(PROBLEMS_SOLVED:%=%.exe)
