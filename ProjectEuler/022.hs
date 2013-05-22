@@ -1,3 +1,4 @@
+-- 022.hs
 -- Project Euler problem 22
 -- Read in the file 022.in
 -- Sort it

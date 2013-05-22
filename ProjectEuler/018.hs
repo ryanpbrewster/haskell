@@ -1,3 +1,4 @@
+-- 018.hs
 -- Project Euler problem 18
 -- There is a triangle located in 018.in
 -- Find the path from the top of the triangle to the bottom

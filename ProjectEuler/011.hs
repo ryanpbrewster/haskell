@@ -1,4 +1,4 @@
--- Problem 011
+-- 011.hs
 -- Find the largest product of 4 adjacent numbers in the grid in 011.in
 -- "Adjacent" here means 8-adjacent, not 4-adjacent
 

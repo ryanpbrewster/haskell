@@ -1,3 +1,4 @@
+-- 015.hs
 -- Project Euler problem 15
 -- Find the number of paths from (0,0) to (a, b) moving only right and up
 --     where a = b = 20

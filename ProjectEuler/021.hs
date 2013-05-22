@@ -1,3 +1,4 @@
+-- 021.hs
 -- Project Euler problem 21
 --
 -- Find the sum of all amicable numbers less than n, where n = 10,000

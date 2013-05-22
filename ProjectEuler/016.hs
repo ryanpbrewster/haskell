@@ -1,3 +1,4 @@
+-- 016.hs
 -- Project Euler problem 16
 -- Find the sum of the base-b digits of n
 

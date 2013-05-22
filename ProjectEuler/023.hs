@@ -1,31 +1,32 @@
--- Project Euler Problem 23
--- An abundant number is one where DivisorSigma[1, n] == 2*n
--- For instance, 28 is an abundant number, since
---     DivisorSigma[1, 28] = 1 + 2 + 4 + 7 + 14 + 28 == 2*28
--- It is helpful to think of proper divisors (divisors of n that are < n)
+-- 023.hs
+-- Uses a slightly different strategy than 023_first.hs
 --
--- It is known that all numbers > 28123 can be written as the sum of two
--- abundant numbers. Find the sum of all numbers <= 28123 that CANNOT
--- be written in such a way.
+-- Instead of constructing all the possible sums first, then summing over the
+-- false elements, let's just check each element as we go. This way there are far
+-- fewer array operations.
+--
+-- The memoization using the array speeds this up by a factor of ~45x
 
 import qualified ProjectEuler.Prime as Prime
-import Data.List(nub)
-import Data.Array -- not my favorite way to import things, but it is convenient
+import Data.Array 
 
 
-bound = 28123
-abundants = [ x | x <- [2..bound], Prime.sigma 1 x > 2*x ]
+bound = 23123
+isAbundant n = Prime.sigma 1 n > 2*n
 
-process bl [] = bl
-process bl (x:xs) = let bl' = bl // [(x+y,True) | y <- takeWhile (\z -> x+z <= bound) (x:xs)]
-                    in process bl' xs
+-- Memoize the answer for [1..bound]
+is_abundant = listArray (1,bound) $ map isAbundant [1..bound]
+isAbundantMemo = (is_abundant !)
 
-asum arr = sum [ arr!i | i <- [lo..hi] ]
-    where (lo,hi) = bounds arr
+abundants = filter isAbundantMemo [1..bound]
 
-solveProblem = let bl = array (0,bound) [(i,False) | i <- [0..bound]]
-                   can_make = process bl abundants
-                   cant_make = [ i | i <- [0..bound], not (can_make!i) ]
-               in sum cant_make
+-- To see if we can make n as a sum of two abundant numbers, k and k',
+-- simply construct all possible k' (as n-k for k \in abundants) and see
+-- if any of them are abundant numbers
+canMake n = let s'  = takeWhile (<n) abundants
+                kk' = map (n-) s' -- all possible values of k'
+            in any isAbundantMemo kk' -- see if any of them are "good" values of k'
 
+solveProblem = sum $ filter (not . canMake) [1..bound]
 main = print solveProblem
+

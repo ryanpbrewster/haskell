@@ -1,3 +1,4 @@
+-- 020.hs
 -- Project Euler problem 20
 --
 -- Find the sum of the digits of 100!

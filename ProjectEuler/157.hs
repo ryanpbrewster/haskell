@@ -1,4 +1,3 @@
--- NOT YET WORKING
 -- 157.hs
 {-
  - Consider the diophantine equation
