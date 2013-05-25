@@ -26,7 +26,9 @@ tns = map tri [1..]
 pns = map pent [1..]
 hns = map hex [1..]
 
-solveProblem = let ans = intersection [tns, pns, hns]
+-- observe that triangle numbers are a strict subset of hexagonal numbers
+-- so we only need to look for hexagonal/pentagonal numbers
+solveProblem = let ans = intersection [hns, pns]
                in ans !! 2
 
 main = print solveProblem
