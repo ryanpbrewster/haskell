@@ -30,3 +30,7 @@ consecutiveDistinct k lofs nofs =
 allDistinct lofs = let factors = map snd lofs
                        pair_overlaps = zipWith DS.intersection (init factors) (tail factors)
                    in all DS.null pair_overlaps
+
+solveProblem = fst $ head $ consecutiveDistinct 4 list_factors num_factors
+
+main = print solveProblem
