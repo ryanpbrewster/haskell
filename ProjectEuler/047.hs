@@ -18,18 +18,16 @@
 import qualified ProjectEuler.Prime as Prime
 import qualified Data.Set as DS
 
-list_factors = [ (n, DS.fromList $ Prime.factors n) | n <- [2..] ]
-
 roll _ [] = []
 roll k xs = (take k xs):(roll k $ tail xs)
 
-kFactors k = let xss = roll k list_factors
-             in [ ns | xs <- xss
-                     , let ns = map fst xs
-                     , let fs = map snd xs
-                     , all (\e -> DS.size e == k) fs
-                     , let overlaps = zipWith DS.intersection (tail fs) (init fs)
-                     , all DS.null overlaps ]
+kFactors k = let nn = [2..]
+                 ff = map (DS.fromList . Prime.factors) nn
+                 fss = roll k ff
+                 xs = zip nn fss
+             in [ n | (n, fs) <- xs
+                    , all (\e -> DS.size e == k) fs
+                    , all DS.null $ zipWith DS.intersection (tail fs) (init fs) ]
 
 solveProblem = head $ kFactors 4
 
