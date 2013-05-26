@@ -1,4 +1,4 @@
--- 047_alternate.hs
+-- 047.hs
 {-
  - The first two consecutive numbers to have two prime factors each, with all
  - four distinct, are:
