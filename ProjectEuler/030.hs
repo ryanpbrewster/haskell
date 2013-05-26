@@ -1,6 +1,7 @@
 -- 030.hs
 {-
- - Surprisingly there are only three numbers that can be written as the sum of fourth powers of their digits:
+ - Surprisingly there are only three numbers that can be written as the sum of
+ - fourth powers of their digits:
  -
  -     1634 = 1^4 + 6^4 + 3^4 + 4^4
  -     8208 = 8^4 + 2^4 + 0^4 + 8^4
@@ -18,14 +19,19 @@
  - The first thing to note is that no number over 999999 can be written as the
  - sum of fifth powers of their digits. Any 7-digit number will necessarily map
  - down to at most a 6-digit number. Thus, we need only check numbers <= 10^6
- -
- - This program contains the immediately obvious brute-force solution.
  -}
 
 import ProjectEuler.Math (integerDigits)
+import Data.List (sort)
 
-legit n = (sum $ map (^5) $ integerDigits n) == n
+ordTuples _ 0 = [[]]
+ordTuples xs k = let tups = ordTuples xs (k-1)
+                 in [ x:t | t <- tups, x <- xs, null t || x <= head t ]
 
-solveProblem = sum $ filter legit [1..999999]
+legit tup = let ans = sum $ map (^5) tup
+            in tup == (sort $ integerDigits ans)
+
+solveProblem = let sols = filter legit $ concat [ ordTuples [0..9] k | k <- [2..6] ]
+               in sum $ [ sum $ map (^5) sol | sol <- sols ]
 
 main = print solveProblem
