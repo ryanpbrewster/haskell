@@ -12,12 +12,19 @@
 -- the criteria because they necessarily map down to <7 digit numbers.
 
 import ProjectEuler.Math (integerDigits)
+import Data.List (sort)
 
 factorial 0 = 1
 factorial n = n * factorial (n-1)
 
-legit n = (sum $ map factorial $ integerDigits n) == n
+ordTuples _ 0 = [[]]
+ordTuples xs k = let tups = ordTuples xs (k-1)
+                 in [ x:t | t <- tups, x <- xs, null t || x <= head t ]
 
-solveProblem = sum $ filter legit [1..10^6-1]
+legit tup = let ans = sum $ map factorial tup
+            in tup == (sort $ integerDigits ans)
+
+solveProblem = let sols = filter legit $ concat [ ordTuples [0..9] k | k <- [2..7] ]
+               in sum $ [ sum $ map factorial sol | sol <- sols ]
 
 main = print solveProblem
