@@ -51,10 +51,10 @@ transientLength d = let fs = factors d
 
 -- Just so you know, integerDigits 0 == []
 -- It's a weird edge case that I don't like.
-integerDigits = reverse.integerDigits'
+integerDigits = reverse . integerDigits'
 integerDigits' 0 = []
 integerDigits' n = let (q,r) = n `quotRem` 10
-                   in r:(integerDigits q)
+                   in r:(integerDigits' q)
 
 -- binomial n k == n!/k!(n-k)!
 --              == n*(n-1)*...*(n-k+1)/(1*2*...*k)
