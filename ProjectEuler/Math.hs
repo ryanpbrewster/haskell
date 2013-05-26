@@ -1,6 +1,7 @@
 module ProjectEuler.Math
 ( powerMod
 , integerDigits
+, binomial
 --, realDigits
 ) where
 
@@ -54,3 +55,8 @@ integerDigits = reverse.integerDigits'
 integerDigits' 0 = []
 integerDigits' n = let (q,r) = n `quotRem` 10
                    in r:(integerDigits q)
+
+-- binomial n k == n!/k!(n-k)!
+--              == n*(n-1)*...*(n-k+1)/(1*2*...*k)
+binomial n k = let k' = min k (n-k)
+               in (product [n-k'+1..n]) `div` (product [1..k'])
