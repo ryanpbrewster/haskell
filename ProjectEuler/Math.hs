@@ -2,6 +2,8 @@ module ProjectEuler.Math
 ( powerMod
 , integerDigits
 , binomial
+, coinCombos
+, fromContinuedFraction
 --, realDigits
 ) where
 
@@ -60,3 +62,18 @@ integerDigits' n = let (q,r) = n `quotRem` 10
 --              == n*(n-1)*...*(n-k+1)/(1*2*...*k)
 binomial n k = let k' = min k (n-k)
                in (product [n-k'+1..n]) `div` (product [1..k'])
+
+coinCombos coins = coinCombos' coins (1:cycle [0]) 0
+coinCombos' [] combos front = drop front combos
+coinCombos' (c:cs) combos front = let (start, rest) = splitAt c combos
+                                      combos' = start ++ zipWith (+) rest combos'
+                                      start' = drop front start
+                                  in start' ++ (coinCombos' cs combos' c)
+
+-- Returns a (n,d) pair which represents n/d in reduced form.
+fromContinuedFraction [a] = (a, 1)
+fromContinuedFraction (a:cfrac) = let (rn, rd) = fromContinuedFraction cfrac
+                                      n = rn*a + rd
+                                      d = rn
+                                      g = gcd n d
+                                  in (n `div` g, d `div` g)

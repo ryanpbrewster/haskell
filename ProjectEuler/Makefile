@@ -16,7 +16,7 @@ clean:
 	@printf "%s %s\n" $* $(shell ./$<)
 
 %.timed: %.exe
-	@printf "%s %s\n" $* "$(shell /usr/bin/time ./$<)"
+	@printf "%s %s\n" $* "$(shell /usr/bin/time -f '%U' ./$<)"
 
 %.exe: %.hs
 	ghc -O3 -o $@ -i.. $<

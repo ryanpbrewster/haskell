@@ -79,9 +79,17 @@ coinCombosGenFinite' (c:cs) targ =
         combos' = start ++ zipWith (+) rest (take (targ+1-c) combos')
     in combos'
 
+coinCombosInf coins = coinCombosInf' coins (1:cycle [0]) 0
+coinCombosInf' [] combos front = drop front combos
+coinCombosInf' (c:cs) combos front = let (start, rest) = splitAt c combos
+                                         combos' = start ++ zipWith (+) rest combos'
+                                         start' = drop front start
+                                     in start' ++ (coinCombosInf' cs combos' c)
+
 test f = print $ f [1,3..99] 1000
 
 -- main = test coinCombosRec
 -- main = test coinCombosIter
 -- main = test coinCombosGen
-main = test coinCombosGenFinite
+-- main = test coinCombosGenFinite
+main = test coinCombosInf
