@@ -51,8 +51,7 @@ tuples k xs = [ x:t | t <- tuples (k-1) xs, x <- xs ]
 
 decipher ciphertext key = let key' = map DC.ord $ cycle key
                               ciphertext' = map DC.ord ciphertext
-                              xor' = uncurry xor
-                              plaintext' = map xor' $ zip key' ciphertext'
+                              plaintext' = zipWith xor key' ciphertext'
                           in map DC.chr plaintext'
 
 
