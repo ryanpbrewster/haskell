@@ -4,9 +4,10 @@ module ProjectEuler.Prime
 , factors
 , divisors
 , sigma
+, phi
 ) where
 
-import Data.List (group)
+import Data.List (group, nub)
 
 -- Tests whether a given integer is prime or not
 test n = trialDivisionTest n 2
@@ -73,3 +74,8 @@ sigma k n = let fs_bin = factorsBin n
 
 -- just for testing purposes
 sigmaBruteForce k n = sum [ d^k | d <- [1..n], n `mod` d == 0 ]
+
+
+-- Returns the number of integers k < n such that gcd(k,n) == 1
+phi n = let fs = nub $ factors n
+        in n `div` (product fs) * (product $ map (subtract 1) fs)
