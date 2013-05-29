@@ -44,35 +44,32 @@ rects wb hb = wb*(wb+1)*hb*(hb+1) `div` 4
 
 main = print $ solveProblem (2*10^6)
 
-solveProblem targ = let pts = goodLatticePoints (uncurry rects) targ
-                        errs = map (abs . (subtract targ) . (uncurry rects)) pts
-                        best = minimumBy (comparing snd) $ zip pts errs
-                        (bx,by) = fst best
+solveProblem targ = let (bx,by) = bestRect targ
                     in bx*by
 
+bestRect targ = let diff = (subtract targ) . (uncurry rects)
+                    pts = goodLatticePoints diff
+                    errs = map (abs . diff) pts
+                    best = minimumBy (comparing snd) $ zip pts errs
+                in fst best
+
 -- f, by assumption, is a monotonically non-decreasing function of two variables
--- and we're looking for points where f x y \approx targ
-goodLatticePoints f targ =
-    let x_points = [ (x,1) | x <- [1..] ]
-        x_cross = findCrossing f x_points targ
-        cross_points = concat $ iterate (nextCrossing f targ) x_cross
+-- and we're looking for points where f x y \approx 0
+goodLatticePoints f =
+    let rows = [ [(x,y) | x <- [0..]] | y <- [1..] ]
+        cross_points = concat [ findCrossing f row | row <- rows ]
     in takeWhile (\(x,y) -> x > 0) cross_points
 
-nextCrossing f targ [(x1,y1), (x2,y2)] =
-    let y = y1
-        xr = max x1 x2
-    in findCrossing f [(x,y+1) | x <- [xr,xr-1..]] targ
-
--- findCrossing takes in a function, a list of points, and a target it finds
--- the first pair of points that straddles a crossing-point
--- That is, it returns two points, p1 and p2
--- It is guaranteed that in moving from p1 to p2 we will cross some point where
---     f pt == targ
-findCrossing f pts targ =
-    let vals = [ (f pt) - targ | pt <- pts ]
+-- findCrossing takes in a function and a list of points, and it finds the
+-- first pair of points that straddles a crossing-point
+-- That is, it returns two points, p1 and p2, such that it is guaranteed that
+-- in moving from p1 to p2 we will cross some point where
+--     f pt == 0
+findCrossing f pts =
+    let vals = map f pts
         f0 = head vals
         pt_vals = zip pts vals
-        (l,r) = span (\(p,v) -> (v<0) == (f0<0)) pt_vals -- split at the cross
-        pt_l = fst $ last l
-        pt_r = fst $ head r
-    in [pt_l, pt_r]
+        (a,b) = span (\(p,v) -> (v<0) == (f0<0)) pt_vals -- split at the cross
+        p1 = fst $ last a
+        p2 = fst $ head b
+    in [p1, p2]
