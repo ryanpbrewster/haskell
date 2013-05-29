@@ -24,19 +24,32 @@
  - starting with n = 0.
  -}
 
+{-
+- Clearly b must be prime, since
+-     n == 0 --> n^2 + an + b == b,
+- so to even get past n=0 we must have b be prime
+-}
+
+-- I tried something new here: explicit type-signatures
+
 import qualified ProjectEuler.Prime as Prime
 import ProjectEuler.Util (tuples)
 import Data.Ord (comparing)
 import Data.List (maximumBy)
 
+main :: IO()
 main = print solveProblem
-solveProblem = let coeffs = tuples 2 [-999..999]
+
+solveProblem :: Int
+solveProblem = let primes = takeWhile (<1000) Prime.primes
+                   coeffs = [ [a,fromIntegral b] | b <- primes, a <- [-999..999] ]
                    [ba, bb] = bestCoeffs coeffs
-               in [ba,bb]
+               in ba*bb
 
-consecutivePrimes a b = length $ takeWhile good [ n*n + a*n + b | n <- [0..] ]
-    where good = (\v -> v > 0 && Prime.test v)
+consecutivePrimes :: Int -> Int -> Int
+consecutivePrimes a b = length $ takeWhile Prime.test [b+n*(a+n) | n <- [0..]]
 
+bestCoeffs :: [[Int]] -> [Int]
 bestCoeffs coeffs = let f = (\[a,b] -> consecutivePrimes a b)
                         vals = map f coeffs
                         best = maximumBy (comparing snd) $ zip coeffs vals

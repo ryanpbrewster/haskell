@@ -10,7 +10,8 @@ module ProjectEuler.Prime
 import Data.List (group, nub)
 
 -- Tests whether a given integer is prime or not
-test n = trialDivisionTest n 2
+test n | n < 2     = False -- 0 and 1 are not prime, nor are negative numbers
+       | otherwise = trialDivisionTest n 2
 
 trialDivisionTest n k | n `mod` k == 0 = False
                       | k*k > n        = True
