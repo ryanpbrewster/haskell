@@ -56,9 +56,13 @@ bestRect targ = let diff = (subtract targ) . (uncurry rects)
 -- f, by assumption, is a monotonically non-decreasing function of two variables
 -- and we're looking for points where f x y \approx 0
 goodLatticePoints f =
-    let rows = [ [(x,y) | x <- [0..]] | y <- [1..] ]
-        cross_points = concat [ findCrossing f row | row <- rows ]
+    let bottom_row = [(x,1) | x <- [0..]]
+        first_cross = findCrossing f bottom_row
+        cross_points = concat $ iterate (nextCrossing f) first_cross
     in takeWhile (\(x,y) -> x > 0) cross_points
+
+nextCrossing f [(x0,y0), (_,_)] = let next_row = [(x,y0+1) | x <- [x0,x0-1..]]
+                                  in findCrossing f next_row
 
 -- findCrossing takes in a function and a list of points, and it finds the
 -- first pair of points that straddles a crossing-point
