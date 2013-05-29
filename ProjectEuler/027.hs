@@ -28,6 +28,11 @@
 - Clearly b must be prime, since
 -     n == 0 --> n^2 + an + b == b,
 - so to even get past n=0 we must have b be prime
+- Then note that
+-     n == 1 --> 1 + a + b must be prime
+-            --> a + b + a > 1 (since all primes are > 1)
+-            --> a > -b
+- so we can run a from (-b,999).
 -}
 
 -- I tried something new here: explicit type-signatures
@@ -41,8 +46,8 @@ main :: IO()
 main = print solveProblem
 
 solveProblem :: Int
-solveProblem = let primes = takeWhile (<1000) Prime.primes
-                   coeffs = [ [a,fromIntegral b] | b <- primes, a <- [-999..999] ]
+solveProblem = let primes = map fromIntegral $ takeWhile (<1000) Prime.primes
+                   coeffs = [ [a,b] | b <- primes, a <- [-b..999] ]
                    [ba, bb] = bestCoeffs coeffs
                in ba*bb
 
