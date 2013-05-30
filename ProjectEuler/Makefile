@@ -10,7 +10,7 @@ tests: $(EXECUTABLES) $(TESTS)
 timed: $(EXECUTABLES) $(TIMED)
 
 clean:
-	rm -f *.o *.hi *.exe a.out
+	rm -f *.o *.hi *.exe a.out *~
 
 %.test: %.exe
 	@printf "%s %s\n" $* $(shell ./$<)
