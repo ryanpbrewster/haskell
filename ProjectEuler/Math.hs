@@ -1,6 +1,7 @@
 module ProjectEuler.Math
 ( powerMod
 , integerDigits
+, fromIntegerDigits
 , binomial
 , coinCombos
 , fromContinuedFraction
@@ -57,6 +58,11 @@ integerDigits = reverse . integerDigits'
 integerDigits' 0 = []
 integerDigits' n = let (q,r) = n `quotRem` 10
                    in r:(integerDigits' q)
+
+fromIntegerDigits = fromIntegerDigits_h . reverse
+
+fromIntegerDigits_h [] = 0
+fromIntegerDigits_h (x:xs) = x + 10*(fromIntegerDigits_h xs)
 
 -- binomial n k == n!/k!(n-k)!
 --              == n*(n-1)*...*(n-k+1)/(1*2*...*k)

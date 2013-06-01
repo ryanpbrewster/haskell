@@ -11,6 +11,7 @@ import Data.List (group, nub)
 
 -- Tests whether a given integer is prime or not
 test n | n < 2     = False -- 0 and 1 are not prime, nor are negative numbers
+       | n == 2    = True
        | otherwise = trialDivisionTest n 2
 
 trialDivisionTest n k | n `mod` k == 0 = False
