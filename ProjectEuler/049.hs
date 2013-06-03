@@ -24,8 +24,7 @@ gatherBy cmp xs = groupBy (\x -> \y -> cmp x y == EQ) $ sortBy cmp xs
 
 pairs [] = []
 pairs (x:xs) = [ [x,y] | y <- xs ] ++ pairs xs
-findArithmeticSequences k xs = let x_pairs = pairs xs
-                                   x_seqs = map (makeSequence k) x_pairs
+findArithmeticSequences k xs = let x_seqs = map (makeSequence k) $ pairs xs
                                in filter (all (`elem` xs)) x_seqs
 
 makeSequence k [x0,x1] = [ x0 + i*(x1-x0) | i <- [0..k-1] ]
