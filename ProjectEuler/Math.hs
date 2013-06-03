@@ -6,6 +6,7 @@ module ProjectEuler.Math
 , binomial
 , coinCombos
 , fromContinuedFraction
+, primitiveTriples
 --, realDigits
 ) where
 
@@ -87,3 +88,20 @@ fromContinuedFraction (a:cfrac) = let (rn, rd) = fromContinuedFraction cfrac
                                       d = rn
                                       g = gcd n d
                                   in (n `div` g, d `div` g)
+
+{-
+ - From Wikipedia:
+ - For any primitive Pythagorean triple [a,b,c], represented as a column vector,
+ - multiplying by any of the following matrices will generate a new primitve
+ - Pythagorean triple:
+ -     [ 1 -2 2 ]       [ 1 2 2 ]      [ -1 2 2 ]
+ - A = [ 2 -1 2 ],  B = [ 2 1 2 ], C = [ -2 1 2 ]
+ -     [ 2 -2 3 ]       [ 2 2 3 ]      [ -2 2 3 ]
+ -}
+primitiveTriples = let trips = [3,4,5]:(concat $ map newTriples trips)
+                   in trips
+newTriples [a,b,c] = [ 1*a - 2*b + 2*c, 2*a - 1*b + 2*c, 2*a - 2*b + 3*c]:
+                     [ 1*a + 2*b + 2*c, 2*a + 1*b + 2*c, 2*a + 2*b + 3*c]:
+                     [-1*a + 2*b + 2*c,-2*a + 1*b + 2*c,-2*a + 2*b + 3*c]:
+                     []
+
