@@ -1,6 +1,7 @@
 module ProjectEuler.Math
 ( powerMod
 , integerDigits
+, integerDigitsBy
 , fromIntegerDigits
 , binomial
 , coinCombos
@@ -54,10 +55,13 @@ transientLength d = let fs = factors d
 
 -- Just so you know, integerDigits 0 == []
 -- It's a weird edge case that I don't like.
-integerDigits = reverse . integerDigits'
-integerDigits' 0 = []
-integerDigits' n = let (q,r) = n `quotRem` 10
-                   in r:(integerDigits' q)
+integerDigits = integerDigitsBy 10
+
+integerDigitsBy base = reverse . (integerDigitsBy_h base)
+
+integerDigitsBy_h _ 0 = []
+integerDigitsBy_h base n = let (q,r) = n `quotRem` base
+                           in r:(integerDigitsBy_h base q)
 
 fromIntegerDigits = fromIntegerDigits_h . reverse
 
