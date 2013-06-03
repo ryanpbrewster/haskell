@@ -15,13 +15,13 @@
  -}
 
 {-
- - For some reason I do not fully understand, the solution is NOT ***857.
- - Thus, just take the second result instead of the first one.
+ - The "do not use leading zeros in the mask" restriction is not stated, but
+ - it is important. This is manifested in the primeFamily function.
  -}
 
 {-
  - I made a small optimization: the is_prime' array, which speeds up the
- - prime-testing. This takes it from ~2.8s to ~1.0s
+ - prime-testing. This takes it from ~4.3s to ~1.15s
  -
  - I'm pretty sure that about 0.6s are spent just generating the (core,mask)
  - pairs, so that would be another area to check.
@@ -36,7 +36,9 @@ is_prime' = accumArray (||) False (0,10^6) [(p,True) | p <- takeWhile (<10^6) Pr
 
 -- Given a core and a mask, generates all the primes in that family
 -- Ex: primeFamily 20 1 -> [23, 29] since those are the only primes of the form 2*
-primeFamily core mask = filter isPrime' [ core + k*mask | k <- [0..9] ]
+primeFamily core mask =
+    let family = [ core + k*mask | k <- if mask < core then [0..9] else [1..9] ]
+    in filter isPrime' family
 
 -- Pads a list to size `s`. Does so by padding on the left with zeros.
 padTo s xs = let zero_pad = take (s - length xs) $ repeat 0
@@ -44,23 +46,20 @@ padTo s xs = let zero_pad = take (s - length xs) $ repeat 0
 
 -- all the core/mask pairs of size s
 -- Ex. coreMaskPairs 5 would include [12030, 101] and [55550, 1]
-coreMaskPairs s =
-    let digits = map (padTo s . Math.integerDigits) [0..10^s-1]
-        cores = filter (0 `elem`) digits
-        masks = map makeMask cores
-    in zip cores masks
+coreMaskPairs s = let raw_cms = coreMaskPairs' s
+                      with_mask = filter (\(c,m) -> m > 0) raw_cms
+                  in with_mask
 
-makeMask = map (\x -> if x > 0 then 0 else 1)
+coreMaskPairs' 0 = [(0,0)]
+coreMaskPairs' s =
+    let cm_pairs = coreMaskPairs' (s-1)
+    in concat [ (10*c, 10*m+1) : [(10*c+i,10*m)|i<-[0..9]] | (c,m) <- cm_pairs ]
 
-families = [ primeFamily core mask | len <- [1..]
-                                   , (c,m) <- coreMaskPairs len
-                                   , let core = Math.fromIntegerDigits c
-                                   , let mask = Math.fromIntegerDigits m
-           ]
+families = [ primeFamily core mask | len <- [1..] , (core,mask) <- coreMaskPairs len ]
 
 findPrimeFamilies s = filter (\f -> length f == s) families
 
 solveProblem = let ans = findPrimeFamilies 8
-               in minimum $ ans !! 1
+               in minimum $ head ans
 
 main = print solveProblem
