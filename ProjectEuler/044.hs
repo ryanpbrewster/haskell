@@ -13,8 +13,7 @@
  - of D?
  -}
 
-import Data.List (tails)
-import ProjectEuler.Util (mergeInf)
+import Data.List (inits)
 
 pents :: [Integer]
 pents = [ n*(3*n-1) `div` 2 | n <- [1..] ]
@@ -23,12 +22,12 @@ isPent :: Integer -> Bool
 isPent k = let n = round $ (1.0 + sqrt (1.0 + 24.0*(fromIntegral k))) / 6.0 
            in n*(3*n-1) `div` 2 == k
 
-pairsWithDifferences xs = [ [(x'-x, x, x') | (x,x') <- zip xs xs', isPent (x'-x) ]
-                                           | xs' <- tails (tail xs) ]
+sols = [ (x,x') | xs <- tail $ inits pents
+                , let x' = last xs
+                , x <- init xs
+                , isPent (x'-x) && isPent (x'+x) ]
 
-first (x,_,_) = x
-
-solveProblem = let pent_pairs = mergeInf $ pairsWithDifferences pents
-               in first $ head $ filter (\(_,x,x') -> isPent (x'+x)) pent_pairs
+solveProblem = let (x,x') = head $ sols
+               in x' - x
 
 main = print solveProblem
