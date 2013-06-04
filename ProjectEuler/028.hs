@@ -41,12 +41,9 @@
 
 main = print solveProblem
 solveProblem = generalProblem 1001
-generalProblem n = let (down, up) = numberSpiralDiagonals
-                   in (sum $ take n down) + (sum $ take n up) - 1
-numberSpiralDiagonals =
-    let down = scanl (+) 1 $ concat [ [x]   | x <- [2,4..] ]
-        up   = scanl (+) 1 $ concat [ [x,x] | x <- [4,8..] ]
-    in (down, up)
+generalProblem n = sum $ take (2*n-1) numberSpiralDiagonals
+
+numberSpiralDiagonals = scanl (+) 1 $ concat $ map (replicate 4) [2,4..]
 
 generalProblem' n = closedform $ (n-1) `div` 2
 closedform n = 1 + 2*n*(13+n*(15+8*n)) `div` 3
