@@ -3,6 +3,7 @@ module ProjectEuler.Util
 , rollBy
 , tuples
 , mergeInf
+, merge
 ) where
 
 -- roll 3 [1..] == [ [1,2,3], [4,5,6], [7,8,9], ... ]
@@ -22,7 +23,10 @@ tuples k xs = [ x:t | t <- tuples (k-1) xs, x <- xs ]
 
 mergeInf :: Ord a => [[a]] -> [a]
 mergeInf = foldr merge2Sorted []
-    where merge2Sorted (x:xs) ys = x:merge2' xs ys
-          merge2' (x:xs) (y:ys) | x < y  = x:merge2' xs (y:ys)
-                                | x == y = x:merge2' xs ys
-                                | x > y  = y:merge2' (x:xs) ys
+    where merge2Sorted (x:xs) ys = x:merge xs ys
+
+merge xs [] = xs
+merge [] ys = ys
+merge (x:xs) (y:ys) | x < y  = x:merge xs (y:ys)
+                  | x == y = x:y:merge xs ys
+                  | x > y  = y:merge (x:xs) ys
