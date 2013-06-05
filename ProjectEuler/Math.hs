@@ -5,6 +5,7 @@ module ProjectEuler.Math
 , fromIntegerDigits
 , binomial
 , coinCombos
+, fullCoinCombos
 , fromContinuedFraction
 , primitiveTriples
 --, realDigits
@@ -74,12 +75,32 @@ fromIntegerDigits_h (x:xs) = x + 10*(fromIntegerDigits_h xs)
 binomial n k = let k' = min k (n-k)
                in (product [n-k'+1..n]) `div` (product [1..k'])
 
-coinCombos coins = coinCombos' coins (1:cycle [0]) 0
+
+
+{-
+ - Coin combinations deals with problems like:
+ -     How many ways can you make 100 using only elements from {1,5,10,25}
+ -     What are the integer partitions of 10?
+ -
+ - coinCombos gives a list of the NUMBER OF COMBINATIONS
+ - fullCoinCOmbos gives a list of the ACTUAL COMBINATIONS
+ -}
+
+coinCombos coins = coinCombos' coins (1:repeat 0) 0
 coinCombos' [] combos front = drop front combos
 coinCombos' (c:cs) combos front = let (start, rest) = splitAt c combos
                                       combos' = start ++ zipWith (+) rest combos'
                                       start' = drop front start
                                   in start' ++ (coinCombos' cs combos' c)
+
+fullCoinCombos coins = fullCoinCombos' coins ([[]]:repeat []) 0
+fullCoinCombos' [] combos front = drop front combos
+fullCoinCombos' (c:cs) combos front =
+    let (start, rest) = splitAt c combos
+        combos' = start ++ zipWith (newCombos c) rest combos'
+        start' = drop front start
+    in start' ++ (fullCoinCombos' cs combos' c)
+newCombos c combos1 combos2 = combos1 ++ [ c:c2 | c2 <- combos2 ]
 
 -- Returns a (n,d) pair which represents n/d in reduced form.
 fromContinuedFraction [a] = (a, 1)
