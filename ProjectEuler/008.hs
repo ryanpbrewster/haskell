@@ -38,6 +38,6 @@ maxProduct xs d = max (product $ take d xs) (maxProduct (tail xs) d)
 
 solveProblem xs d = maxProduct xs d
 
-main = do awful_string <- readFile "008.txt"
+main = do awful_string <- readFile "008.in"
           let awful_number = map digitToInt $ concat $ lines awful_string
           print $ solveProblem awful_number 5
