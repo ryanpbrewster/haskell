@@ -12,24 +12,34 @@
  - Given that 0 <= x1, y1, x2, y2 <= 50, how many right triangles can be formed?
  -}
 
-isRightTriangle x1 y1 x2 y2 x3 y3 =
-    let d12 = (x2-x1)^2 + (y2-y1)^2
-        d13 = (x3-x1)^2 + (y3-y1)^2
-        d23 = (x3-x2)^2 + (y3-y2)^2
-    in d12 + d13 == d23 || d12 + d23 == d13 || d13 + d23 == d12
+{-
+ - There are 3n^2 trivial solutions (n^2 for P and Q on the axes, n^2 for P only,
+ - and n^2 for Q only). The non-trivial solutions require non-axial points. Suppose
+ - we have point P at location (x1,y1). Since the slope to point P is y1/x1,
+ - the slope from P to Q has to be -x1/y1. Thus, Q has to be at position
+ -     (x2,y2) == (x1 + s*y1, y1 - s*x1)
+ - for some scalar s. In order for both x2 and y2 to be integers, we need
+ - s to be a rational number such that s*y1 is an integer and s*x1 is an integer.
+ - The first value of s that will work is 1/gcd(x1,y1), since that is the smallest
+ - rational number where s*y1 and s*x1 are both integers.
+ - Any multiple of 1/gcd(x1,y1) will also work.
+ -
+ - Thus, keep on adding y1/gcd(x1,y1) to x1 and
+ -          subtracting x1/gcd(x1,y1) from y1
+ - until you run out of space in the box.
+ -
+ - There are also exactly symmetrical solutions where you have
+ -     (x2,y2) == (x1 - s*y1, y1 + s*x1)
+ - instead (moving up and left instead of down and right). Just multiply by 2.
+ -}
 
--- The x1*y2 > x2*y1 thing is to avoid double-counting
--- We simply require that Q (at x2,y2) make a larger angle than P (at x1,y1)
--- Thus, theta2 > theta1
---  -->  Tan[theta2] > Tan[theta1]
---  -->  y2/x2 > y1/x1
---  --> x1*y2 > x2*y1
-solveProblem bound =
-    length $ [ [(0,0), (x1,y1), (x2,y2)] | x1 <- [0..bound]
-                                         , y1 <- [0..bound]
-                                         , x2 <- [0..bound]
-                                         , y2 <- [0..bound]
-                                         , x1*y2 > x2*y1
-                                         , isRightTriangle 0 0 x1 y1 x2 y2 ]
+numSolutions x y n = length $ takeWhile inBounds lattice_points
+    where g = gcd x y
+          x' = x `div` g
+          y' = y `div` g
+          lattice_points = [ (x+c*y', y-c*x') | c <- [1..]]
+          inBounds (p,q) = 0 <= p && p <= n && 0 <= q && q <= n
+
+solveProblem n = 3*n^2 + 2*(sum [numSolutions x y n | x <- [1..n], y <- [1..n]])
 
 main = print $ solveProblem 50
