@@ -21,8 +21,6 @@
 
 import ProjectEuler.Prime (sigma, primes)
 import ProjectEuler.Math (fullCoinCombos)
-import ProjectEuler.Util (mergeInf)
-import Data.List (sort)
 
 parts = fullCoinCombos [1..]
 
@@ -33,7 +31,7 @@ ndivs = sigma 0
 numSolutions z = 1 + (ndivs (z^2)) `div` 2
 
 solveProblem bound =
-    let candidates = mergeInf $ [ sort $ map expsToInt ps | ps <- parts ]
-    in head $ filter (\z -> numSolutions z > bound) candidates
+    let candidates = concat $ [ map expsToInt ps | ps <- parts ]
+    in minimum $ take 100 $ filter (\z -> numSolutions z > bound) candidates
 
 main = print $ solveProblem (4*10^6)
