@@ -28,16 +28,40 @@
  -}
 
 {-
- - Minor optimization. Since we're looking for a number with a lot of
- - solutions, (that is, a lot of divisors), we can pretty much guarantee that
- - it will be divisible by at least 2 and 3 (so it will be a multiple of 6).
+ - We are looking for a number with a lot of very small divisors.
+ - Thus, it makes NO sense to look at numbers like 19, since 19 has the same
+ - number of divisors as 2, but is much larger.
+ -
+ - What I do here is look systematically at numbers with a given number of prime factors.
+ - First: 0 factors --> [1]
+ -        1 factor  --> [2]
+ -        2 factors --> [4, 6]
+ -        3 factors --> [8, 12, 30]
+ -        4 factors --> [2^4, 2^3 3, 2^2 3^2, 2^2 3 5, 2 3 5 7]
+ - Essentially what we're doing is looking at the integer partitions and
+ - using them as prime exponents. Thus,
+ -     partitions 1 = { [1] } --> {2}
+ -     partitions 2 = { [2], [1,1] } --> {2^2, 2 3}
+ -                    { [3], [2,1], [1,1,1] } --> {2^3, 2^2 3, 2 3 5}
+ -
+ - If we do it this way, we'll avoid looking at a LOT of silly numbers.
  -}
 
-import ProjectEuler.Prime (sigma)
+import ProjectEuler.Prime (sigma, primes)
+import ProjectEuler.Math (fullCoinCombos)
+import ProjectEuler.Util (mergeInf)
+import Data.List (sort)
+
+parts = fullCoinCombos [1..]
+
+expsToInt :: Integral a => [a] -> Integer
+expsToInt = product . zipWith (^) primes
 
 ndivs = sigma 0
 numSolutions z = 1 + (ndivs (z^2)) `div` 2
 
-solveProblem bound = head $ filter (\z -> numSolutions z > bound) [12,24..]
+solveProblem bound =
+    let candidates = mergeInf $ [ sort $ map expsToInt ps | ps <- parts ]
+    in head $ filter (\z -> numSolutions z > bound) candidates
 
-main = print $ solveProblem 1000
+main = print $ solveProblem (10^3)
