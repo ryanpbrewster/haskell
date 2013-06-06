@@ -1,5 +1,5 @@
 -- 145.hs
--- HOLY COW SLOW (17m 37s)
+-- HOLY COW SLOW (9m 42s)
 {-
  - Some positive integers n have the property that the sum [n + reverse(n)]
  - consists entirely of odd (decimal) digits. For instance, 36 + 63 = 99 and
@@ -23,6 +23,6 @@ isReversible n | n `mod` 10 == 0 = False
                | otherwise       = let s = n + (intReverse n)
                                    in all odd $ integerDigits s
 
-solveProblem bound = length $ filter isReversible [1..bound]
+solveProblem bound = 2 * (length $ filter isReversible [1,3..bound])
 
 main = print $ solveProblem (10^9)
