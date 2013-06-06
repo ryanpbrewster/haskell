@@ -32,7 +32,7 @@ import Data.Array
 -- To find the max subsequence, just add up adjacent numbers
 -- If at any point, the current sum is worse than just starting over,
 -- just start over (hence the `max x 0`)
-maxSubsequence xs = foldl (\x -> \y -> y + max x 0) 0 xs
+maxSubsequence xs = maximum $ scanl (\x -> \y -> y + max x 0) 0 xs
 
 diagonals rs = let n = length rs
                    uls = [ [(rs !! j) !! (i - j) | j <- [0..i]] | i <- [0..n-1] ]
