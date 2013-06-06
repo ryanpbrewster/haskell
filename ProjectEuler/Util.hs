@@ -2,6 +2,7 @@ module ProjectEuler.Util
 ( roll
 , rollBy
 , tuples
+, sublists
 , mergeInf
 , merge
 ) where
@@ -20,6 +21,12 @@ rollBy (k:ks) xs = let (front,back) = splitAt k xs
 -- tuples 2 [1,2,3] == [ [1,1], [1,2], [1,3], [2,1], [2,2], [2,3], [3,1], [3,2], [3,3] ]
 tuples 0 _ = [[]] -- only the empty tuple
 tuples k xs = [ x:t | t <- tuples (k-1) xs, x <- xs ]
+
+-- similar to tuples, but maintains order
+-- `sublists 2` will retrieve all distinct pairs from a list
+sublists 0 _ = [[]]
+sublists _ [] = []
+sublists k (x:xs) = [ x:l | l <- sublists (k-1) xs ] ++ sublists k xs
 
 mergeInf :: Ord a => [[a]] -> [a]
 mergeInf = foldr merge2Sorted []
