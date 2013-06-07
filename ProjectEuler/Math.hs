@@ -15,11 +15,8 @@ import ProjectEuler.Prime (factors)
 import Data.List (nub)
 
 powerMod _ 0 _ = 1
-powerMod x y m = let t = powerMod x (y `quot` 2) m
-                     t2 = t*t
-                 in case (y `mod` 2) of
-                    0 -> t2 `mod` m
-                    1 -> (t2*x) `mod` m
+powerMod x y m | even y = (  (powerMod x (quot y 2) m)^2) `mod` m
+               | odd y  = (x*(powerMod x (quot y 2) m)^2) `mod` m
 
 {- This shit is a disaster. Jesus.
 
