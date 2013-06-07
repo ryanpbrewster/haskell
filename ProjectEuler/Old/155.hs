@@ -29,7 +29,8 @@ caps n = caps' n [DS.fromList [1%1]]
 caps' n cs | length cs == n = cs
            | otherwise      =
     let newcaps = DS.unions $ zipWith (joinCaps) cs (reverse cs)
-    in caps' n (newcaps:cs)
+        unique_newcaps = foldl DS.difference newcaps cs
+    in caps' n (unique_newcaps:cs)
 
 joinCaps cs1 cs2 = let cs1' = DS.elems cs1
                        cs2' = DS.elems cs2
