@@ -12,10 +12,6 @@
  - Find the least value of n for which A(n) first exceeds one-million.
  -}
 
-import ProjectEuler.Math (powerMod)
-import Data.List (findIndex)
-import Data.Maybe
-
 a n = aH n 1 1
 
 -- aH n r t k   {{ aH is the Helper function for a }}
