@@ -8,6 +8,7 @@ module ProjectEuler.Math
 , fullCoinCombos
 , fromContinuedFraction
 , primitiveTriples
+, pascalTriangle
 --, realDigits
 ) where
 
@@ -123,3 +124,5 @@ newTriples [a,b,c] = [ 1*a - 2*b + 2*c, 2*a - 1*b + 2*c, 2*a - 2*b + 3*c]:
                      [-1*a + 2*b + 2*c,-2*a + 1*b + 2*c,-2*a + 2*b + 3*c]:
                      []
 
+pascalTriangle = iterate nextRow [1]
+    where nextRow r = zipWith (+) ([0]++r) (r ++ [0])
