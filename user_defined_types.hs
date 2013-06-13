@@ -37,3 +37,29 @@ costOfProduct :: BillingInfo -> Integer
 costOfProduct (CreditCard _ _ _) = 100
 costOfProduct (CashOnDelivery) = 50
 costOfProduct (Invoice _) = 200
+
+
+
+
+
+
+
+data Tree a = Node { leftBranch :: Tree a
+                   , value :: a
+                   , rightBranch :: Tree a
+                   }
+            | Nil
+
+leaf :: a -> Tree a
+leaf v = Node Nil v Nil
+
+treeHeight :: Tree a -> Int
+treeHeight Nil = 0
+treeHeight (Node lb _ rb) = 1 + max (treeHeight lb) (treeHeight rb)
+
+instance Show a => Show (Tree a) where
+    show t = showTree t
+
+showTree Nil = "<Nil>"
+showTree (Node Nil v Nil) = show v
+showTree (Node lb v rb) = "(" ++ show v ++ "," ++ show lb ++ "," ++ show rb ++ ")"
