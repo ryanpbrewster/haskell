@@ -3,6 +3,7 @@ module ProjectEuler.Math
 , integerDigits
 , integerDigitsBy
 , fromIntegerDigits
+, fromIntegerDigitsBy
 , binomial
 , coinCombos
 , fullCoinCombos
@@ -63,10 +64,12 @@ integerDigitsBy_h _ 0 = []
 integerDigitsBy_h base n = let (q,r) = n `quotRem` base
                            in r:(integerDigitsBy_h base q)
 
-fromIntegerDigits = fromIntegerDigits_h . reverse
+fromIntegerDigits = fromIntegerDigitsBy 10
 
-fromIntegerDigits_h [] = 0
-fromIntegerDigits_h (x:xs) = x + 10*(fromIntegerDigits_h xs)
+fromIntegerDigitsBy base = fromIntegerDigitsBy_h base . reverse
+
+fromIntegerDigitsBy_h base [] = 0
+fromIntegerDigitsBy_h base (x:xs) = x + base*(fromIntegerDigitsBy_h base xs)
 
 -- binomial n k == n!/k!(n-k)!
 --              == n*(n-1)*...*(n-k+1)/(1*2*...*k)
