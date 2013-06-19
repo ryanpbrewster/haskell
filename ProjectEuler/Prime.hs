@@ -1,5 +1,6 @@
 module ProjectEuler.Prime
 ( test
+, bfTest
 , primes
 , factors
 , divisors
@@ -11,12 +12,21 @@ import Data.List (group, nub)
 
 -- Tests whether a given integer is prime or not
 test n | n < 2     = False -- 0 and 1 are not prime, nor are negative numbers
-       | n == 2    = True
-       | otherwise = trialDivisionTest n 2
+       | otherwise = trialDivisionTest n primes
 
-trialDivisionTest n k | n `mod` k == 0 = False
-                      | k*k > n        = True
-                      | otherwise      = trialDivisionTest n (k+1)
+trialDivisionTest n (p:ps) | p*p > n        = True
+                           | n `mod` p == 0 = False
+                           | otherwise      = trialDivisionTest n ps
+
+
+
+bfTest n | n < 2     = False
+         | otherwise = bfTrialDivisionTest n 2
+
+bfTrialDivisionTest n k | k*k > n        = True
+                        | n `mod` k == 0 = False
+                        | otherwise      = bfTrialDivisionTest n (k+1)
+
 
 
 {-

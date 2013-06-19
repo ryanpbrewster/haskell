@@ -20,13 +20,13 @@
  - efficient algorithm to solve it. ;o)
  -}
 
-import ProjectEuler.Util (rollBy)
+import ProjectEuler.Util (chunksBy)
 
 -- addRows takes in two rows of length (x) and (x+1), and returns a
 -- row of length (x+1)
 addRows r1 r2 = let r1' = zipWith max ([0] ++ r1) (r1 ++ [0])
                 in zipWith (+) r1' r2
-solveProblem nums = maxTrianglePath $ rollBy [1..] nums
+solveProblem nums = maxTrianglePath $ chunksBy [1..] nums
 maxTrianglePath tri = maximum $ foldl1 addRows tri
 main = do
     txt <- readFile "067.in"

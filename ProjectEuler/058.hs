@@ -22,7 +22,7 @@
  -}
 
 import qualified ProjectEuler.Prime as Prime
-import ProjectEuler.Util (roll)
+import ProjectEuler.Util (chunks)
 import Data.Ratio
 
 numberSpiralDiagonals = scanl (+) 1 $ concat $ map (replicate 4) [2,4..]
@@ -30,7 +30,7 @@ numberSpiralDiagonals = scanl (+) 1 $ concat $ map (replicate 4) [2,4..]
 solveProblem = generalProblem 0.1
 generalProblem bound = let diagonals = tail numberSpiralDiagonals
                            primes = map (\n -> if Prime.test n then 1 else 0) diagonals
-                           counts = scanl1 (+) $ map sum $ roll 4 primes
+                           counts = scanl1 (+) $ map sum $ chunks 4 primes
                            totals = [5,9..]
                            ratios = zipWith (%) counts totals
                            levels = 1 + (length $ takeWhile (>=bound) ratios)

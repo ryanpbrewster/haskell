@@ -42,19 +42,15 @@ import ProjectEuler.Util (tuples)
 import Data.Ord (comparing)
 import Data.List (maximumBy)
 
-main :: IO()
 main = print solveProblem
 
-solveProblem :: Int
 solveProblem = let primes = map fromIntegral $ takeWhile (<1000) Prime.primes
                    coeffs = [ [a,b] | b <- primes, a <- [-b..999] ]
                    [ba, bb] = bestCoeffs coeffs
                in ba*bb
 
-consecutivePrimes :: Int -> Int -> Int
 consecutivePrimes a b = length $ takeWhile Prime.test [b+n*(a+n) | n <- [0..]]
 
-bestCoeffs :: [[Int]] -> [Int]
 bestCoeffs coeffs = let f = (\[a,b] -> consecutivePrimes a b)
                         vals = map f coeffs
                         best = maximumBy (comparing snd) $ zip coeffs vals

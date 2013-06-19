@@ -27,7 +27,7 @@ solveProblem = let possibles = concat [ [p+3, p+7] | p <- [10,20..] ]
                    truncatable_primes = take 11 $ filter isTruncatable possibles
                in sum truncatable_primes
 
-isTruncatable n = all Prime.test $ (leftTruncations n) ++ (rightTruncations n)
+isTruncatable n = all Prime.bfTest $ (leftTruncations n) ++ (rightTruncations n)
 
 leftTruncations n  = map Math.fromIntegerDigits $ tail $ inits $ Math.integerDigits n
 rightTruncations n = map Math.fromIntegerDigits $ init $ tails $ Math.integerDigits n

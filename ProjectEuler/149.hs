@@ -28,7 +28,7 @@
  -}
 
 import Data.List (transpose)
-import ProjectEuler.Util (roll)
+import ProjectEuler.Util (chunks)
 
 -- To find the max subsequence, just add up adjacent numbers
 -- If at any point, the current sum is worse than just starting over,
@@ -55,7 +55,7 @@ lfg = let m = 10^6
       in ans
 
 solveProblem n =
-    let mat = take n $ roll n lfg
+    let mat = take n $ chunks n lfg
     in maximum $ map maxSubsequence $ allseqs mat
 
 main = print $ solveProblem 2000

@@ -14,7 +14,7 @@
  - given above.
  -}
 
-import ProjectEuler.Util (roll)
+import ProjectEuler.Util (chunks)
 import Data.Ord (comparing)
 import Data.List (maximumBy, findIndex)
 import Data.Maybe (fromJust) -- findIndex returns a Maybe index
@@ -22,7 +22,7 @@ import Data.Maybe (fromJust) -- findIndex returns a Maybe index
 
 main = do
     txt <- readFile "099.in"
-    let be_pairs = roll 2 $ map read $ words txt
+    let be_pairs = chunks 2 $ map read $ words txt
     print $ solveProblem be_pairs
 
 solveProblem be_pairs =

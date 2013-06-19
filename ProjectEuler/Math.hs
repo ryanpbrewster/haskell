@@ -3,9 +3,11 @@ module ProjectEuler.Math
 , integerDigits
 , integerDigitsBy
 , fromIntegerDigits
+, fromIntegerDigitsBy
 , binomial
 , coinCombos
 , fullCoinCombos
+, coinCombosP
 , fromContinuedFraction
 , primitiveTriples
 , pascalTriangle
@@ -63,10 +65,12 @@ integerDigitsBy_h _ 0 = []
 integerDigitsBy_h base n = let (q,r) = n `quotRem` base
                            in r:(integerDigitsBy_h base q)
 
-fromIntegerDigits = fromIntegerDigits_h . reverse
+fromIntegerDigits = fromIntegerDigitsBy 10
 
-fromIntegerDigits_h [] = 0
-fromIntegerDigits_h (x:xs) = x + 10*(fromIntegerDigits_h xs)
+fromIntegerDigitsBy base = fromIntegerDigitsBy_h base . reverse
+
+fromIntegerDigitsBy_h base [] = 0
+fromIntegerDigitsBy_h base (x:xs) = x + base*(fromIntegerDigitsBy_h base xs)
 
 -- binomial n k == n!/k!(n-k)!
 --              == n*(n-1)*...*(n-k+1)/(1*2*...*k)
@@ -99,6 +103,14 @@ fullCoinCombos' (c:cs) combos front =
         start' = drop front start
     in start' ++ (fullCoinCombos' cs combos' c)
 newCombos c combos1 combos2 = combos1 ++ [ c:c2 | c2 <- combos2 ]
+
+-- proper coin combos. Can only use each coin once
+coinCombosP coins = coinCombosP' coins (1:repeat 0) 0
+coinCombosP' [] combos front = drop front combos
+coinCombosP' (x:xs) combos front = let (start, rest) = splitAt x combos
+                                       combos' = start ++ zipWith (+) rest combos
+                                       start' = drop front start
+                                   in start' ++ (coinCombosP' xs combos' x)
 
 -- Returns a (n,d) pair which represents n/d in reduced form.
 fromContinuedFraction [a] = (a, 1)
