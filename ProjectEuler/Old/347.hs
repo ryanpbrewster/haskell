@@ -18,14 +18,13 @@
 
 import qualified ProjectEuler.Prime as Prime
 import qualified ProjectEuler.Util as Util
-import qualified Data.Set as DS
 import Data.List (tails)
 
 allMultiples [] _ = [1]
-allMultiples (p:ps) bound = let xs = allMultiples ps bound
-                                p_powers = takeWhile (<=bound) $ iterate (p*) p
-                                xs_with_p = [ p' * x | p' <- p_powers, x <- xs ]
-                            in filter (<= bound) xs_with_p
+allMultiples (p:ps) bound =
+    let xs = allMultiples ps bound
+        p_powers = iterate (p*) p
+    in concat [ takeWhile (<=bound) [p' * x | p' <- p_powers] | x <- xs ]
 
 primePairs n = [ (p,q) | ps <- takeWhile (\(p:ps) -> p^2 < n) (tails Prime.primes)
                        , let p = head ps
@@ -33,8 +32,8 @@ primePairs n = [ (p,q) | ps <- takeWhile (\(p:ps) -> p^2 < n) (tails Prime.prime
 
 fm p q n = maximum $ allMultiples [p,q] n
 
-fs n = DS.fromList $ [ fm p q n | (p,q) <- primePairs n ]
+fs n = [ fm p q n | (p,q) <- primePairs n ]
 
-solveProblem n = DS.foldl (+) 0 (fs n)
+solveProblem n = sum $ fs n
 
 main = print $ solveProblem (10^7)
