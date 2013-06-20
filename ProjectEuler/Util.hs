@@ -2,6 +2,7 @@ module ProjectEuler.Util
 ( chunks
 , chunksBy
 , tuples
+, ordTuples
 , sublists
 , mergeInf
 , merge
@@ -21,6 +22,15 @@ chunksBy (k:ks) xs = let (front,back) = splitAt k xs
 -- tuples 2 [1,2,3] == [ [1,1], [1,2], [1,3], [2,1], [2,2], [2,3], [3,1], [3,2], [3,3] ]
 tuples 0 _ = [[]] -- only the empty tuple
 tuples k xs = [ x:t | t <- tuples (k-1) xs, x <- xs ]
+
+-- ordTuples yields all the k-tuples where all adjacent elements in the tuple
+-- obey the predicate. For example, if pred == (<) then all tuples will be in
+-- strictly ascending order (as each element will be (<) than its neighbor)
+ordTuples pred 0 _ = [[]] -- only the empty tuple
+ordTuples pred 1 xs = [[x] | x <- xs]
+ordTuples pred k xs = [ x:t | t <- ordTuples pred (k-1) xs
+                            , x <- xs
+                            , x `pred` (head t) ]
 
 -- similar to tuples, but maintains order
 -- `sublists 2` will retrieve all distinct pairs from a list
