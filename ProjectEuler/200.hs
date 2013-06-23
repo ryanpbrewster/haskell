@@ -19,6 +19,7 @@ import Data.List (isInfixOf)
 
 squbes = mergeInf [ [p^2 * q^3 | p <- primes] | q <- primes ]
 
+-- digitPlaces 12345 == [(1,10000), (2,1000), (3,100), (4,10), (5,1)]
 digitPlaces n = digitPlaces' n 1
     where digitPlaces' 0 _ = []
           digitPlaces' n acc = let (q,r) = n `divMod` 10
@@ -28,9 +29,8 @@ isPrimeProof n = let ds = digitPlaces n
                      all_changes = [ n + k*dp | (d,dp) <- ds, k <- [-d..9-d] ]
                  in not $ any test all_changes
 
-solveProblem k =
-    let candidates = filter (\n -> "200" `isInfixOf` (show n)) squbes
-        legits = filter isPrimeProof candidates
-    in legits !! k
+answers = filter isPrimeProof $ filter (isInfixOf "200" . show) squbes
+
+solveProblem k = answers !! k
 
 main = print $ solveProblem 199
