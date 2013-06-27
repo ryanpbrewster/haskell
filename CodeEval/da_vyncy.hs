@@ -100,13 +100,20 @@ mergeFragments a b | a `isInfixOf` b = (b, length a)
     let ov = length $ head $ filter (`isPrefixOf` b) (tails a)
     in (a ++ drop ov b, ov)
 
-reassembleDocument [doc] = doc
 reassembleDocument fragments = let frag_pairs = sublists 2 fragments
                                    overlaps = [ (a,b,mergeFragments a b) | [a,b] <- frag_pairs ] ++
                                               [ (b,a,mergeFragments b a) | [a,b] <- frag_pairs ]
-                                   (a',b',(f',_)) = maximumBy (comparing ov) overlaps
-                               in reassembleDocument (f' : (delete a' $ delete b' fragments))
-    where ov (_,_,(_,x)) = x
+                               in reassembleDocument' overlaps fragments
+
+reassembleDocument' _ [doc] = doc
+reassembleDocument' overlaps fragments =
+    let ov (_,_,(_,x)) = x
+        (a',b',(f',_)) = maximumBy (comparing ov) overlaps
+        new_fragments = delete a' $ delete b' fragments
+        new_overlaps = [ (f',a,mergeFragments f' a) | a <- new_fragments ] ++
+                       [ (a,f',mergeFragments a f') | a <- new_fragments ]
+        old_overlaps = filter (\(a,b,_) -> a /= a' && a /= b' && b /= a' && b /= b') overlaps
+    in reassembleDocument' (old_overlaps ++ new_overlaps) (f':new_fragments)
 
 wordsBy delims s = wordsBy' delims s
     where wordsBy' _ [] = []
