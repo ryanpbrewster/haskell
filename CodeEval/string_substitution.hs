@@ -31,20 +31,13 @@
  -     -> 11100110    [replacing 10 with 11]
  -}
 
-{-
- - The problem statement is incomplete. It is NOT guaranteed that every Fi will
- - be possible to replace. If you find an Fi that is not part of the string,
- - simply ignore it.
- -}
-
-import Data.List (isPrefixOf, isInfixOf)
-
+import Data.List (isPrefixOf)
 import System.Environment (getArgs)
 
 main = do
     args <- getArgs
     txt <- readFile (head args)
-    putStr $ solveProblem txt
+    putStr $ solveProblem txt 
 
 wordsBy pred s = wordsBy' pred $ dropWhile pred s
     where wordsBy' _ [] = []
@@ -54,50 +47,27 @@ wordsBy pred s = wordsBy' pred $ dropWhile pred s
 pairs [] = []
 pairs (x:x':xs) = (x,x') : pairs xs
 
-solveProblem txt = let inputs = [(str, subs) | ln <- lines txt
-                                             , let wrds = wordsBy (`elem` ",;") ln
-                                             , let str = head wrds
-                                             , let subs = pairs (tail wrds) ]
-                       outputs = [ processString str subs | (str,subs) <- inputs ]
-                   in unlines outputs
+solveProblem txt =
+    let inputs = [(str, subs) | ln <- lines txt
+                              , let (str:rest) = wordsBy (`elem` ",;") ln
+                              , let subs = pairs rest ]
+        outputs = [ stringSubs str subs | (str,subs) <- inputs ]
+    in unlines outputs
 
+data StrChunk = SC { getStr :: String, getVis :: Bool }
 
-data StrChunk = SC { getStr :: String
-                   , getVis :: Bool
-                   }
-instance Show StrChunk where
-    show sc = showStrChunk sc
-showStrChunk (SC s v) = show (s,v)
+stringSubs str subs = let unit = [SC str False]
+                      in concat $ map getStr $ foldl stringSub unit subs
 
-concatChunks :: [StrChunk] -> String
-concatChunks = concat . map getStr
+stringSub chks (si,sf) = concat $ map (replace si sf) chks
 
-processString s subs = substituteStrings [SC s False] subs
+replace si sf chk | getVis chk = [chk]
+                  | otherwise =
+    let pieces = breakAroundSubstring (getStr chk) si
+    in [if p == si then SC sf True else SC p False | p <- pieces ]
 
--- pieces of the string to be replaced
---                       |        substitution pairs
---                       |                |
---                       v                v
-substituteStrings :: [StrChunk] -> [(String,String)] -> String
-substituteStrings chks [] = concatChunks chks
-substituteStrings chks (sub:subs) = substituteStrings (makeOneSub chks sub) subs
-
-makeOneSub :: [StrChunk] -> (String,String) -> [StrChunk]
-makeOneSub [] _ = []
-makeOneSub (chk:chks) (si, sf)
-    | getVis chk || not (si `isInfixOf` (getStr chk)) = chk : makeOneSub chks (si,sf)
-    | otherwise = let s = getStr chk
-                      (l,_,r) = breakIntoPieces s si
-                      rest = makeOneSub ((SC r False):chks) (si,sf)
-                  in (SC l False):(SC sf True):rest
-
--- breakIntoPieces takes a string, and a substring, and breaks it
--- into the portion before ss, ss, and the portion after ss
--- Should obey: let (l,_,r) = breakIntoPieces str ss in (l ++ ss ++ r) == str
-breakIntoPieces str@(ch:rest) ss | ss `isPrefixOf` str = ("", ss, drop (length ss) str)
-                                 | otherwise           =
-    let (l,_,r) = breakIntoPieces rest ss
-    in (ch:l, ss, r)
-
-
-
+breakAroundSubstring str ss = filter (not.null) $ breakAroundSubstring' str ss
+breakAroundSubstring' "" _ = [""]
+breakAroundSubstring' str@(ch:rest) ss
+    | ss `isPrefixOf` str = "" : ss : breakAroundSubstring' (drop (length ss) str) ss
+    | otherwise = let (f:ps) = breakAroundSubstring' rest ss in (ch:f):ps
