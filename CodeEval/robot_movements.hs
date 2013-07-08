@@ -13,7 +13,9 @@
  - (its not !!), print out 10, not 10.0 or 10.00 etc)
  -}
 
-data Point = Point Int Int deriving (Show, Eq)
+import Data.Set (empty, insert, member)
+
+data Point = Point Int Int deriving (Show, Eq, Ord)
 
 neighbors4 (Point x y) = [ Point (x+1) y
                          , Point x (y+1)
@@ -24,11 +26,14 @@ neighbors4 (Point x y) = [ Point (x+1) y
 inBounds (Point x_lo y_lo) (Point x_hi y_hi) (Point x y) =
     x_lo <= x && x <= x_hi && y_lo <= y && y <= y_hi
 
-ways path@(cur:_) target | cur == target = 1
-                         | otherwise =
-    let legit p = inBounds (Point 0 0) target p && not (p `elem` path)
+ways cur target = ways' cur empty target
+
+ways' cur vis target | cur == target = 1
+                     | otherwise =
+    let legit p = inBounds (Point 0 0) target p && not (p `member` vis)
         moves = filter legit $ neighbors4 cur
-    in sum [ ways (next:path) target | next <- moves ]
+        vis' = insert cur vis
+    in sum [ ways' next vis' target | next <- moves ]
 
 
-main = print $ ways [(Point 0 0)] (Point 3 3)
+main = print $ ways (Point 0 0) (Point 5 5)
