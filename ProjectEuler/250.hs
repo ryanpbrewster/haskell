@@ -12,15 +12,30 @@
  -    ways[n] += ways[(n-v) `mod` m]
  -}
 
+{-
+ - x^x (mod n) is periodic
+ -
+ - In general, x^(phi n) = 1 (mod n)
+ -             n = 0 (mod n)
+ - So
+ -             (x+k)^(x+k) = x^x (mod n)
+ -      where k = LCM[n, phi n]
+ - Thus, we don't really need to compute all the powerMods
+ - We can just repeat after a certain period, which is lcm n (phi n)
+ -}
+
 import Data.Array.Unboxed
 import Data.Array.ST
 import Control.Monad
 import Control.Monad.ST
+
 import ProjectEuler.Math (powerMod)
+import ProjectEuler.Prime (phi)
 import Data.Int
 
 -- Return a list, ss, where ss !! k is the number of subsets, s, of
 -- of xs where sum(s) == k (mod m)
+subsetSums :: [Int] -> Int -> Int64 -> UArray Int Int64
 subsetSums xs m a = runSTUArray $ do
     arr <- newArray (0,m-1) 0 :: ST s (STUArray s Int Int64)
     writeArray arr 0 1
@@ -32,8 +47,10 @@ subsetSums xs m a = runSTUArray $ do
             writeArray arr idx ((cur+new) `rem` a)
     return arr
 
-solveProblem n m a = let xs = [ powerMod i i m | i <- [1..n] ]
-                         arr = subsetSums xs m a
+solveProblem :: Int -> Int -> Int64 -> Int64
+solveProblem n m a = let period = lcm m (phi m)
+                         xs = cycle [ powerMod i i m | i <- [1..period] ]
+                         arr = subsetSums (take n xs) m a
                      in (arr ! 0) - 1 -- leave out the empty subset
 
 main = print $ solveProblem (250250) (250) (10^16)
