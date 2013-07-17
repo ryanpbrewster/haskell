@@ -53,7 +53,7 @@ union = foldr merge []
 
 
 -- Returns a list of the factors of n
-factors n = factors' n primes
+factors n = factors' (fromIntegral n) primes
     where factors' n (p:ps) | n `mod` p == 0 = p:factors' (n `quot` p) (p:ps)
                             | p*p > n        = if n > 1 then [n] else []
                             | otherwise      = factors' n ps
@@ -89,5 +89,7 @@ sigmaBruteForce k n = sum [ d^k | d <- [1..n], n `mod` d == 0 ]
 
 
 -- Returns the number of integers k < n such that gcd(k,n) == 1
-phi n = let fs = nub $ factors n
-        in n `div` (product fs) * (product $ map (subtract 1) fs)
+phi n = let n' = fromIntegral n
+            fs = nub $ factors n'
+            ans = n' `div` (product fs) * (product [f-1 | f <- fs])
+        in fromIntegral ans
