@@ -24,19 +24,16 @@ import Data.Int
 subsetSums xs m a = runSTUArray $ do
     arr <- newArray (0,m-1) 0 :: ST s (STUArray s Int Int64)
     writeArray arr 0 1
-    forM_ xs $ \i -> do
-        let v = powerMod i i m
-        cpy <- newArray (0,m-1) 0 :: ST s (STUArray s Int Int64)
-        forM_ [0..m-1] $ \n -> do
-            e <- readArray arr n
-            writeArray cpy n e
-        forM_ [0..m-1] $ \n -> do
-            new <- readArray cpy ((n-v) `mod` m)
-            cur <- readArray arr n
-            writeArray arr n ((cur+new) `mod` a)
+    forM_ xs $ \v -> do
+        cpy <- getAssocs arr
+        forM_ cpy $ \(n,new) -> do
+            let idx = (n+v) `rem` m
+            cur <- readArray arr idx
+            writeArray arr idx ((cur+new) `rem` a)
     return arr
 
-solveProblem n m a = let arr = subsetSums [1..n] m a
+solveProblem n m a = let xs = [ powerMod i i m | i <- [1..n] ]
+                         arr = subsetSums xs m a
                      in (arr ! 0) - 1 -- leave out the empty subset
 
 main = print $ solveProblem (250250) (250) (10^16)
