@@ -40,37 +40,43 @@
 
 import Control.Monad
 import Control.Monad.ST
+import Data.STRef
+
 import Data.Array.ST
 import Data.Array.Unboxed
 
 main = print solveProblem
 
 solveProblem = let s = map (^2) [1..100]
-               in uniqueSubsets s 50
+               in sumOfUniqueSubsetSums s 50
 
-test1 = let s = [1,3,6,8,10,11]
-        in uniqueSubsets s 3
+sumOfUniqueSubsetSums xs targ = runST $ do
+    arr <- generateSubsetSumCount xs targ
+    ans <- countSubsets arr targ
+    return ans
 
-test2 = let s = [1..20]
-        in uniqueSubsets s 3
-
-uniqueSubsets xs targ = runST $ do
-    let s = sum xs
-        cumsums = scanl1 (+) xs
-        max_sum = sum $ take targ $ reverse xs
-    arr <- newArray ((0,0), (max_sum,targ)) 0 :: ST s (STUArray s (Int,Int) Int)
+generateSubsetSumCount xs targ = do
+    let n = length xs
+        cumsums = listArray (0,n) $ scanl (+) 0 xs :: UArray Int Int
+        max_sum = (cumsums ! n) - (cumsums ! (n-targ))
+    arr <- newArray ((0,0), (targ,max_sum)) 0 :: ST s (STUArray s (Int,Int) Int)
     writeArray arr (0,0) 1 -- the empty subset
-    forM_ (zip xs cumsums) $ \(v,cs) -> do
-        includeInSums arr v (min cs max_sum)
+    forM_ (zip [1..] xs) $ \(vi,v) -> do
+        let k_hi = min vi targ
+        forM_ [k_hi, k_hi-1..1] $ \k -> do
+            let i_hi = (cumsums ! vi) - (cumsums ! (vi-k))
+            forM_ [i_hi, i_hi-1..v] $ \i -> do
+                cur_ways <- readArray arr (k,i)
+                prev_ways <- readArray arr (k-1,i-v)
+                writeArray arr (k,i) (prev_ways + cur_ways)
+    return arr
 
-    ways <- sequence [ readArray arr (i,targ) | i <- [0..max_sum] ]
-    return $ sum [ i | (i,w) <- zip [0..max_sum] ways, w == 1 ]
 
-includeInSums arr v max_sum = do
-    (_,(_,l)) <- getBounds arr
-    forM_ [max_sum, max_sum-1..v] $ \i -> do
-        forM_ [1..l] $ \k -> do
-            cur_ways <- readArray arr (i,k)
-            when (cur_ways <= 1) $ do
-                prev_ways <- readArray arr (i-v,k-1)
-                writeArray arr (i,k) (prev_ways + cur_ways)
+countSubsets arr targ = do
+    ((_,lo), (_,hi)) <- getBounds arr
+    ans <- newSTRef 0 :: ST s (STRef s Int)
+    forM_ [lo..hi] $ \i -> do
+        ways <- readArray arr (targ,i)
+        when (ways == 1) $ do
+            modifySTRef ans (+i)
+    readSTRef ans
