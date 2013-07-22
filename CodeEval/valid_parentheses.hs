@@ -28,7 +28,6 @@
  -}
 
 import System.Environment (getArgs)
-import Data.Maybe
 
 main = do
     args <- getArgs
@@ -39,29 +38,15 @@ solveProblem txt = let inputs = lines txt
                        anss = map valid inputs
                    in unlines $ map show anss
 
+lefts = "({["
+right '(' = ')'
+right '{' = '}'
+right '[' = ']'
 
-data S = SC V S | Nil
-data V = VC Char S Char
-
-parseS str = let vp = parseV str
-             in case vp of
-                Just (v,rest) -> let (s,fin) = parseS rest in (SC v s, fin)
-                Nothing -> (Nil, str)
-
-
--- parseV returns <Just (v, rest)> if it can successfully pull a V from str
--- Otherwise, it returns Nothing
-parseV (l:str) | not (l `elem` "([{") = Nothing
-               | otherwise = 
-    let r = rightMatch l
-        (s,rest) = parseS str
-    in case rest of
-        (f:fin) -> if f == r then Just (VC l s r, fin) else Nothing
-        _ -> Nothing
-parseV _ = Nothing
-
-rightMatch '(' = ')'
-rightMatch '[' = ']'
-rightMatch '{' = '}'
-
-valid str = let (s,rest) = parseS str in rest == ""
+valid inp = valid' inp ""
+    where valid' "" stk = null stk
+          valid' (ch:inp) stk
+            | ch `elem` lefts         = valid' inp (ch:stk)
+            | null stk                = False
+            | ch == right (head stk)  = valid' inp (tail stk)
+            | otherwise               = False
