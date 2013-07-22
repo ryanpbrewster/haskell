@@ -17,4 +17,8 @@ g1 = tail g'
 g2 = [1,2] ++ g' 3 [2]
     where g' k (c:cs) = c : g' (k+1) (cs ++ replicate c k)
 
-main = print $ g2 !! (10^6)
+-- g3 is faster than g1
+g3 = tail g'
+    where g' = [0,1,2,2] ++ concat [replicate z k | (z,k) <- zip (drop 3 g') [3..] ]
+
+main = print $ g3 !! (5*10^7)
