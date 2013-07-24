@@ -9,3 +9,6 @@ cabal-dev
 *~
 *.exe
 a.out
+
+*.aux
+*.log
