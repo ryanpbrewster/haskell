@@ -1,8 +1,6 @@
 \documentclass{article}
 %include polycode.fmt
-\usepackage{listings, amsmath, amssymb}
-\lstnewenvironment{code}{\lstset{language=Haskell,basicstyle=\small}}{}
-
+\usepackage{minted, amsmath, amssymb}
 
 \newcommand{\pp}[2]{\frac{\partial #1}{\partial #2}}
 
@@ -35,5 +33,10 @@ Finally, we can directly calculate $P_m$.
 \[ P_m = x_1 x_2^2 \cdots x_m^m = \left( \frac{1}{\lambda} \right)^1 \left( \frac{2}{\lambda} \right)^2 \cdots  \left( \frac{m}{\lambda} \right)^m. \]
 
 The Haskell code for this is pretty straightforward.
-\lstinputlisting[language=Haskell, firstline=10,lastline=13]{190.hs}
+\begin{minted}{haskell}
+main = print solveProblem
+solveProblem = sum [ floor (p m) | m <- [2..15] ]
+p m = let lambda = fromIntegral (m+1) / 2
+      in product [ (fromIntegral i / lambda)^i | i <- [1..m] ]
+\end{minted}
 \end{document}
