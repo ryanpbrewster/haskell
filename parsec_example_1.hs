@@ -1,4 +1,4 @@
--- parsec_example_0.hs
+-- parsec_example_1.hs
 {-
  - Do (+), then (*)
  -}
