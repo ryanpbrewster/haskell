@@ -42,6 +42,6 @@ prefactor n = prefactor' n
 findCCPs 0 = [empty]
 findCCPs k = filter legitFront $ mergeInf $ map newCCPs $ findCCPs (k-1)
 
-solveProblem = getTotal $ head $ findCCPs 4
+solveProblem = getTotal $ head $ findCCPs 5
 
 main = print solveProblem

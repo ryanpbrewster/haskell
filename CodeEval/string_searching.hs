@@ -1,6 +1,12 @@
 -- string_searching.hs
 {-
- - You are given two strings. Determine if the second string is a substring of the first (Do NOT use any substr type library function). The second string may contain an asterisk(*) which should be treated as a regular expression i.e. matches zero or more characters. The asterisk can be escaped by a \ char in which case it should be interpreted as a regular '*' character. To summarize: the strings can contain alphabets, numbers, * and \ characters.
+ - You are given two strings. Determine if the second string is a substring of
+ - the first (Do NOT use any substr type library function). The second string
+ - may contain an asterisk(*) which should be treated as a regular expression
+ - i.e. matches zero or more characters. The asterisk can be escaped by
+ - a \ char in which case it should be interpreted as a regular '*' character.
+ - To summarize: the strings can contain alphabets, numbers, * and
+ - \ characters.
  - Input sample:
  -
  - File containing two comma delimited strings per line. e.g.
