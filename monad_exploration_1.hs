@@ -11,3 +11,4 @@ instance Monad Wrapper where
 {- To add two wrappers, we need to ``lift'' the (+) function -}
 main = do
     print $ liftM2 (+) (Wrapper 1) (Wrapper 2)
+    print $ foldl1 (liftM2 (+)) [Wrapper i | i <- [1..10]]
