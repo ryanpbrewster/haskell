@@ -24,7 +24,8 @@
  -}
 
 {-
- - P(k,m,n) = k*(k+m+n-1) + 3/4*m*(m-1) + 1/4*m*n   / (k+m+n)*(k+m+n-1)
+ - P(k,m,n) = 1*(at least one mate is k) + 3/4*(both mates m) + 1/2*(one m, one n)
+ -          = 1*(k*(k-1) + 2*k*(m+n))    + 3/4*(m*(m-1))      + 1/2*(2*m*n) / t*(t-1)
  -}
 
 import System.Environment (getArgs)
