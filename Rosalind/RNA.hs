@@ -1,4 +1,4 @@
--- transcribing_dna_into_rna.hs
+-- RNA.hs
 {-
  - Problem
  -

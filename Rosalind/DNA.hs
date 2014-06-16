@@ -1,4 +1,4 @@
--- counting_dna_nucleotides.hs
+-- DNA.hs
 {-
  - Problem
  -
