@@ -1,9 +1,10 @@
 import System.Environment (getArgs)
-import Text.ParserCombinators.Parsec hiding (count)
 import qualified Data.Array as A
 import qualified Data.Map as M
 import Data.List (intercalate, maximumBy, transpose)
 import Data.Ord (comparing)
+import Rosalind.Structures
+import Rosalind.Parsing
 
 main = do
     args <- getArgs
@@ -18,20 +19,6 @@ solveProblem txt = let fastas = parseFASTAs txt
 {--------------------}
 {- Data definitions -}
 {--------------------}
-data FASTA = FASTA { getID :: ID
-                   , getDNA :: DNA
-                   } deriving (Show, Eq, Ord)
-
-data ID = ID String deriving (Show, Eq, Ord)
-showID (ID id) = id
-
-data DNA = DNA { getNCLs :: [Nucleotide] } deriving (Show, Eq, Ord)
-showDNA (DNA ncls) = concat $ map showNCL ncls
-
-data Nucleotide = Nucleotide Char deriving (Show, Eq, Ord)
-showNCL (Nucleotide ncl) = [ncl]
-alphabet = map Nucleotide "ACGT"
-
 data ProfileMatrix = ProfileMatrix (A.Array (Int,Int) Int) deriving (Show, Eq, Ord)
 showProfileMatrix :: ProfileMatrix -> String
 showProfileMatrix (ProfileMatrix pm) =
@@ -59,26 +46,3 @@ consensusString (ProfileMatrix pm) =
         ncl_idxs = [ maximumBy (comparing (\i -> pm A.! (i,j))) [1..4] | j <- [1..n] ]
         ncl_map = M.fromList $ zip [1..4] alphabet
     in DNA $ map (ncl_map M.!) ncl_idxs
-
-
-{---------------------}
-{- Parsing Functions -}
-{---------------------}
-parseFASTAs :: String -> [FASTA]
-parseFASTAs input = case parse pFASTAs "" input of
-    Right v -> v
-    Left _  -> error $ "Improperly formatted input:" ++ show input
-
-pFASTAs = many pFASTA
-pFASTA = do
-    id <- pID
-    dna <- pDNA
-    return $ FASTA id dna
-
-pID = do
-    char '>'
-    id <- many (noneOf "\n")
-    return $ ID id
-pDNA = do
-    dna_str <- many (oneOf "ACGT\n")
-    return $ DNA $ map Nucleotide $ filter (/='\n') dna_str
