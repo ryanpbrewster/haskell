@@ -23,11 +23,13 @@
  - AC
  -}
 import System.Environment (getArgs)
-import Text.ParserCombinators.Parsec hiding (count)
 import qualified Data.Array as A
 import qualified Data.Map as M
 import Data.List (intercalate, maximumBy, transpose, isInfixOf, nub)
 import Data.Ord (comparing)
+
+import Rosalind.Structures
+import Rosalind.Parsing (parseFASTAs)
 
 main = do
     args <- getArgs
@@ -38,49 +40,9 @@ solveProblem txt = let fastas = parseFASTAs txt
                        anss = longestCommonSubstrings $ map (getNCLs.getDNA) fastas
                    in showDNA $ DNA (head anss)
 
-{--------------------}
-{- Data definitions -}
-{--------------------}
-data FASTA = FASTA { getID :: ID
-                   , getDNA :: DNA
-                   } deriving (Show, Eq, Ord)
-
-data ID = ID String deriving (Show, Eq, Ord)
-showID (ID id) = id
-
-data DNA = DNA { getNCLs :: [Nucleotide] } deriving (Show, Eq, Ord)
-showDNA (DNA ncls) = concat $ map showNCL ncls
-
-data Nucleotide = Nucleotide Char deriving (Show, Eq, Ord)
-showNCL (Nucleotide ncl) = [ncl]
-alphabet = map Nucleotide "ACGT"
-
 {- Solution -}
-expandOption opt = [ a:opt | a <- alphabet ] ++ [ opt ++ [a] | a <- alphabet ]
+expandOption opt = [ opt++[a] | a <- alphabet ] ++ [ [a]++opt | a <- alphabet ]
 longestCommonSubstrings xss = lcss [[]]
     where lcss opts = let maybes = nub $ concat $ map expandOption opts
                           opts' = filter (\m -> all (m `isInfixOf`) xss) maybes
                       in if null opts' then opts else lcss opts'
-
-
-{---------------------}
-{- Parsing Functions -}
-{---------------------}
-parseFASTAs :: String -> [FASTA]
-parseFASTAs input = case parse pFASTAs "" input of
-    Right v -> v
-    Left _  -> error $ "Improperly formatted input:" ++ show input
-
-pFASTAs = many pFASTA
-pFASTA = do
-    id <- pID
-    dna <- pDNA
-    return $ FASTA id dna
-
-pID = do
-    char '>'
-    id <- many (noneOf "\n")
-    return $ ID id
-pDNA = do
-    dna_str <- many (oneOf "ACGT\n")
-    return $ DNA $ map Nucleotide $ filter (/='\n') dna_str
