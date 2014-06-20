@@ -47,7 +47,7 @@ import Text.Printf
 import Data.Ord (comparing)
 import Data.List (maximumBy)
 
-import Rosalind.Parsing (parseFASTAs)
+import Rosalind.Parsing (parseNucFASTAs)
 import Rosalind.Structures
 
 main = do
@@ -55,22 +55,19 @@ main = do
     txt <- readFile (head args)
     putStrLn $ solveProblem txt
 
-solveProblem txt = let inps = parseFASTAs txt
-                       ans = maximumBy (comparing (gcContent.getDNA)) inps
+solveProblem txt = let inps = parseNucFASTAs txt
+                       ans = maximumBy (comparing (gcContent.getSequence)) inps
                        out = showAnswer ans
                    in out
 
 showAnswer fsta@(FASTA id dna) = showID id ++ "\n" ++ printf "%.6f" (100 * gcContent dna)
 
-{------------}
-{- Solution -}
-{------------}
-
 gc :: Nucleotide -> Bool
 gc (Nucleotide n) = n == 'G' || n == 'C'
 
-gcContent :: DNA -> Double
-gcContent (DNA ncls) =
-    let gc_content = length $ filter gc ncls
-        total = length ncls
+gcContent :: BioSequence -> Double
+gcContent ncl_seq =
+    let nucs = getNucs ncl_seq
+        gc_content = length $ filter gc nucs
+        total = length nucs
     in (fromIntegral gc_content) / (fromIntegral total)

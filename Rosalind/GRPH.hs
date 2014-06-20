@@ -39,22 +39,22 @@ import Data.List (intercalate, maximumBy, transpose)
 import Data.Ord (comparing)
 
 import Rosalind.Structures
-import Rosalind.Parsing (parseFASTAs)
+import Rosalind.Parsing (parseNucFASTAs)
 
 main = do
     args <- getArgs
     txt <- readFile (head args)
     putStr $ solveProblem txt
 
-solveProblem txt = let fastas = parseFASTAs txt
+solveProblem txt = let fastas = parseNucFASTAs txt
                        adj_list = makeAdjacencyList fastas
                        outs = [ showID (getID a) ++ " " ++ showID (getID b) | (a,b) <- adj_list ]
                    in unlines outs
 
 makeAdjacencyList xs = filter (overlap 3) [ (a,b) | a <- xs, b <- xs, a /= b ]
 
-overlap k (a,b) = let suff = takeR k $ getNCLs $ getDNA a
-                      pref = takeL k $ getNCLs $ getDNA b
+overlap k (a,b) = let suff = takeR k $ getNucs $ getSequence a
+                      pref = takeL k $ getNucs $ getSequence b
                   in suff == pref
 
 takeL n xs = take n xs

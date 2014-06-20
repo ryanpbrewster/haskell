@@ -11,10 +11,10 @@ main = do
     txt <- readFile (head args)
     putStr $ solveProblem txt
 
-solveProblem txt = let fastas = parseFASTAs txt
-                       pm = makeProfileMatrix $ map getDNA fastas
+solveProblem txt = let fastas = parseNucFASTAs txt
+                       pm = makeProfileMatrix $ map getSequence fastas
                        cs = consensusString pm
-                   in showDNA cs ++ "\n" ++ showProfileMatrix pm
+                   in show cs ++ "\n" ++ showProfileMatrix pm
 
 {--------------------}
 {- Data definitions -}
@@ -23,26 +23,29 @@ data ProfileMatrix = ProfileMatrix (A.Array (Int,Int) Int) deriving (Show, Eq, O
 showProfileMatrix :: ProfileMatrix -> String
 showProfileMatrix (ProfileMatrix pm) =
     let ((1,1), (4,n)) = A.bounds pm
-    in unlines [ showNCL ncl ++ ": " ++ 
+    in unlines [ show ncl ++ ": " ++ 
                    intercalate " " [ show $ pm A.! (i,j) | j <- [1..n] ]
-                   | (i,ncl) <- zip [1..4] alphabet ]
+                   | (i,ncl) <- zip [1..4] allNucleotides ]
 
 {- Solution -}
+count :: Eq a => a -> [a] -> Int
 count e xs = length $ filter (==e) xs
 
 
-makeProfileMatrix :: [DNA] -> ProfileMatrix
-makeProfileMatrix dnas =
-    let n = length $ getNCLs $ head dnas -- length of the DNA strings
+allNucleotides = map newNucleotide "ACGT"
+
+makeProfileMatrix :: [BioSequence] -> ProfileMatrix
+makeProfileMatrix nuc_seqs =
+    let n = length $ getNucs $ head nuc_seqs -- length of the DNA strings
         bds = ((1,1), (4,n)) -- bounds
-        nclm = transpose $ map getNCLs dnas -- base pair matrix
-        pm = [ ((i,j), count ncl col) | (i,ncl) <- zip [1..4] alphabet
-                                     , (j,col) <- zip [1..n] nclm ]
+        nclm = transpose $ map getNucs nuc_seqs
+        pm = [ ((i,j), count ncl col) | (i,ncl) <- zip [1..4] allNucleotides
+                                      , (j,col) <- zip [1..n] nclm ]
     in ProfileMatrix (A.array bds pm)
 
-consensusString :: ProfileMatrix -> DNA
+consensusString :: ProfileMatrix -> BioSequence
 consensusString (ProfileMatrix pm) =
     let ((1,1),(4,n)) = A.bounds pm
         ncl_idxs = [ maximumBy (comparing (\i -> pm A.! (i,j))) [1..4] | j <- [1..n] ]
-        ncl_map = M.fromList $ zip [1..4] alphabet
-    in DNA $ map (ncl_map M.!) ncl_idxs
+        ncl_map = M.fromList $ zip [1..4] allNucleotides
+    in NucleotideSequence $ map (ncl_map M.!) ncl_idxs

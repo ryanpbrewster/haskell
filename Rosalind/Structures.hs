@@ -1,20 +1,52 @@
 module Rosalind.Structures
 where
 
+import Control.Exception (assert)
+import qualified Data.Map as M
+
 data FASTA = FASTA { getID :: ID
-                   , getDNA :: DNA
+                   , getSequence :: BioSequence
                    } deriving (Show, Eq, Ord)
 
 data ID = ID String deriving (Show, Eq, Ord)
 showID (ID id) = id
 
-data DNA = DNA { getNCLs :: [Nucleotide] } deriving (Show, Eq, Ord)
-showDNA (DNA ncls) = concat $ map showNCL ncls
+data BioSequence = NucleotideSequence { getNucs :: [Nucleotide] }
+                 | PeptideSequence { getPeps :: [Peptide] }
+                 deriving (Show, Eq, Ord)
 
-makeDNA :: String -> DNA
-makeDNA str = DNA $ map Nucleotide str
+showSequence (NucleotideSequence ncls) = concat $ map showNucleotide ncls
+showSequence (PeptideSequence peps) = concat $ map showPeptide peps
 
-data Nucleotide = Nucleotide Char deriving (Show, Eq, Ord)
-showNCL (Nucleotide ncl) = [ncl]
+newNucleotideSequence str = NucleotideSequence $ map newNucleotide str
+newPeptideSequence str = PeptideSequence $ map newPeptide str
 
-alphabet = map Nucleotide "ACGT"
+data Nucleotide = Nucleotide Char deriving (Eq, Ord)
+instance Show Nucleotide where show = showNucleotide
+showNucleotide (Nucleotide ncl) = [ncl]
+
+nucleotideAlphabet = "ACGTU"
+newNucleotide chr = assert (chr `elem` nucleotideAlphabet) $ Nucleotide chr
+
+data Peptide = Peptide Char deriving (Eq, Ord)
+instance Show Peptide where show = showPeptide
+showPeptide (Peptide ncl) = [ncl]
+
+peptideAlphabet = "ACDEFGHIKLMNPQRSTVWY"
+newPeptide chr = assert (chr `elem` peptideAlphabet) $ Peptide chr
+
+data CodonInstruction = MakePeptide Peptide | Stop deriving (Show, Eq, Ord)
+
+c_CODON_MAP = M.fromList $ zip ncl_seqs cis
+    where seqs = ["UUU","CUU","AUU","GUU","UUC","CUC","AUC","GUC"
+                 ,"UUA","CUA","AUA","GUA","UUG","CUG","AUG","GUG"
+                 ,"UCU","CCU","ACU","GCU","UCC","CCC","ACC","GCC"
+                 ,"UCA","CCA","ACA","GCA","UCG","CCG","ACG","GCG"
+                 ,"UAU","CAU","AAU","GAU","UAC","CAC","AAC","GAC"
+                 ,"CAA","AAA","GAA","CAG","AAG","GAG","UGU","CGU"
+                 ,"AGU","GGU","UGC","CGC","AGC","GGC","CGA","AGA"
+                 ,"GGA","UGG","CGG","AGG","GGG","UAA","UAG","UGA"
+                 ]
+          peptides = "FLIVFLIVLLIVLLMVSPTASPTASPTASPTAYHNDYHNDQKEQKECRSGCRSGRRGWRRG"
+          ncl_seqs = [ map newNucleotide seq | seq <- seqs ]
+          cis = [ MakePeptide (newPeptide chr) | chr <- peptides ] ++ replicate 3 Stop

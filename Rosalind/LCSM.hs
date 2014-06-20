@@ -36,18 +36,19 @@ import Data.List (intercalate, maximumBy, transpose, isInfixOf, nub)
 import Data.Ord (comparing)
 
 import Rosalind.Structures
-import Rosalind.Parsing (parseFASTAs)
+import Rosalind.Parsing (parseNucFASTAs)
 
 main = do
     args <- getArgs
     txt <- readFile (head args)
     putStrLn $ solveProblem txt
 
-solveProblem txt = let fastas = parseFASTAs txt
-                       ncl_strs = map (getNCLs . getDNA) fastas
+solveProblem txt = let fastas = parseNucFASTAs txt
+                       ncl_strs = map (showSequence . getSequence) fastas
                        anss = longestCommonSubstrings ncl_strs
-                   in showDNA $ DNA (head anss)
+                   in head anss
 
+longestCommonSubstrings :: Eq a => [[a]] -> [[a]]
 longestCommonSubstrings (xs:xss) =
     let f l = null (commonSubstrings l xs xss)
         len = binarySearch f 0 (length xs + 1)
