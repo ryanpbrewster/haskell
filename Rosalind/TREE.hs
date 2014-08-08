@@ -40,22 +40,23 @@
  - Data.Graph includes functions that do this for you.
  -}
 
+{-
+ - We're guaranteed that none of the components have cycles. That necessarily
+ - means that the full tree is minimally connected, and thus must have
+ -     |E| = |V|-1
+ - Just figure out how many edges need to be added to bring it up to that
+ - total.
+ -     required_edges = |V| - 1 - |E_0|
+ -}
+
 
 import System.Environment (getArgs)
-import Data.Graph (buildG, components)
 
 main = do
     args <- getArgs
     txt <- readFile (head args)
     putStrLn $ solveProblem txt
 
-solveProblem txt = let (n_vertices, edge_list) = parseInput txt
-                       g = buildG (1,n_vertices) edge_list
-                       ans = length (components g) - 1
+solveProblem txt = let (v:es) = lines txt
+                       ans = (read v) - 1 - length es
                    in show ans
-
-parseInput txt =
-    let (v_str:es_str) = lines txt
-        v = read v_str
-        es = [ (s, d) | ln <- es_str, let [s,d] = map read (words ln) ]
-    in (v, es)
