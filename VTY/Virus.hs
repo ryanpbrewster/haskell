@@ -6,6 +6,7 @@
 import Graphics.Vty.Widgets.All
 import Graphics.Vty
 import qualified Data.Text as T
+import qualified Data.Set as S
 import Data.Array
 import Data.List (intercalate)
 import System.Exit (exitSuccess)
@@ -31,17 +32,27 @@ instance Show Grid where
             lns = [ map cellChar [arr ! (i,j)|j <- [1..cc]] | i <- [1..rr] ]
         in intercalate "\n" lns
 
-inBounds (i,j) (rr,cc) = (1 <= i) && (i <= rr) && (1 <= j) && (j <= cc)
-neighbors (i,j) (rr,cc) = filter (`inBounds` (rr,cc)) [ (i,j+1), (i-1,j), (i,j-1), (i+1,j) ]
+inBounds (i,j) ((rlo,clo),(rhi,chi)) = (rlo <= i) && (i <= rhi) && (clo <= j) && (j <= chi)
+neighbors (i,j) bounds = filter (`inBounds` bounds) [ (i,j+1), (i-1,j), (i,j-1), (i+1,j) ]
 
 infect :: Grid -> Cell -> Grid
-(Grid arr) `infect` cell_type =
-    let ((1,1), (rr,cc)) = bounds arr
-        vulnerable = [ (i,j) | i <- [1..rr]
-                             , j <- [1..cc]
-                             , arr ! (i,j) == cell_type
-                             , any (\idx -> arr ! idx == virus) (neighbors (i,j) (rr,cc)) ]
-    in Grid $ arr // [ (idx, virus) | idx <- vulnerable ]
+g@(Grid arr) `infect` cell_type = Grid $ arr // [ (idx,virus) | idx <- bfsVulnerableCells g cell_type ]
+
+-- bfs through the grid and find all of the vulnerable cells
+-- Vulnerability is defined as those cells of type cell_type that are next to
+-- a virus or next to a vulnerable cell
+bfsVulnerableCells :: Grid -> Cell -> [(Int,Int)]
+bfsVulnerableCells (Grid arr) cell_type = let infected = head $ filter (isVirus . (arr!)) (indices arr)
+                                          in bfs [infected] S.empty []
+    where isVuln ct = ct == virus || ct == cell_type
+          bfs []     vis vuln = vuln
+          bfs (x:xs) vis vuln
+              | x `S.member` vis = bfs xs vis vuln
+              | otherwise        =
+                  let ns = neighbors x (bounds arr)
+                      vuln_ns = [ n | n <- ns, isVuln (arr ! n) ]
+                      vuln' = if (arr!x) == cell_type then (x:vuln) else vuln
+                  in bfs (vuln_ns ++ xs) (S.insert x vis) vuln'
 
 {--------------------------------------------------------------}
 {- New Widget definition for displaying and updating the grid -}
@@ -58,17 +69,19 @@ newGridWidget init_grid = do
 infectGridWidget wRef cell_type = updateWidgetState wRef (`infect` cell_type)
 
 
+{-------------------------------------------------------------}
+{- Main driver. Initialize a random grid, then run the game. -}
+{-------------------------------------------------------------}
 main = do
     let (rr,cc) = (15,45)
+    let cell_range = ('a', 'd')
     rng <- getStdGen
-    let rnds = map Cell $ randomRs ('a', 'c') rng
+    let rnds = map Cell $ randomRs cell_range rng
     let init_grid = Grid $ listArray ((1,1), (rr,cc)) $ virus : take (rr*cc-1) rnds
-
     runGame init_grid
 
 runGame init_grid = do
     gw <- newGridWidget init_grid
-
     bgw <- bordered gw
 
     fg <- newFocusGroup
@@ -76,12 +89,11 @@ runGame init_grid = do
 
     fg `onKeyPressed` \_ key _ ->
         case key of
-            KEsc -> exitSuccess
-            KASCII ch -> do gw `infectGridWidget` (Cell ch)
-                            return True
-            _ -> return False
+            KEsc      -> exitSuccess
+            KASCII ch -> gw `infectGridWidget` (Cell ch) >> return True
+            _         -> return False
 
     c <- newCollection
-    showfg <- addToCollection c bgw fg
+    _ <- addToCollection c bgw fg
 
     runUi c defaultContext
