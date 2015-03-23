@@ -12,35 +12,39 @@ maxAdd e xx@(viewr -> xs :> x)
     | e > x     = maxAdd e xs
     | otherwise = xx |> e
 
-windowMin winlen xs =
-    let (a,b) = splitAt winlen xs
-        w0 = foldl (flip minAdd) empty a
-    in windowMinHelper w0 b xs
 
--- windowMinHelper window cur backset
--- If cur == [], we are done. Give the final minimum and exit
-windowMinHelper w@(viewl -> m :< w') [] _ = [m]
--- Else, process the current element, possibly remove the minimum, and go on
-windowMinHelper w@(viewl -> m :< w') (x:xs) (b:bs)
-    | b == m    = m : windowMinHelper (minAdd x w') xs bs
-    | otherwise = m : windowMinHelper (minAdd x w)  xs bs
-
-
-
+-- windowMax returns a list of window maxima
+-- windowMax 3 [3,1,4,1,5,9,2,6] will yield
+--     [ maximum [3,1,4]
+--     , maximum [1,4,1]
+--     , maximum [4,1,5]
+--     ... ]
+-- It does this in a kind of clever way using double-ended queues
 windowMax winlen xs =
     let (a,b) = splitAt winlen xs
         w0 = foldl (flip maxAdd) empty a
-    in windowMaxHelper w0 b xs
+    in windowHelper w0 b xs maxAdd
 
--- windowMaxHelper window cur backset
--- See windowMinHelper for explanation
-windowMaxHelper w@(viewl -> m :< w') [] _ = [m]
-windowMaxHelper w@(viewl -> m :< w') (x:xs) (b:bs)
-    | b == m    = m : windowMaxHelper (maxAdd x w') xs bs
-    | otherwise = m : windowMaxHelper (maxAdd x w)  xs bs
-
+windowMin winlen xs =
+    let (a,b) = splitAt winlen xs
+        w0 = foldl (flip minAdd) empty a
+    in windowHelper w0 b xs minAdd
 
 differentials winlen xs =
     let maxs = windowMax winlen xs
         mins = windowMin winlen xs
     in zipWith (-) maxs mins
+
+
+
+-- windowHelper window cur backset add
+-- "backset" is the same list as cur, but backset but the length of the window
+
+-- If cur == [], we are done. Give the final extremum and exit
+windowHelper w@(viewl -> m :< w') [] _ _ = [m]
+-- Else, process the current element, possibly remove the extremum, and go on
+windowHelper w@(viewl -> m :< w') (x:xs) (b:bs) add
+    | b == m    = m : windowHelper (add x w') xs bs
+    | otherwise = m : windowHelper (add x w)  xs bs
+
+
