@@ -1,6 +1,9 @@
-import Data.Sequence hiding (splitAt, zipWith)
+module WindowExtrema
+( windowMax
+, windowMin
+) where
 
-{-# LANGUAGE ViewPatterns #-}
+import Data.Sequence hiding (splitAt, zipWith)
 
 minAdd e (viewl -> EmptyL) = singleton e
 minAdd e xx@(viewr -> xs :> x)
@@ -46,5 +49,3 @@ windowHelper w@(viewl -> m :< w') [] _ _ = [m]
 windowHelper w@(viewl -> m :< w') (x:xs) (b:bs) add
     | b == m    = m : windowHelper (add x w') xs bs
     | otherwise = m : windowHelper (add x w)  xs bs
-
-
