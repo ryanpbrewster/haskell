@@ -47,5 +47,5 @@ differentials winlen xs =
 windowHelper w@(viewl -> m :< w') [] _ _ = [m]
 -- Else, process the current element, possibly remove the extremum, and go on
 windowHelper w@(viewl -> m :< w') (x:xs) (b:bs) add
-    | b == m    = m : windowHelper (add x w') xs bs
-    | otherwise = m : windowHelper (add x w)  xs bs
+    | b == m    = m : windowHelper (add x w') xs bs add
+    | otherwise = m : windowHelper (add x w)  xs bs add
