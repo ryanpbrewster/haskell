@@ -12,3 +12,5 @@ a.out
 
 *.aux
 *.log
+
+foo.hs
