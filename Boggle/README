@@ -1,0 +1,19 @@
+Author: Ryan Brewster
+Date: 2015-04-19
+Time elapsed: ~2 hours
+
+The program enclosed will solve the problem described in problem_statement.pdf
+
+The input files have been modified in the following way:
+    <board> files have had the first line, which has the number of layers in
+        the board, removed
+
+It can be compiled by executing:
+    ghc -O2 -o boggle.exe Boggle.hs
+
+It can be run by executing:
+    ./boggle.exe <boardfile> <dictionaryfile>
+
+Two example board files, and two example dictionary files, are provided
+testboard1.in and testdictionary1.in are small, and run very fast
+testboard2.in and testdictionary2.in are quite large, and will take ~1s to run
