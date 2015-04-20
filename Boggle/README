@@ -17,3 +17,13 @@ It can be run by executing:
 Two example board files, and two example dictionary files, are provided
 testboard1.in and testdictionary1.in are small, and run very fast
 testboard2.in and testdictionary2.in are quite large, and will take ~1s to run
+
+
+One of the nice things about this solution is that it can be used to solve
+standard Boggle boards as well. Note that all the logic uses the Board
+typeclass, which only needs to know how to do three things:
+    Retrieve a cell at a specific location
+    Find a list of all the Cells on the board
+    Given a Cell, find all of its neighbors
+A square Boggle board wouldn't take much effort to implement, and it should
+just "plug and play" into the solveBoggle function.
