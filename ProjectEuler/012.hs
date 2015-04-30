@@ -24,6 +24,10 @@
 
 import ProjectEuler.Prime (sigma)
 
-solveProblem divisor_bound = head [ t | i <- [1..], let t = i*(i+1) `quot` 2, sigma 0 t > divisor_bound ]
+solveProblem divisor_bound =
+    let pents = map (\x -> x*(x+1) `quot` 2) [1..]
+        legal p = sigma 0 p > divisor_bound
+        answers = filter legal pents
+    in head answers
 
 main = print $ solveProblem 500
