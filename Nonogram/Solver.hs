@@ -1,6 +1,5 @@
-module Nonogram.Solver (
-solve
-) where
+module Nonogram.Solver
+where
 
 import Nonogram.Base
 import qualified Data.Array as A
