@@ -9,24 +9,26 @@ import Control.Monad
 
 main = do
   nodes <- fmap (map parseNode . lines) (readFile "07.input")
-  let a = (solve nodes) M.! (NodeId "a")
+  let a = (solve nodes) M.! "a"
   let nodes2 = [ n | n@(Node nId _) <- nodes, nId /= NodeId "b" ] ++ [ Node (NodeId "b") (Derived0 $ ConstSource a) ]
-  let a' = (solve nodes2) M.! (NodeId "a")
+  let a' = (solve nodes2) M.! "a"
   print a
   print a'
   
 
-newtype NodeId = NodeId String deriving (Eq, Ord, Show)
-data Source = NodeSource NodeId | ConstSource Int deriving (Show)
+data Source = Node String | Const Int deriving (Show)
 
-asNode :: Source -> Maybe NodeId
-asNode (NodeSource nId) = Just nId
+asNode :: Source -> Maybe String
+asNode (Node nId) = Just nId
 asNode _ = Nothing
 
-data NodeInput = Derived0 Source
-               | Derived1 Op1 Source 
-               | Derived2 Op2 Source Source
+data NodeInput = Const Source | Not Source 
+               | LeftShift Source Source
+               | RightShift Source Source
+               | And Source Source
+               | Or Source Source
                deriving (Show)
+
 sources :: NodeInput -> [Source]
 sources (Derived0 s) = [s]
 sources (Derived1 _ s) = [s]
