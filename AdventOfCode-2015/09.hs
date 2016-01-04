@@ -1,6 +1,6 @@
 -- 09.hs
 import Text.ParserCombinators.Parsec
-import Data.List (tails, permutations, minimumBy, nub)
+import Data.List (tails, permutations, minimumBy, maximumBy, nub)
 import Data.Ord (comparing)
 import qualified Data.Array as A
 import qualified Data.Map as M
@@ -15,6 +15,7 @@ newtype Weight = Weight Int deriving (Eq, Ord, Show)
 main = do
   graph <- fmap (buildGraph . map parseEdge . lines) (readFile "09.input")
   print $ pathLength $ travelingSalesman graph
+  print $ pathLength $ longestTravelingSalesman graph
 
 sliding k xs = takeWhile (\w -> length w == k) $ map (take k) (tails xs)
 pathLength (Path es) = Weight $ sum [ w | Edge a b (Weight w) <- es ]
@@ -24,6 +25,13 @@ travelingSalesman (Klique verts weightMatrix) =
     let n = V.length verts
         allPossiblePaths = map vertexPath (permutations [0..n-1])
     in minimumBy (comparing pathLength) allPossiblePaths
+  where vertexPath idxs = Path [ Edge (verts V.! i) (verts V.! j) (weightMatrix A.! (i,j)) | [i,j] <- sliding 2 idxs ]
+
+longestTravelingSalesman :: Klique -> Path
+longestTravelingSalesman (Klique verts weightMatrix) =
+    let n = V.length verts
+        allPossiblePaths = map vertexPath (permutations [0..n-1])
+    in maximumBy (comparing pathLength) allPossiblePaths
   where vertexPath idxs = Path [ Edge (verts V.! i) (verts V.! j) (weightMatrix A.! (i,j)) | [i,j] <- sliding 2 idxs ]
 
 buildGraph :: [Edge] -> Klique
