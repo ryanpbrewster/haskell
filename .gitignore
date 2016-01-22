@@ -18,3 +18,4 @@ foo.hs
 .idea
 *.iml
 *.cabal
+*/.stack-work
