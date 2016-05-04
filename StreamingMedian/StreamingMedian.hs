@@ -7,23 +7,21 @@ import qualified Data.PQueue.Max as Max
 
 streamingMedian :: [Double] -> [Double]
 streamingMedian [] = []
-streamingMedian (x:xs) = streamingMedian' (Max.singleton x) (Min.singleton x) 1 xs
-
-
--- we have processed `k` elements so far
-streamingMedian' lo_max_pq hi_min_pq k [] = [avg (Max.findMax lo_max_pq) (Min.findMin hi_min_pq)]
-streamingMedian' lo_max_pq hi_min_pq k (x:xs) =
-  let lo = Max.findMax lo_max_pq
-      hi = Min.findMin hi_min_pq
-      median = avg lo hi
-      (lo_max_pq', hi_min_pq') = if odd k
-                                 then ( Max.deleteMax (Max.insert x lo_max_pq)
-                                      , Min.deleteMin (Min.insert x hi_min_pq)
-                                      )
-                                 else if x <= median
-                                      then ( Max.insert x lo_max_pq, Min.insert (max x lo) hi_min_pq )
-                                      else ( Max.insert (min x hi) lo_max_pq, Min.insert x hi_min_pq )
-  in median : streamingMedian' lo_max_pq' hi_min_pq' (k+1) xs
+streamingMedian (x:xs) = streamingMedian' (Max.singleton x) Min.empty xs
+  where
+  streamingMedian' maxPQ minPQ [] = [medianFromHeaps maxPQ minPQ]
+  streamingMedian' maxPQ minPQ (x:xs) =
+    let median = medianFromHeaps maxPQ minPQ
+        (maxPQ', minPQ') = balancePQs $ if x <= median then (Max.insert x maxPQ, minPQ) else (maxPQ, Min.insert x minPQ)
+    in median : streamingMedian' maxPQ' minPQ' xs
+  medianFromHeaps maxPQ minPQ
+    | Max.size maxPQ == Min.size minPQ = avg (Max.findMax maxPQ) (Min.findMin minPQ)
+    | Max.size maxPQ > Min.size minPQ = Max.findMax maxPQ
+    | otherwise                       = Min.findMin minPQ
+  balancePQs (maxPQ, minPQ)
+    | abs (Max.size maxPQ - Min.size minPQ) <= 1 = (maxPQ, minPQ)
+    | Max.size maxPQ > Min.size minPQ = balancePQs (Max.deleteMax maxPQ, Min.insert (Max.findMax maxPQ) minPQ)
+    | Max.size maxPQ < Min.size minPQ = balancePQs (Max.insert (Min.findMin minPQ) maxPQ, Min.deleteMin minPQ)
 
 avg :: Double -> Double -> Double
 avg x y = 0.5 * (x+y)

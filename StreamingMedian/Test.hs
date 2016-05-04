@@ -1,4 +1,5 @@
-import Data.List (sort, inits)
+import Data.List (sort, sortBy, inits)
+import Data.Ord (comparing)
 import StreamingMedian
 import System.Random
 import Control.Monad (forM_, when)
@@ -13,8 +14,8 @@ main = do
   let n = 100
   let prng = mkStdGen 42
   let lens = randomRs (5, 1000) prng :: [Int]
-  let lists = take n $ chunksOf lens $ map fromIntegral $ (randomRs (0, 99) prng :: [Int])
-  let tests = zip (map streamingMedian lists) (map bfStreamingMedian lists)
+  let lists = sortBy (comparing length) $ take n $ chunksOf lens $ map fromIntegral $ (randomRs (0, 99) prng :: [Int])
+  let tests = zip (map streamingMedian  lists) (map bfStreamingMedian lists)
   let failed_tests = filter snd $ map (\(x,y) -> ((x,y), x /= y)) tests
   when (null failed_tests) $ putStrLn "All tests passed"
   forM_ failed_tests $ \((x,y), _) -> do
