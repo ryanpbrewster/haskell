@@ -15,34 +15,45 @@ Find the smallest value of K such that the sheep can access more than half
 of the meadow (sheep can only move up/down/left/right
 -}
 
+{-# LANGUAGE ViewPatterns #-}
+
 import qualified Data.Array as A
-import qualified Data.Set as S
+import qualified Data.IntSet as S
+import qualified Data.PSQueue as PQ
+
+type Height = Int
+type Bravery = Int
+type Position = (Int, Int)
 
 main = do
   grid <- fmap parseGrid getContents
-  print $ findMinK grid
+  print $ findMinK grid 0.5
 
-parseGrid :: String -> (A.Array (Int, Int) Int)
+parseGrid :: String -> (A.Array Position Height)
 parseGrid txt =
   let txtGrid = map words $ lines txt
       (m, n) = (length txtGrid, length $ head txtGrid)
   in A.listArray ((0,0),(m-1,n-1)) (map read $ concat txtGrid)
 
-findMinK :: A.Array (Int, Int) Int -> Int
-findMinK grid =
+findMinK :: A.Array Position Height -> Double -> Bravery
+findMinK grid chi =
   let ((ilo, jlo), (ihi, jhi)) = A.bounds grid
       area = (ihi - ilo + 1) * (jhi - jlo + 1)
-      validKs = filter (\k -> numAccessibleCells grid k >= area `div` 2 ) [0..]
-  in head validKs
+      threshold = ceiling (chi * fromIntegral area)
+  in fst $ (explore grid) !! threshold
 
-numAccessibleCells :: A.Array (Int, Int) Int -> Int -> Int
-numAccessibleCells grid k = S.size $ accessibleCells [(0,0)] (S.empty)
+explore :: A.Array Position Height -> [(Bravery, Position)]
+explore grid = exploreHelper (PQ.singleton (0, 0) 0) (S.singleton 0)
   where
-  inBounds (i,j) =
-    let ((ilo, jlo), (ihi, jhi)) = A.bounds grid
-    in ilo <= i && i <= ihi && jlo <= j && j <= jhi
-  neighbors (i,j) = [(i+1,j), (i-1,j), (i,j+1), (i,j-1)]
-  accessibleCells [] visited = visited
-  accessibleCells (n:q) visited
-    | not (inBounds n) || grid A.! n > k || S.member n visited = accessibleCells q visited
-    | otherwise = accessibleCells (q ++ neighbors n) (S.insert n visited)
+  exploreHelper (PQ.minView -> Nothing) vis = []
+  exploreHelper (PQ.minView -> Just (pos PQ.:-> k, pq)) vis =
+    let newPositions = filter (\n -> inBounds n && not (S.member (flat n) vis)) (neighbors pos)
+        updatePQ pq_ pos_ = PQ.insert pos_ (max k (grid A.! pos_)) pq_
+        pq' = foldl updatePQ pq newPositions
+    in (k, pos) : (exploreHelper pq' (S.union vis $ S.fromList $ map flat newPositions))
+
+  (m, n) = let ((0,0), (ihi,jhi)) = A.bounds grid in (ihi+1, jhi+1)
+  flat (i, j) = n * i + j
+  inBounds (i,j) = 0 <= i && i < m && 0 <= j && j < n
+
+neighbors (i,j) = [(i+1,j), (i-1,j), (i,j+1), (i,j-1)]
