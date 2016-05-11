@@ -6,10 +6,9 @@
 
 {-# LANGUAGE ViewPatterns #-}
 import Control.Monad
-import Control.Monad.ST
+import Control.Monad.ST.Lazy
 import Debug.Trace
 import Data.Array.ST
-import Data.Array.Unboxed
 import qualified Data.Array as A
 import qualified Data.Dequeue as Q
 
@@ -20,7 +19,7 @@ c_GRID0 = [ "....xxxxxxxxxxxx"
           , "xxxxxxxxx..xxxxx"
           ]
 c_GRID1 = let n = 500 in [[ if (i*n+j) `mod` 97 == 0 && j > 0 then 'x' else '.' | j <- [0..n-1]] | i <- [0..n-1]]
-main = print $ take 1 $ explore c_GRID1
+main = print $ take 100 $ explore c_GRID1
 
 type Position = (Int, Int)
 explore :: [[Char]] -> [Position]
@@ -33,7 +32,7 @@ neighbors :: Position -> [Position]
 neighbors (i, j) = [ (i,j+1), (i-1,j), (i,j-1), (i+1,j) ]
 
 explorePure :: A.Array Position Bool -> [Position]
-explorePure grid0 = explore' (grid0 // [((0,0), True)]) (Q.pushBack Q.empty (0,0) :: Q.BankersDequeue Position)
+explorePure grid0 = explore' (grid0 A.// [((0,0), True)]) (Q.pushBack Q.empty (0,0) :: Q.BankersDequeue Position)
   where
   (m, n) = let ((0, 0), (ihi, jhi)) = A.bounds grid0 in (ihi + 1, jhi + 1)
   inBounds (i, j) = 0 <= i && i < m && 0 <= j && j < n
@@ -41,17 +40,20 @@ explorePure grid0 = explore' (grid0 // [((0,0), True)]) (Q.pushBack Q.empty (0,0
   explore' grid (Q.popFront -> Just (p, q)) =
     let ns = filter (\n -> inBounds n && not (grid A.! n)) (neighbors p)
         q' = foldl Q.pushBack q ns
-        grid' = grid // zip ns (repeat True)
+        grid' = grid A.// zip ns (repeat True)
     in p : explore' grid' q'
 
 
 exploreST :: A.Array Position Bool -> [Position]
-exploreST grid0 = runST $ (thaw grid0 :: ST s (STUArray s Position Bool)) >>= \gm0 -> explore' gm0 (0,0)
+exploreST grid0 = runST $ do
+  gridMut0 <- thaw grid0 :: ST s (STArray s Position Bool)
+  explore' gridMut0 (0,0)
   where
   (m, n) = let ((0, 0), (ihi, jhi)) = A.bounds grid0 in (ihi + 1, jhi + 1)
   inBounds (i, j) = 0 <= i && i < m && 0 <= j && j < n
+  explore' :: STArray s Position Bool -> Position -> ST s [Position]
   explore' gridMut p = do
-    vis <- readArray gridMut p
+    vis <- traceShow p $ readArray gridMut p
     if vis then return [] else do
       writeArray gridMut p True
       rests <- mapM (explore' gridMut) (filter inBounds $ neighbors p)
