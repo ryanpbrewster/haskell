@@ -43,14 +43,7 @@ kindaGreedy k countries
     in numToUse + kindaGreedy k countries'
 
 bsOnAnswer k countries = binarySearch (canFormNGroups k countries) (0, sum countries + 1)
-
-canFormNGroups k countries n = canForm' countries (n*k)
-  where
-  canForm' _ numPeopleToFinish | numPeopleToFinish <= 0 = True
-  canForm' [] numPeopleToFinish = False
-  canForm' (first:rest) numPeopleToFinish =
-    let numUsed = min first n
-    in canForm' rest (numPeopleToFinish - numUsed)
+canFormNGroups k countries n = sum (map (min n) countries) >= n*k
 
 binarySearch f (lo, hi)
   | lo >= hi = lo
