@@ -21,8 +21,7 @@ c_GRID0 = [ "....xxxxxxxxxxxx"
 c_GRID1 = let n = 500 in [[ if (i*n+j) `mod` 97 == 0 && j > 0 then 'x' else '.' | j <- [0..n-1]] | i <- [0..n-1]]
 main = do
   let grid = toGrid c_GRID1
-  print $ length $ take 1000 $ exploreST grid
-  print $ length $ take 1000 $ explorePure grid
+  print $ length $ exploreST grid
 
 type Position = (Int, Int)
 toGrid :: [[Char]] -> A.Array Position Bool
@@ -49,14 +48,15 @@ explorePure grid0 = explore' (grid0 A.// [((0,0), True)]) (Q.pushBack Q.empty (0
 exploreST :: A.Array Position Bool -> [Position]
 exploreST initGrid = runST $ do
   visGrid <- newArray (A.bounds initGrid) False
-  explore' visGrid (0,0)
+  explore' visGrid [(0,0)]
   where
   (m, n) = let ((0, 0), (ihi, jhi)) = A.bounds initGrid in (ihi + 1, jhi + 1)
   inBounds (i, j) = 0 <= i && i < m && 0 <= j && j < n
-  explore' :: STArray s Position Bool -> Position -> ST s [Position]
-  explore' visGrid p = do
+  explore' :: STArray s Position Bool -> [Position] -> ST s [Position]
+  explore' visGrid [] = return []
+  explore' visGrid (p:ps) = do
     vis <- readArray visGrid p
-    if vis || initGrid A.! p then return [] else do
+    if vis || initGrid A.! p then explore' visGrid ps else do
       writeArray visGrid p True
-      rests <- mapM (explore' visGrid) (filter inBounds $ neighbors p)
-      return (p : concat rests)
+      rest <- explore' visGrid (filter inBounds (neighbors p) ++ ps)
+      return (p : rest)
