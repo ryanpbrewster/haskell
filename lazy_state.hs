@@ -1,24 +1,36 @@
--- imperative_programming_2.hs
+-- lazy_state.hs
 {-
  - An exploration of "imperative-style" programming within Haskell, using
  - the State monad.
  -}
 
-import Control.Monad
-import Control.Monad.ST.Lazy
-import Data.Array.ST
+import qualified Control.Monad.ST as STS
+import qualified Data.STRef as STRS
 
-main = print $ take 20 (stRange 1000000)
+import qualified Control.Monad.ST.Lazy as STL
+import qualified Data.STRef.Lazy as STRL
 
-stRange :: Int -> [Int]
-stRange n = runST $ do
-  arr <- newArray (0, 0) 0 :: ST s (STArray s Int Int)
-  range' arr
+main = do
+  let n = 10^7
+  print $ take 20 (lazyRange n)
+  print $ take 20 (strictRange n)
+
+strictRange :: Int -> [Int]
+strictRange n = STS.runST $ STRS.newSTRef 0 >>= range'
   where
-  range' :: STArray s Int Int -> ST s [Int]
-  range' arr = do
-    x <- readArray arr 0
+  range' xref = do
+    x <- STRS.readSTRef xref
     if x >= n then return [] else do
-      writeArray arr 0 (x+1)
-      xs <- range' arr
+      STRS.writeSTRef xref (x+1)
+      xs <- range' xref
+      return (x : xs)
+
+lazyRange :: Int -> [Int]
+lazyRange n = STL.runST $ STRL.newSTRef 0 >>= range'
+  where
+  range' xref = do
+    x <- STRL.readSTRef xref
+    if x >= n then return [] else do
+      STRL.writeSTRef xref (x+1)
+      xs <- range' xref
       return (x : xs)
