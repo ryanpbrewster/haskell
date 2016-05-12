@@ -1,16 +1,12 @@
 -- imperative_programming_2.hs
 {-
- - An exploration of "imperative-style" programming within Haskell, using
- - the State monad.
+ - Flood-fill using the ST monad (and a reference "pure" non-monadic implementation).
  -}
 
-{-# LANGUAGE ViewPatterns #-}
-import Control.Monad
 import Control.Monad.ST.Lazy
 import Debug.Trace
 import Data.Array.ST
 import qualified Data.Array as A
-import qualified Data.Dequeue as Q
 
 c_GRID0 = [ "....xxxxxxxxxxxx"
           , "x....xx.......xx"
@@ -18,10 +14,10 @@ c_GRID0 = [ "....xxxxxxxxxxxx"
           , "x......xx.....xx"
           , "xxxxxxxxx..xxxxx"
           ]
-c_GRID1 = let n = 500 in [[ if (i*n+j) `mod` 97 == 0 && j > 0 then 'x' else '.' | j <- [0..n-1]] | i <- [0..n-1]]
+c_GRID1 = let n = 100 in [[ if (i*n+j) `mod` 97 == 0 && j > 0 then 'x' else '.' | j <- [0..n-1]] | i <- [0..n-1]]
 main = do
   let grid = toGrid c_GRID1
-  print $ length $ exploreST grid
+  print $ length $ explorePure grid
 
 type Position = (Int, Int)
 toGrid :: [[Char]] -> A.Array Position Bool
@@ -33,17 +29,16 @@ neighbors :: Position -> [Position]
 neighbors (i, j) = [ (i,j+1), (i-1,j), (i,j-1), (i+1,j) ]
 
 explorePure :: A.Array Position Bool -> [Position]
-explorePure grid0 = explore' (grid0 A.// [((0,0), True)]) (Q.pushBack Q.empty (0,0) :: Q.BankersDequeue Position)
+explorePure grid0 = explore' (grid0 A.// [((0,0), True)]) [(0,0)]
   where
   (m, n) = let ((0, 0), (ihi, jhi)) = A.bounds grid0 in (ihi + 1, jhi + 1)
   inBounds (i, j) = 0 <= i && i < m && 0 <= j && j < n
-  explore' grid (Q.popFront -> Nothing) = []
-  explore' grid (Q.popFront -> Just (p, q)) =
-    let ns = reverse $ filter (\n -> inBounds n && not (grid A.! n)) (neighbors p)
-        q' = foldl Q.pushFront q ns
+  explore' grid [] = []
+  explore' grid (p:ps) =
+    let ns = filter (\n -> inBounds n && not (grid A.! n)) (neighbors p)
+        ps' = ns ++ ps
         grid' = grid A.// zip ns (repeat True)
-    in p : explore' grid' q'
-
+    in p : explore' grid' ps'
 
 exploreST :: A.Array Position Bool -> [Position]
 exploreST initGrid = runST $ do
