@@ -17,43 +17,55 @@ of the meadow (sheep can only move up/down/left/right
 
 {-# LANGUAGE ViewPatterns #-}
 
+import Debug.Trace (traceShow)
+import Data.Maybe (fromJust)
+import Control.Monad (forM_)
+import qualified Data.ByteString.Char8 as BS
 import qualified Data.Array as A
-import qualified Data.IntSet as S
-import qualified Data.PSQueue as PQ
+import qualified Data.PQueue.Min as PQ
+import qualified Data.Array.ST as AST
+import qualified Control.Monad.ST.Lazy as ST
 
 type Height = Int
 type Bravery = Int
 type Position = (Int, Int)
 
 main = do
-  grid <- fmap parseGrid getContents
+  grid <- fmap parseGrid (BS.readFile "sheep_in_hilly_meadow.in.1000x1000")
   print $ findMinK grid 0.5
 
-parseGrid :: String -> (A.Array Position Height)
+parseGrid :: BS.ByteString -> (A.Array Position Height)
 parseGrid txt =
-  let txtGrid = map words $ lines txt
-      (m, n) = (length txtGrid, length $ head txtGrid)
-  in A.listArray ((0,0),(m-1,n-1)) (map read $ concat txtGrid)
+  let (m:n:grid) = map (fst . fromJust . BS.readInt) (BS.words txt)
+  in A.listArray ((0,0),(m-1,n-1)) grid
 
 findMinK :: A.Array Position Height -> Double -> Bravery
 findMinK grid chi =
-  let ((ilo, jlo), (ihi, jhi)) = A.bounds grid
-      area = (ihi - ilo + 1) * (jhi - jlo + 1)
+  let ((0, 0), (ihi, jhi)) = A.bounds grid
+      area = (ihi - 1) * (jhi + 1)
       threshold = ceiling (chi * fromIntegral area)
   in fst $ (explore grid) !! threshold
 
 explore :: A.Array Position Height -> [(Bravery, Position)]
-explore grid = exploreHelper (PQ.singleton (0, 0) 0) (S.singleton 0)
+explore grid = ST.runST $ do
+  visGrid <- AST.newArray (A.bounds grid) False :: ST.ST s (AST.STArray s Position Bool)
+  AST.writeArray visGrid (0,0) True
+  explore' (PQ.singleton (0, (0, 0))) visGrid
   where
-  exploreHelper (PQ.minView -> Nothing) vis = []
-  exploreHelper (PQ.minView -> Just (pos PQ.:-> k, pq)) vis =
-    let newPositions = filter (\n -> inBounds n && not (S.member (flat n) vis)) (neighbors pos)
-        updatePQ pq_ pos_ = PQ.insert pos_ (max k (grid A.! pos_)) pq_
-        pq' = foldl updatePQ pq newPositions
-    in (k, pos) : (exploreHelper pq' (S.union vis $ S.fromList $ map flat newPositions))
+  explore' :: PQ.MinQueue (Height, Position) -> AST.STArray s Position Bool -> ST.ST s [(Height, Position)]
+  explore' (PQ.minView -> Nothing) visGrid = return []
+  explore' (PQ.minView -> Just ((k, pos), pq)) visGrid = do
+    AST.writeArray visGrid pos True
+    let candidates = filter inBounds (neighbors pos)
+    candVis <- mapM (AST.readArray visGrid) candidates
+    let newPositions = [ n | (n, v) <- zip candidates candVis, not v ]
+    let pq' = foldl (updatePQ k) pq newPositions
+    forM_ newPositions $ \n -> AST.writeArray visGrid n True
+    rest <- explore' pq' visGrid
+    return ((k, pos) : rest)
 
   (m, n) = let ((0,0), (ihi,jhi)) = A.bounds grid in (ihi+1, jhi+1)
-  flat (i, j) = n * i + j
   inBounds (i,j) = 0 <= i && i < m && 0 <= j && j < n
+  updatePQ k pq pos = let prio = max k (grid A.! pos) in PQ.insert (prio, pos) pq
 
 neighbors (i,j) = [(i+1,j), (i-1,j), (i,j+1), (i,j-1)]
