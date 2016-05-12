@@ -5,6 +5,7 @@ import qualified Data.ByteString.Char8 as BS
 import Control.Monad
 import Data.Maybe (fromJust)
 import Data.List (sort)
+import Debug.Trace
 
 main = do
   filenames <- Env.getArgs
@@ -24,7 +25,7 @@ parseInput fn = do
 
 type Solution = Int
 solve :: Problem -> Solution
-solve (Problem k countries) = bruteForce k countries
+solve (Problem k countries) = bsOnAnswer k countries
 
 bruteForce k countries
   | length countries < k = 0
@@ -32,3 +33,27 @@ bruteForce k countries
     let (used, ignored) = splitAt k (reverse $ sort countries)
         countries' = filter (>0) $ map (subtract 1) used ++ ignored
     in 1 + bruteForce k countries'
+
+kindaGreedy k countries
+  | length countries < k = 0
+  | otherwise =
+    let (used, ignored) = splitAt k (reverse $ sort countries)
+        numToUse = max 1 (minimum used - 1)
+        countries' = filter (>0) $ map (subtract numToUse) used ++ ignored
+    in numToUse + kindaGreedy k countries'
+
+bsOnAnswer k countries = binarySearch (canFormNGroups k countries) (0, sum countries + 1)
+
+canFormNGroups k countries n = canForm' countries (n*k)
+  where
+  canForm' _ numPeopleToFinish | numPeopleToFinish <= 0 = True
+  canForm' [] numPeopleToFinish = False
+  canForm' (first:rest) numPeopleToFinish =
+    let numUsed = min first n
+    in canForm' rest (numPeopleToFinish - numUsed)
+
+binarySearch f (lo, hi)
+  | lo >= hi = lo
+  | otherwise =
+    let mid = lo + (hi - lo + 1) `div` 2
+    in binarySearch f $ if f mid then (mid, hi) else (lo, mid-1)
