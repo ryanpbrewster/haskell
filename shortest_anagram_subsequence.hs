@@ -5,7 +5,8 @@ that s contains an anagram of L. Put another way, find the smallest substring of
 that for every character c in L, L.count(c) == s.count(c)
 -}
 
-import qualified Data.Map as M
+import qualified Data.HashMap.Strict as M
+import qualified Data.Array as A
 import Debug.Trace
 import Data.List (minimumBy)
 import Data.Ord (comparing)
@@ -30,39 +31,45 @@ chunks n xs = let (f, rest) = splitAt n xs in f : chunks n rest
   
 main = do
   let inputs = map (splitAt 1000) $ chunks 10000 $ randomChars (RNG.seed [])
-  print [ length $ shortestAnagram little big | (little, big) <- take 10 inputs ]
+  print [ shortestAnagram little big | (little, big) <- take 10 inputs ]
   
-
-shortestAnagram :: (Show a, Ord a) => [a] -> [a] -> [a]
-shortestAnagram little big = minimumBy (comparing length) (locallyMinimalAnagrams little big)
-
-locallyMinimalAnagrams :: (Show a, Ord a) => [a] -> [a] -> [[a]]
-locallyMinimalAnagrams little big =
+shortestAnagram :: String -> String -> Int
+shortestAnagram little big =
   let
-    initCounts = M.fromListWith (+) $ zip little (repeat 1)
-  in expand [] big initCounts (M.size initCounts)
+    littleTally = M.fromListWith (+) $ zip little (repeat 1)
+    bigArray = A.listArray (1, length big) big
+  in minimum [ end - start | (start, end) <- locallyMinimalAnagrams littleTally bigArray ]
+
+
+type Bookends = (Int, Int)
+type StringArr = A.Array Int Char
+type AnagramTally = M.HashMap Char Int
+locallyMinimalAnagrams :: AnagramTally -> StringArr -> [Bookends]
+locallyMinimalAnagrams little big = expand (1, 1) little (M.size little)
   where
-  expand :: (Show a, Ord a) => [a] -> [a] -> M.Map a Int -> Int -> [[a]]
-  expand _ [] _ _ = []
-  expand cur (x:xs) counts numOverThreshold
-    | not (x `M.member` counts) = expand (x:cur) xs counts numOverThreshold
+  (1, n) = A.bounds big
+  expand :: Bookends -> AnagramTally -> Int -> [Bookends]
+  expand (lo, hi) counts numOverThreshold
+    | hi > n = []
+    | not ((big A.! hi) `M.member` counts) = expand (lo, hi+1) counts numOverThreshold
     | otherwise =
       let
+        x = big A.! hi
         c = counts M.! x
-        cur' = x:cur
-        counts' = M.insert x (c-1) counts
+        counts' = M.adjust (subtract 1) x counts
         numOverThreshold' = if c-1 == 0 then numOverThreshold-1 else numOverThreshold
       in if numOverThreshold' == 0
-         then shrink (reverse cur') xs counts'
-         else expand cur' xs counts' numOverThreshold'
-  shrink :: (Show a, Ord a) => [a] -> [a] -> M.Map a Int -> [[a]]
-  shrink (x:xs) big counts
-    | not (x `M.member` counts) = shrink xs big counts
+         then shrink (lo, hi+1) counts'
+         else expand (lo, hi+1) counts' numOverThreshold'
+  shrink :: Bookends -> AnagramTally -> [Bookends]
+  shrink (lo, hi) counts
+    | not ((big A.! lo) `M.member` counts) = shrink (lo+1, hi) counts
     | otherwise =
       let
+        x = big A.! lo
         c = counts M.! x
-        counts' = M.insert x (c+1) counts
+        counts' = M.adjust (+1) x counts
       in if c == 0
-         then (x:xs) : expand (reverse xs) big counts' 1
-         else shrink xs big counts'
+         then (lo, hi) : expand (lo+1, hi) counts' 1
+         else shrink (lo+1, hi) counts'
       
