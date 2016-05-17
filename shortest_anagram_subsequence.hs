@@ -9,6 +9,29 @@ import qualified Data.Map as M
 import Debug.Trace
 import Data.List (minimumBy)
 import Data.Ord (comparing)
+import Data.Char (ord, chr)
+import qualified Random.MWC.Pure as RNG
+import Control.Monad.State
+
+instance RNG.RangeRandom Char where
+  range_random (a, b) s =
+    let (n, s') = RNG.range_random (ord a, ord b) s
+    in (chr n, s')
+
+randomChars :: RNG.Seed -> [Char]
+randomChars initSeed = randomChars' initSeed
+  where
+  randomChars' s = 
+    let (ch, s') = RNG.range_random ('a', 'z') s
+    in ch : randomChars' s'
+
+chunks :: Int -> [a] -> [[a]]
+chunks n xs = let (f, rest) = splitAt n xs in f : chunks n rest
+  
+main = do
+  let inputs = map (splitAt 1000) $ chunks 10000 $ randomChars (RNG.seed [])
+  print [ length $ shortestAnagram little big | (little, big) <- take 10 inputs ]
+  
 
 shortestAnagram :: (Show a, Ord a) => [a] -> [a] -> [a]
 shortestAnagram little big = minimumBy (comparing length) (locallyMinimalAnagrams little big)
