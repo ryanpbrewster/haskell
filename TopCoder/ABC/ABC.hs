@@ -11,7 +11,7 @@ such string. Otherwise, return an empty string.
 
 import Data.List (tails)
 import Control.Monad
-import qualified Data.Set as S
+import qualified Data.Array as A
 import Debug.Trace
 import Data.Maybe (fromMaybe)
 
@@ -59,23 +59,31 @@ maxPossible n (as, bs) = maximum [ maxPossible (n-1) (as+1, bs)
                                  , maxPossible (n-1) (as, bs) + (as+bs)
                                  ]
 
-type BFSTree = S.Set (Int, Int, Int, Int)
-bfsTrees = iterate nextTree $ S.singleton (0, 0, 0, 0)
-  where
-  addA (n,k,a,b) = (n+1, k, a+1, b)
-  addB (n,k,a,b) = (n+1, k+a, a, b+1)
-  addC (n,k,a,b) = (n+1, k+a+b, a, b)
-  nextTree tree = S.unions [ S.map addA tree, S.map addB tree, S.map addC tree ]
+iterateH :: ((s, a) -> (s, a)) -> (s, a) -> [a]
+iterateH next (s, a) = map snd $ iterate next (s, a)
 
-bfs (n0, k0) = concat [ bfs' (n0, k0, a, b) "" | a <- [0..n0], b <- [0..n0-a] ]
+singleton idx v = A.array (idx, idx) [(idx, v)]
+
+type SolutionCount = A.Array (Int, Int, Int) Bool
+solutionCounts :: [SolutionCount]
+solutionCounts = iterateH next (0, singleton (0, 0, 0) True)
   where
-  tree = S.unions $ take (n0+1) bfsTrees
-  bfs' (0,0,0,0) acc = [acc]
-  bfs' (n,k,a,b) acc =
-    if (not $ S.member (n,k,a,b) tree)
+  addA arr = [ ((k, a+1, b), True) | ((k,a,b), True) <- A.assocs arr ]
+  addB arr = [ ((k+a, a, b+1), True) | ((k,a,b), True) <- A.assocs arr ]
+  addC arr = [ ((k+a+b, a, b), True) | ((k,a,b), True) <- A.assocs arr ]
+  next (n, arr) =
+    let newBounds = ((0,0,0),((n+1)*(n+2) `div` 2, n+1, n+1))
+    in (n+1, A.accumArray (||) False newBounds $ addA arr ++ addB arr ++ addC arr)
+
+bfs (n0, k0) = concat [ bfs' arrs n0 (k0, a, b) "" | a <- [0..n0], b <- [0..n0-a] ]
+  where
+  arrs = reverse $ take (n0+1) solutionCounts
+  bfs' _ 0 (0,0,0) acc = [acc]
+  bfs' (arr:rest) n (k,a,b) acc =
+    if a < 0 || b < 0 || a+b > n || n*(n+1) `div` 2 < k || not (arr A.! (k,a,b))
     then []
-    else concat [ bfs' (n-1,k,a-1,b) ('a':acc)
-                , bfs' (n-1,k-a,a,b-1) ('b':acc)
-                , bfs' (n-1,k-a-b,a,b) ('c':acc)
+    else concat [ bfs' rest (n-1) (k,a-1,b) ('a':acc)
+                , bfs' rest (n-1) (k-a,a,b-1) ('b':acc)
+                , bfs' rest (n-1) (k-a-b,a,b) ('c':acc)
                 ]
 
