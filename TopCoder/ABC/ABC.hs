@@ -11,7 +11,7 @@ such string. Otherwise, return an empty string.
 
 import Data.List (tails)
 import Control.Monad
-import qualified Data.Map as M
+import qualified Data.Set as S
 import Debug.Trace
 import Data.Maybe (fromMaybe)
 
@@ -59,22 +59,23 @@ maxPossible n (as, bs) = maximum [ maxPossible (n-1) (as+1, bs)
                                  , maxPossible (n-1) (as, bs) + (as+bs)
                                  ]
 
-type BFSTree = (Int, M.Map (Int, Int, Int, Int) Int)
-bfsTrees = iterate nextTree $ M.singleton (0, 0, 0, 0) 1
+type BFSTree = S.Set (Int, Int, Int, Int)
+bfsTrees = iterate nextTree $ S.singleton (0, 0, 0, 0)
   where
-  addA tree = [ ((n+1, k, a+1, b), count) | ((n,k,a,b), count) <- M.toList tree ]
-  addB tree = [ ((n+1, k+a, a, b+1), count) | ((n,k,a,b), count) <- M.toList tree ]
-  addC tree = [ ((n+1, k+a+b, a, b), count) | ((n,k,a,b), count) <- M.toList tree ]
-  nextTree tree = M.fromListWith (+) $ concat [ addA tree, addB tree, addC tree ]
+  addA (n,k,a,b) = (n+1, k, a+1, b)
+  addB (n,k,a,b) = (n+1, k+a, a, b+1)
+  addC (n,k,a,b) = (n+1, k+a+b, a, b)
+  nextTree tree = S.unions [ S.map addA tree, S.map addB tree, S.map addC tree ]
 
 bfs (n0, k0) = concat [ bfs' (n0, k0, a, b) "" | a <- [0..n0], b <- [0..n0-a] ]
   where
-  tree = M.unions $ take (n0+1) bfsTrees
+  tree = S.unions $ take (n0+1) bfsTrees
   bfs' (0,0,0,0) acc = [acc]
-  bfs' (n,k,a,b) acc = case M.lookup (n,k,a,b) tree of
-    Nothing -> []
-    Just c -> concat [ bfs' (n-1,k,a-1,b) ('a':acc)
-                     , bfs' (n-1,k-a,a,b-1) ('b':acc)
-                     , bfs' (n-1,k-a-b,a,b) ('c':acc)
-                     ]
+  bfs' (n,k,a,b) acc =
+    if (not $ S.member (n,k,a,b) tree)
+    then []
+    else concat [ bfs' (n-1,k,a-1,b) ('a':acc)
+                , bfs' (n-1,k-a,a,b-1) ('b':acc)
+                , bfs' (n-1,k-a-b,a,b) ('c':acc)
+                ]
 
