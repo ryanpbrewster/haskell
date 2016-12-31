@@ -1,6 +1,8 @@
 module Main where
 
+import Poker.Data
 import Lib
 
 main :: IO ()
-main = someFunc
+main = do
+  print (Card Two Hearts)
