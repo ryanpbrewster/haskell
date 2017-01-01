@@ -2,6 +2,9 @@ module Poker.Data
 ( Rank(..)
 , Suit(..)
 , Card(..)
+, Hand(..)
+, allRanks
+, allSuits
 ) where
 
 data Rank = Two
@@ -18,6 +21,8 @@ data Rank = Two
           | King
           | Ace
           deriving (Eq, Ord, Show)
+
+allRanks = [Two, Three, Four, Five, Six, Seven, Eight, Nine, Ten, Jack, Queen, King, Ace]
 
 rankToChar :: Rank -> Char
 rankToChar Two   = '2'
@@ -40,6 +45,8 @@ data Suit = Clubs
           | Spades
           deriving (Eq, Ord, Show)
 
+allSuits = [Clubs, Diamonds, Hearts, Spades]
+
 suitToChar Clubs    = 'C'
 suitToChar Diamonds = 'D'
 suitToChar Hearts   = 'H'
@@ -50,3 +57,15 @@ data Card = Card Rank Suit
 
 instance Show Card where
   show (Card rank suit) = [rankToChar rank, suitToChar suit]
+
+
+data Hand = HighCard Rank
+          | OnePair Rank
+          | TwoPair Rank Rank
+          | Triple Rank
+          | Straight Rank
+          | Flush Rank
+          | FullHouse Rank Rank
+          | Quartet Rank
+          | StraightFlush Rank
+          deriving (Eq, Ord, Show)
