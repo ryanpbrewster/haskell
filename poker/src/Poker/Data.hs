@@ -5,6 +5,7 @@ module Poker.Data
 , Hand(..)
 , allRanks
 , allSuits
+, allCards
 ) where
 
 data Rank = Two
@@ -46,6 +47,8 @@ data Suit = Clubs
           deriving (Eq, Ord, Show)
 
 allSuits = [Clubs, Diamonds, Hearts, Spades]
+
+allCards = [ Card rank suit | suit <- allSuits, rank <- allRanks ]
 
 suitToChar Clubs    = 'C'
 suitToChar Diamonds = 'D'
