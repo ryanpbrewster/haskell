@@ -15,13 +15,35 @@ import qualified Data.Map as M
 import Data.Ord (Down(..))
 import Data.List (sortOn)
 
-trials = 1000
+trials = 10000
 
 main :: IO ()
 main = do
-  forM_ [5..25] $ \num_cards -> do
-    print num_cards
+  forM_ [5..30] $ \num_cards -> do
     decks <- replicateM trials $ fmap (S.fromList . take num_cards) (shuffleM allCards)
-    let hand_tally = M.fromListWith (+) $ zip (map bestHand decks) (repeat 1) :: Map Hand Int
-    forM_ (sortOn Down $ M.toList hand_tally) $ \(hand, count) ->
-      putStrLn $ "\t" ++ show count ++ "\t" ++ show hand
+    let hand_tally = M.fromListWith (+) $ zip (map (handType . bestHand) decks) (repeat 1)
+    let tally_dump = unlines [ hand ++ "\t" ++ show (M.findWithDefault 0 hand hand_tally) | hand <- allTypes ]
+    writeFile (show num_cards ++ ".log") tally_dump
+
+
+handType :: Hand -> String
+handType (HighCard r) = "HighCard"
+-- handType (OnePair r) = "OnePair"
+handType (TwoPair r1 r2) = "TwoPair"
+handType (Triple r) = "Triple"
+handType (Straight r) = "Straight"
+handType (Flush r) = "Flush"
+handType (FullHouse r1 r2) = "FullHouse"
+handType (Quartet r) = "Quartet"
+handType (StraightFlush r) = "StraightFlush"
+
+allTypes = [ "HighCard"
+           , "OnePair"
+           , "TwoPair"
+           , "Triple"
+           , "Straight"
+           , "Flush"
+           , "FullHouse"
+           , "Quartet"
+           , "StraightFlush"
+           ]
