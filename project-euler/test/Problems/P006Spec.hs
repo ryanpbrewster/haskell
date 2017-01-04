@@ -7,5 +7,4 @@ spec :: Spec
 spec = do
   describe "problem 006" $ do
     it "produces the correct answer" $ do
-      solve `shouldBe` "233168"
-
+      solve `shouldBe` "25164150"
