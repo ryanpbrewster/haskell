@@ -4,9 +4,7 @@ module Problems.P013 (process) where
 type FileContents = String
 
 process :: FileContents -> String
-process txt = show $ solveProblem txt
-
-solveProblem txt =
+process txt =
   let
     ans = sum $ map read $ lines txt
   in

@@ -18,6 +18,7 @@ library
   build-depends:       base >= 4.7 && < 5
                      , array >= 0.5
                      , containers >= 0.5
+  default-extensions:  NumDecimals
   exposed-modules:     Util.List
                      , Util.Math
                      , Util.Prime
@@ -157,14 +158,14 @@ test-suite project-euler-test
                      , Problems.P008Test , TestData.P008
                      , Problems.P009Test
                      , Problems.P010Test
-                     , Problems.P011Test
+                     , Problems.P011Test , TestData.P011
                      , Problems.P012Test
-                     , Problems.P013Test
+                     , Problems.P013Test , TestData.P013
                      , Problems.P014Test
                      , Problems.P015Test
                      , Problems.P016Test
                      , Problems.P017Test
-                     , Problems.P018Test
+                     , Problems.P018Test , TestData.P018
                      , Problems.P019Test
                      , Problems.P020Test
                      , Problems.P021Test

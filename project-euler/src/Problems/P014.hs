@@ -5,13 +5,14 @@ module Problems.P014 (solve) where
  -}
 
 solve :: String
-solve = show $ problem014 (10^6)
+solve = show $ slowSolve 1e6
 
-problem014 :: Int -> Int
-problem014 n = snd $ maximum $ [ (collatz x, x) | x <- [1..n] ]
+slowSolve :: Int -> Int
+slowSolve n = snd $ maximum $ [ (collatz x, x) | x <- [1..n] ]
 
 collatz :: Int -> Int
-collatz n = length $ takeWhile (>1) $ iterate next n
+collatz 1 = 0
+collatz n = 1 + collatz (next n)
 
 next :: Int -> Int
 next n = if even n then n `div` 2 else 3*n+1

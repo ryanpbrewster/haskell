@@ -10,8 +10,6 @@ type FileContents = String
 process :: FileContents -> String
 process txt = show $ problem011 txt
 
-flatten = foldl (++) []
-
 -- horizontal = --------- = [(i,j), (i,j+1), (i,j+2), ..., (i,j+d-1)]
 --
 --           |
@@ -36,10 +34,10 @@ flatten = foldl (++) []
 adjacentLocations n d =
     horizontals ++ verticals ++ falldiag ++ risediag
     where
-        horizontals = flatten [[[(i,j+k)  |k<-[0..d-1]]|j<-[0..n-d]]|i<-[0..n-1]]
-        verticals   = flatten [[[(i+k,j)  |k<-[0..d-1]]|j<-[0..n-1]]|i<-[0..n-d]]
-        falldiag    = flatten [[[(i+k,j+k)|k<-[0..d-1]]|j<-[0..n-d]]|i<-[0..n-d]]
-        risediag    = flatten [[[(i-k,j+k)|k<-[0..d-1]]|j<-[0..n-d]]|i<-[d-1..n-1]]
+    horizontals = [ [ (i,  j+k)  | k <- [0..d-1]] | j <- [0..n-d], i <- [0..n-1]]
+    verticals   = [ [ (i+k,j)    | k <- [0..d-1]] | j <- [0..n-1], i <- [0..n-d]]
+    falldiag    = [ [ (i+k,j+k)  | k <- [0..d-1]] | j <- [0..n-d], i <- [0..n-d]]
+    risediag    = [ [ (i-k,j+k)  | k <- [0..d-1]] | j <- [0..n-d], i <- [d-1..n-1]]
 
 indicesToElements grid idxTup = [ grid !! fst index !! snd index | index <- idxTup]
 
@@ -55,4 +53,4 @@ problem011 txt =
       products = map product elements
     in maximum products
 
-parseGrid txt = [ [read num | num <- words line] | line <- lines txt ]
+parseGrid txt = [ map read (words line) | line <- lines txt ]
