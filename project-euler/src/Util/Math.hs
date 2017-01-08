@@ -13,28 +13,28 @@ module Util.Math
 , pascalTriangle
 ) where
 
-import Data.List (nub)
+import Data.List (nub, unfoldr)
 
 powerMod _ 0 _ = 1
-powerMod x y m | even y = (  (powerMod x (quot y 2) m)^2) `mod` m
-               | odd y  = (x*(powerMod x (quot y 2) m)^2) `mod` m
+powerMod x y m
+  | even y = (  (powerMod x (y `div` 2) m)^2) `mod` m
+  | odd y  = (x*(powerMod x (y `div` 2) m)^2) `mod` m
 
--- Just so you know, integerDigits 0 == []
--- It's a weird edge case that I don't like.
+-- NB: integerDigits 0 == []
 integerDigits = integerDigitsBy 10
 
-integerDigitsBy base = reverse . (integerDigitsBy_h base)
-
-integerDigitsBy_h _ 0 = []
-integerDigitsBy_h base n = let (q,r) = n `quotRem` base
-                           in r:(integerDigitsBy_h base q)
+integerDigitsBy :: Integral a => a -> a -> [a]
+integerDigitsBy base = unfoldr nextDigit
+  where
+  nextDigit 0 = Nothing
+  nextDigit n = let (q, r) = n `divMod` base in Just (r, q)
 
 fromIntegerDigits = fromIntegerDigitsBy 10
 
-fromIntegerDigitsBy base = fromIntegerDigitsBy_h base . reverse
-
-fromIntegerDigitsBy_h base [] = 0
-fromIntegerDigitsBy_h base (x:xs) = x + base*(fromIntegerDigitsBy_h base xs)
+fromIntegerDigitsBy :: Integral a => a -> [a] -> a
+fromIntegerDigitsBy base = foldr acc 0
+  where
+  acc a b = a + base * b
 
 -- binomial n k == n!/k!(n-k)!
 --              == n*(n-1)*...*(n-k+1)/(1*2*...*k)
