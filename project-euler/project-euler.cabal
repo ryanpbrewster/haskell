@@ -169,7 +169,7 @@ test-suite project-euler-test
                      , Problems.P019Test
                      , Problems.P020Test
                      , Problems.P021Test
-                     , Problems.P022Test
+                     , Problems.P022Test , TestData.P022
                      , Problems.P023Test
                      , Problems.P024Test
                      , Problems.P025Test
