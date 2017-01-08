@@ -1,0 +1,271 @@
+name:                project-euler
+version:             0.1.0.0
+synopsis:            Initial project template from stack
+description:         Please see README.md
+homepage:            https://github.com/githubuser/project-euler#readme
+license:             BSD3
+license-file:        LICENSE
+author:              Author name here
+maintainer:          example@example.com
+copyright:           2017 Author name here
+category:            Web
+build-type:          Simple
+extra-source-files:  README.md
+cabal-version:       >=1.10
+
+library
+  hs-source-dirs:      src
+  build-depends:       base >= 4.7 && < 5
+                     , array >= 0.5
+                     , containers >= 0.5
+  exposed-modules:     Util.List
+                     , Util.Math
+                     , Util.Prime
+                     , Problems.P001
+                     , Problems.P002
+                     , Problems.P003
+                     , Problems.P004
+                     , Problems.P005
+                     , Problems.P006
+                     , Problems.P007
+                     , Problems.P008
+                     , Problems.P009
+                     , Problems.P010
+                     , Problems.P011
+                     , Problems.P012
+                     , Problems.P013
+                     , Problems.P014
+                     , Problems.P015
+                     , Problems.P016
+                     , Problems.P017
+                     , Problems.P018
+                     , Problems.P019
+                     , Problems.P020
+                     , Problems.P021
+                     , Problems.P022
+                     , Problems.P023
+                     , Problems.P024
+                     , Problems.P025
+                     , Problems.P026
+                     , Problems.P027
+                     , Problems.P028
+                     , Problems.P029
+                     , Problems.P030
+                     , Problems.P031
+                     , Problems.P032
+                     , Problems.P033
+                     , Problems.P034
+                     , Problems.P035
+                     , Problems.P036
+                     , Problems.P037
+                     , Problems.P038
+                     , Problems.P039
+                     , Problems.P040
+                     , Problems.P041
+                     , Problems.P042
+                     , Problems.P043
+                     , Problems.P044
+                     , Problems.P045
+                     , Problems.P046
+                     , Problems.P047
+                     , Problems.P048
+                     , Problems.P049
+                     , Problems.P050
+                     , Problems.P051
+                     , Problems.P052
+                     , Problems.P053
+                     , Problems.P054
+                     , Problems.P055
+                     , Problems.P056
+                     , Problems.P057
+                     , Problems.P058
+                     , Problems.P059
+                     , Problems.P062
+                     , Problems.P063
+                     , Problems.P065
+                     , Problems.P067
+                     , Problems.P072
+                     , Problems.P076
+                     , Problems.P077
+                     , Problems.P079
+                     , Problems.P085
+                     , Problems.P087
+                     , Problems.P091
+                     , Problems.P097
+                     , Problems.P099
+                     , Problems.P101
+                     , Problems.P108
+                     , Problems.P110
+                     , Problems.P112
+                     , Problems.P114
+                     , Problems.P115
+                     , Problems.P116
+                     , Problems.P117
+                     , Problems.P119
+                     , Problems.P122
+                     , Problems.P124
+                     , Problems.P125
+                     , Problems.P129
+                     , Problems.P130
+                     , Problems.P132
+                     , Problems.P147
+                     , Problems.P149
+                     , Problems.P150
+                     , Problems.P157
+                     , Problems.P164
+                     , Problems.P178
+                     , Problems.P181
+                     , Problems.P183
+                     , Problems.P188
+                     , Problems.P190
+                     , Problems.P191
+                     , Problems.P197
+                     , Problems.P200
+                     , Problems.P201
+                     , Problems.P203
+                     , Problems.P204
+                     , Problems.P205
+                     , Problems.P206
+                     , Problems.P209
+                     , Problems.P235
+                     , Problems.P240
+                     , Problems.P249
+                     , Problems.P250
+                     , Problems.P301
+                     , Problems.P317
+  default-language:    Haskell2010
+
+executable project-euler-exe
+  hs-source-dirs:      app
+  main-is:             Main.hs
+  ghc-options:         -threaded -rtsopts -with-rtsopts=-N
+  build-depends:       base
+                     , project-euler
+  default-language:    Haskell2010
+
+test-suite project-euler-test
+  type:                exitcode-stdio-1.0
+  hs-source-dirs:      tests
+  main-is:             Spec.hs
+  other-modules:       Problems.P001Spec
+                     , Problems.P002Spec
+                     , Problems.P003Spec
+                     , Problems.P004Spec
+                     , Problems.P005Spec
+                     , Problems.P006Spec
+                     , Problems.P007Spec
+                     , Problems.P008Spec
+                     , Problems.P009Spec
+                     , Problems.P010Spec
+                     , Problems.P011Spec
+                     , Problems.P012Spec
+                     , Problems.P013Spec
+                     , Problems.P014Spec
+                     , Problems.P015Spec
+                     , Problems.P016Spec
+                     , Problems.P017Spec
+                     , Problems.P018Spec
+                     , Problems.P019Spec
+                     , Problems.P020Spec
+                     , Problems.P021Spec
+                     , Problems.P022Spec
+                     , Problems.P023Spec
+                     , Problems.P024Spec
+                     , Problems.P025Spec
+                     , Problems.P026Spec
+                     , Problems.P027Spec
+                     , Problems.P028Spec
+                     , Problems.P029Spec
+                     , Problems.P030Spec
+                     , Problems.P031Spec
+                     , Problems.P032Spec
+                     , Problems.P033Spec
+                     , Problems.P034Spec
+                     , Problems.P035Spec
+                     , Problems.P036Spec
+                     , Problems.P037Spec
+                     , Problems.P038Spec
+                     , Problems.P039Spec
+                     , Problems.P040Spec
+                     , Problems.P041Spec
+                     , Problems.P042Spec
+                     , Problems.P043Spec
+                     , Problems.P044Spec
+                     , Problems.P045Spec
+                     , Problems.P046Spec
+                     , Problems.P047Spec
+                     , Problems.P048Spec
+                     , Problems.P049Spec
+                     , Problems.P050Spec
+                     , Problems.P051Spec
+                     , Problems.P052Spec
+                     , Problems.P053Spec
+                     , Problems.P054Spec
+                     , Problems.P055Spec
+                     , Problems.P056Spec
+                     , Problems.P057Spec
+                     , Problems.P058Spec
+                     , Problems.P059Spec
+                     , Problems.P062Spec
+                     , Problems.P063Spec
+                     , Problems.P065Spec
+                     , Problems.P067Spec
+                     , Problems.P072Spec
+                     , Problems.P076Spec
+                     , Problems.P077Spec
+                     , Problems.P079Spec
+                     , Problems.P085Spec
+                     , Problems.P087Spec
+                     , Problems.P091Spec
+                     , Problems.P097Spec
+                     , Problems.P099Spec
+                     , Problems.P101Spec
+                     , Problems.P108Spec
+                     , Problems.P110Spec
+                     , Problems.P112Spec
+                     , Problems.P114Spec
+                     , Problems.P115Spec
+                     , Problems.P116Spec
+                     , Problems.P117Spec
+                     , Problems.P119Spec
+                     , Problems.P122Spec
+                     , Problems.P124Spec
+                     , Problems.P125Spec
+                     , Problems.P129Spec
+                     , Problems.P130Spec
+                     , Problems.P132Spec
+                     , Problems.P147Spec
+                     , Problems.P149Spec
+                     , Problems.P150Spec
+                     , Problems.P157Spec
+                     , Problems.P164Spec
+                     , Problems.P178Spec
+                     , Problems.P181Spec
+                     , Problems.P183Spec
+                     , Problems.P188Spec
+                     , Problems.P190Spec
+                     , Problems.P191Spec
+                     , Problems.P197Spec
+                     , Problems.P200Spec
+                     , Problems.P201Spec
+                     , Problems.P203Spec
+                     , Problems.P204Spec
+                     , Problems.P205Spec
+                     , Problems.P206Spec
+                     , Problems.P209Spec
+                     , Problems.P235Spec
+                     , Problems.P240Spec
+                     , Problems.P249Spec
+                     , Problems.P250Spec
+                     , Problems.P301Spec
+                     , Problems.P317Spec
+  build-depends:       base
+                     , project-euler
+                     , hspec
+                     , hspec-discover
+  ghc-options:         -threaded -rtsopts -with-rtsopts=-N
+  default-language:    Haskell2010
+
+source-repository head
+  type:     git
+  location: https://github.com/githubuser/project-euler

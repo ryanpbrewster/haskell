@@ -17,5 +17,4 @@ foo.hs
 .*.swp
 .idea
 *.iml
-*.cabal
 */.stack-work
