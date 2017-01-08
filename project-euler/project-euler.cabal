@@ -154,7 +154,7 @@ test-suite project-euler-test
                      , Problems.P005Test
                      , Problems.P006Test
                      , Problems.P007Test
-                     , Problems.P008Test
+                     , Problems.P008Test , TestData.P008
                      , Problems.P009Test
                      , Problems.P010Test
                      , Problems.P011Test
