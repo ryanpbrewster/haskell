@@ -15,7 +15,7 @@ module Problems.P024 (solve) where
 import Data.List (delete)
 
 solve :: String
-solve = show solveProblem
+solve = nthPermutation (1000000-1) "0123456789"
 
 factorial n = product [1..n]
 
@@ -27,5 +27,3 @@ nthPermutation n xs = let r = factorial (length xs - 1)
                           n' = n - k*r
                           xs' = delete e xs
                      in e:(nthPermutation n' xs')
-
-solveProblem = concat $ map show $ nthPermutation (1000000-1) [0..9]
