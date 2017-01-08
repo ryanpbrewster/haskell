@@ -39,7 +39,7 @@ data Node = Node { val :: Int, front :: Int, back :: Int } deriving (Eq, Ord)
 instance Show Node where
     show (Node v f b) = show v
 
-toNode n = let (q,r) = n `quotRem` 100 in Node n q r
+toNode n = let (q,r) = n `divMod` 100 in Node n q r
 
 alls = map toNode $ elems $ unions [tris, sqs, pents, hexs, hepts, octs]
 dests (Node _ _ b) = [ n | n <- alls, front n == b ]

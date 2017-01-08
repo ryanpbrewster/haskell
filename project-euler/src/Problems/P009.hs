@@ -24,5 +24,5 @@ solveProblem :: Integer -> Integer
 solveProblem target = let (a,b,c)   = head [ (a',b',c') | (a',b',c') <- triplets,
                                                           target `mod` (a'+b'+c') == 0 ]
                           perimeter = a+b+c
-                          scale     = target `quot` perimeter
+                          scale     = target `div` perimeter
                       in scale^3*a*b*c

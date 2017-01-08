@@ -56,4 +56,4 @@ bruteForce wb hb = let (straight, corner, center) = crossHatchRects wb hb
 solveProblem :: Int -> Int -> Int
 solveProblem m n = n*(n+1)*(6*n^4 - 24*m*n^3 + 30*m^2*n^2 - 6*m*n^2 - 15*n^2
                             + 5*m^3*n + 45*m^2*n + 46*m*n + 15*n + 10*m^3
-                            + 15*m^2 - 31*m - 6) `quot` 180
+                            + 15*m^2 - 31*m - 6) `div` 180

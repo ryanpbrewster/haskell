@@ -37,7 +37,7 @@ concatInts a b = (prefactor b)*a + b
 prefactor 0 = 10
 prefactor n = prefactor' n
     where prefactor' 0 = 1
-          prefactor' n = 10 * prefactor' (n `quot` 10)
+          prefactor' n = 10 * prefactor' (n `div` 10)
 
 findCCPs 0 = [empty]
 findCCPs k = filter legitFront $ mergeInf $ map newCCPs $ findCCPs (k-1)

@@ -37,4 +37,4 @@ isBouncy n = let ds = digits n
              in not $ all (>=0) diffs || all (<=0) diffs
 
 digits 0 = []
-digits n = let (q,r) = n `quotRem` 10 in r : digits q
+digits n = let (q,r) = n `divMod` 10 in r : digits q

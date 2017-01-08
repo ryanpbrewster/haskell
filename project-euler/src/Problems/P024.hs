@@ -22,7 +22,7 @@ factorial n = product [1..n]
 -- Finds the n-th permutation of distinct items
 nthPermutation 0 xs = xs
 nthPermutation n xs = let r = factorial (length xs - 1)
-                          k = n `quot` r
+                          k = n `div` r
                           e = xs !! k
                           n' = n - k*r
                           xs' = delete e xs

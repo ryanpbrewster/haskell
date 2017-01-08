@@ -43,7 +43,7 @@ solveProblem n k t d = let counts = ordTuples (>=) n [1..d]
                            goods = filter (\r -> (sum $ take k r) == t) counts
                            fn = fact n
                            nrolls = [ product $ map (fact.length) $ group r | r <- goods ]
-                       in sum $ map (fn `quot`) nrolls
+                       in sum $ map (fn `div`) nrolls
 
 
 main = print $ solveProblem 20 10 70 12

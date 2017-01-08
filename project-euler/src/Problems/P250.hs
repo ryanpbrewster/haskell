@@ -46,13 +46,13 @@ subsetSums xs m a = runSTUArray $ do
     forM_ xs $ \v -> do
         cpy <- getAssocs arr
         forM_ cpy $ \(n,new) -> do
-            let idx = (n+v) `rem` m
+            let idx = (n+v) `mod` m
             cur <- readArray arr idx
-            writeArray arr idx ((cur+new) `rem` a)
+            writeArray arr idx ((cur+new) `mod` a)
     return arr
 
 solveProblem :: Int -> Int -> Int64 -> Int64
-solveProblem n m a = let period = lcm m (phi m)
+solveProblem n m a = let period = lcm m (fromIntegral $ phi $ fromIntegral m)
                          xs = cycle [ powerMod i i m | i <- [1..period] ]
                          arr = subsetSums (take n xs) m a
                      in (arr ! 0) - 1 -- leave out the empty subset

@@ -29,7 +29,7 @@ solve :: String
 solve = show $ solveProblem 500
 
 solveProblem divisor_bound =
-    let pents = map (\x -> x*(x+1) `quot` 2) [1..]
+    let pents = map (\x -> x*(x+1) `div` 2) [1..]
         legal p = sigma 0 p > divisor_bound
         answers = filter legal pents
     in head answers

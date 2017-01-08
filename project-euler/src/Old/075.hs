@@ -32,7 +32,7 @@ perims bound = [ k*p | m <- takeWhile (\t -> t*t <= bound) [2..]
                      , n <- [1+m', 3+m'..m-1]
                      , gcd (m*m-n*n) (2*m*n) == 1
                      , let p = 2*m*(m+n)
-                     , k <- [1..bound `quot` p] ]
+                     , k <- [1..bound `div` p] ]
 
 solveProblem bound =
     let ps = perims bound
