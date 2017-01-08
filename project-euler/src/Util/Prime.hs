@@ -34,10 +34,18 @@ bfTrialDivisionTest n k | k*k > n        = True
  - Sieve of Eratosthenes, as declared in the epilogue of Melissa O'Neill's
  - article "The Genuine Sieve of Eratosthenes" in J. Functional Programming.
  -}
+
+wheel2357 =
+  2:4:2:4:6:2:6:4:2:4:6:6:2:6:4:2:6:4:6:8:4:2:4:2:4
+   :8:6:4:6:2:4:6:2:6:6:4:2:4:6:2:6:4:2:4:2:10:2:10:wheel2357
+
+spin (x:xs) n = n : spin xs (n + x)
+
 primes :: [Integer]
-primes = 2:minus [3,5..] composites
+primes = 2:3:5:7:minus (spin wheel2357 11) composites
     where composites = union [ multiples p | p <- primes ]
 multiples n = map (n*) [n..]
+
 
 -- "minus X Y" removes all elements of y from x
 minus (x:xs) (y:ys) | x<y  = x:minus xs     (y:ys)

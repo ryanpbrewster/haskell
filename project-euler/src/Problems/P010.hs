@@ -8,6 +8,6 @@ module Problems.P010 (solve) where
 import qualified Util.Prime as Prime
 
 solve :: String
-solve = show $ solveProblem (2 * 10^6)
+solve = show $ solveProblem 2e6
 
 solveProblem bound = sum $ takeWhile (<bound) Prime.primes
