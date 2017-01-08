@@ -1,4 +1,6 @@
-module Problems.P027 (solve) where
+module Problems.P027
+  (solve)
+  where
 
 {-
  - Euler published the remarkable quadratic formula:
@@ -24,7 +26,6 @@ module Problems.P027 (solve) where
  - that produces the maximum number of primes for consecutive values of n,
  - starting with n = 0.
  -}
-
 {-
 - Clearly b must be prime, since
 -     n == 0 --> n^2 + an + b == b,
@@ -35,25 +36,22 @@ module Problems.P027 (solve) where
 -            --> a > -b
 - so we can run a from (-b,999).
 -}
-
--- I tried something new here: explicit type-signatures
-
 import qualified Util.Prime as Prime
-import Util.List (tuples)
-import Data.Ord (comparing)
-import Data.List (maximumBy)
+import Util.List (maximumBy)
 
 solve :: String
 solve = show solveProblem
 
-solveProblem = let primes = map fromIntegral $ takeWhile (<1000) Prime.primes
-                   coeffs = [ [a,b] | b <- primes, a <- [-b..999] ]
-                   [ba, bb] = bestCoeffs coeffs
-               in ba*bb
+bound = 999
 
-consecutivePrimes a b = length $ takeWhile Prime.test [b+n*(a+n) | n <- [0..]]
+solveProblem = 
+  let primes = takeWhile (<= bound) Prime.primes
+      coeffs = [(a,b)|b <- primes,a <- [-b .. bound]]
+      (a,b) = maximumBy consecutivePrimes coeffs
+  in a * b
 
-bestCoeffs coeffs = let f = (\[a,b] -> consecutivePrimes a b)
-                        vals = map f coeffs
-                        best = maximumBy (comparing snd) $ zip coeffs vals
-                    in fst best
+type Coefficients = (Integer,Integer) -- coefficients are pairs (a, b)
+
+consecutivePrimes :: Coefficients -> Int
+consecutivePrimes (a,b) = 
+  length $ takeWhile Prime.test [b + n * (a + n)|n <- [0 ..]]
