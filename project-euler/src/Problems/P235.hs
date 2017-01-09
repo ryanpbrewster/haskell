@@ -1,4 +1,6 @@
-module Problems.P235 (solve) where
+module Problems.P235
+  ( solve
+  ) where
 
 {-
  - Given is the arithmetic-geometric sequence u(k) = (900-3k)rk-1.
@@ -8,32 +10,32 @@ module Problems.P235 (solve) where
  -
  - Give your answer rounded to 12 places behind the decimal point.
  -}
-
 import Text.Printf
 
-u k r = (900-3*k) * (r**(k-1))
-s n r = sum [ u k r | k <- [1..n] ]
+u k r = (900 - 3 * k) * (r ** (k - 1))
 
-nestUntil pred f x | pred x = x
-                   | otherwise = nestUntil pred f (f x)
+s n r = sum [u k r | k <- [1 .. n]]
 
-findRoot f = let lo = 1.0
-                 hi = nestUntil (\x -> f x > 0) (2*) lo
-             in findRoot' f lo hi
+nestUntil pred f x
+  | pred x = x
+  | otherwise = nestUntil pred f (f x)
 
-findRoot' f lo hi | hi - lo < 1e-13 = lo
-                  | otherwise       =
-    let mid = 0.5*(lo+hi)
+findRoot f =
+  let lo = 1.0
+      hi = nestUntil (\x -> f x > 0) (2 *) lo
+  in findRoot' f lo hi
+
+findRoot' f lo hi
+  | hi - lo < 1e-13 = lo
+  | otherwise =
+    let mid = 0.5 * (lo + hi)
     in if f mid >= 0
-       then findRoot' f lo mid
-       else findRoot' f mid hi
+         then findRoot' f lo mid
+         else findRoot' f mid hi
 
 solve :: String
 solve =
-  let
-    targ = -600e9
-    f r = -(s 5000 r - targ)
-    ans = findRoot f :: Double
-  in
-    printf "%.12f" ans
-
+  let targ = -600e9
+      f r = -(s 5000 r - targ)
+      ans = findRoot f :: Double
+  in printf "%.12f" ans

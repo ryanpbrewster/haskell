@@ -1,4 +1,7 @@
-module Problems.P065 (solve) where
+module Problems.P065
+  ( solve
+  ) where
+
 -- 065.hs
 {-
  - What is most surprising is that the important mathematical constant,
@@ -6,12 +9,12 @@ module Problems.P065 (solve) where
  -
  - Find the sum of digits in the numerator of the 100th convergent of the continued fraction for e.
  -}
-
 import Util.Math (integerDigits, fromContinuedFraction)
 
 solve :: String
 solve = show solveProblem
 
-solveProblem = let cfrac = 2:concat [[1,2*k,1] | k <- [1..]]
-                   conv = fromContinuedFraction $ take 100 cfrac
-               in sum $ integerDigits $ fst conv
+solveProblem =
+  let cfrac = 2 : concat [[1, 2 * k, 1] | k <- [1 ..]]
+      conv = fromContinuedFraction $ take 100 cfrac
+  in sum $ integerDigits $ fst conv

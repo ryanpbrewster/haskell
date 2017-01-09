@@ -1,4 +1,6 @@
-module Problems.P108 (solve) where
+module Problems.P108
+  ( solve
+  ) where
 
 {-
  - In the following equation x, y, and z are positive integers.
@@ -11,7 +13,6 @@ module Problems.P108 (solve) where
  - What is the least value of z for which the number of distinct solutions
  - exceeds one-thousand?
  -}
-
 {-
  - Since we know x > z and y > z, we write x = z+a, y = z+b which yields
  -     1/(z+a) + 1/(z+b) == 1/z
@@ -27,7 +28,6 @@ module Problems.P108 (solve) where
  - --> (a,b) = { (1,25), (5,5) }
  - --> (x,y) = { (6,30), (10,10) }
  -}
-
 {-
  - We are looking for a number with a lot of very small divisors.
  - Thus, it makes NO sense to look at numbers like 19, since 19 has the same
@@ -47,24 +47,26 @@ module Problems.P108 (solve) where
  -
  - If we do it this way, we'll avoid looking at a LOT of silly numbers.
  -}
-
 import Data.List (sort)
 
-import Util.Prime (sigma, primes)
-import Util.Math (fullCoinCombos)
 import Util.List (mergeInf)
+import Util.Math (fullCoinCombos)
+import Util.Prime (sigma, primes)
 
 solve :: String
-solve = show $ solveProblem (10^3)
+solve = show $ solveProblem (10 ^ 3)
 
-parts = fullCoinCombos [1..]
+parts = fullCoinCombos [1 ..]
 
-expsToInt :: Integral a => [a] -> Integer
+expsToInt
+  :: Integral a
+  => [a] -> Integer
 expsToInt = product . zipWith (^) primes
 
 ndivs = sigma 0
-numSolutions z = 1 + (ndivs (z^2)) `div` 2
+
+numSolutions z = 1 + (ndivs (z ^ 2)) `div` 2
 
 solveProblem bound =
-    let candidates = mergeInf $ [ sort $ map expsToInt ps | ps <- parts ]
-    in head $ filter (\z -> numSolutions z > bound) candidates
+  let candidates = mergeInf $ [sort $ map expsToInt ps | ps <- parts]
+  in head $ filter (\z -> numSolutions z > bound) candidates

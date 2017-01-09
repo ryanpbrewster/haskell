@@ -1,4 +1,6 @@
-module Problems.P114 (solve) where
+module Problems.P114
+  ( solve
+  ) where
 
 {-
  - A row measuring seven units in length has red blocks with a minimum length of
@@ -19,7 +21,6 @@ module Problems.P114 (solve) where
  - general it is permitted to mix block sizes. For example, on a row measuring
  - eight units in length you could use red (3), black (1), and red (4).
  -}
-
 {-
  - Let B[n] be the number of ways to tile a length `n` by starting with a black
  - tile, and R[n] by starting with a red tile
@@ -42,12 +43,13 @@ module Problems.P114 (solve) where
  -     f[n] = B[n] + R[n]
  -     f[50] = B[50] + R[50]
  -}
-
 solve :: String
 solve = show $ solveProblem 50
 
-b = [1]     ++ zipWith (+) b r
-r = [0,0,0] ++ zipWith (+) b (drop 2 r)
+b = [1] ++ zipWith (+) b r
+
+r = [0, 0, 0] ++ zipWith (+) b (drop 2 r)
+
 f = zipWith (+) b r
 
 solveProblem n = f !! n

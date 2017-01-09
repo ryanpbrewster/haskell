@@ -1,4 +1,6 @@
-module Problems.P031 (solve) where
+module Problems.P031
+  ( solve
+  ) where
 
 {-
  - In England the currency is made up of pound, £, and pence, p, and there are
@@ -12,7 +14,6 @@ module Problems.P031 (solve) where
  -
  - How many different ways can £2 be made using any number of coins?
  -}
-
 {-
  - Consider the notationally simpler problem:
  - How many ways can you construct the number 10 out of the set
@@ -34,15 +35,16 @@ module Problems.P031 (solve) where
  -     {0,1,2,3,4,5,6,7,8,9,10}
  -     {1,1,2,3,4,5,7,8,10,12,14}
  -}
-
 solve :: String
 solve = show solveProblem
 
-ways [] = 1:cycle [0]  -- can only make 0
-ways (x:xs) = let others = ways xs
-                  (start,rest) = splitAt x others -- x doesn't matter for [0..x-1]
-                  ans = start ++ zipWith (+) rest ans
-              in ans
+ways [] = 1 : cycle [0] -- can only make 0
+ways (x:xs) =
+  let others = ways xs
+      (start, rest) = splitAt x others -- x doesn't matter for [0..x-1]
+      ans = start ++ zipWith (+) rest ans
+  in ans
 
-solveProblem = let w = ways [1,2,5,10,20,50,100,200]
-               in w !! 200
+solveProblem =
+  let w = ways [1, 2, 5, 10, 20, 50, 100, 200]
+  in w !! 200

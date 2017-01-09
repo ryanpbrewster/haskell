@@ -1,4 +1,6 @@
-module Problems.P122 (solve) where
+module Problems.P122
+  ( solve
+  ) where
 
 {-
  - The most naive way of computing n15 requires fourteen multiplications:
@@ -27,7 +29,6 @@ module Problems.P122 (solve) where
  -
  - For 1 ≤ k ≤ 200, find ∑ m(k).
  -}
-
 {-
  - So this nonsense with multiplication is clearly unnecessary. This is really
  - a problem about addition chains. The "legit" terminology is that
@@ -53,7 +54,6 @@ module Problems.P122 (solve) where
  -
  - Thus, we will generate star-chains for this problem.
  -}
-
 import Data.List (mapAccumL)
 import qualified Data.Set as DS
 
@@ -61,17 +61,19 @@ solve :: String
 solve = show $ solveProblem 200
 
 all_star_chains = iterate (concat . map newStarChains) [[1]]
-    where newStarChains xs = [ (x + head xs):xs | x <- xs ]
+  where
+    newStarChains xs = [(x + head xs) : xs | x <- xs]
 
-chain_ends = let raw_chain_ends = [ map head chains | chains <- all_star_chains ]
-             in uniques raw_chain_ends
+chain_ends =
+  let raw_chain_ends = [map head chains | chains <- all_star_chains]
+  in uniques raw_chain_ends
 
-uniques xss = let xss' = map DS.fromList xss
-                  grabUniques acc xs = (DS.union acc xs, DS.difference xs acc)
-              in snd $ mapAccumL grabUniques DS.empty xss'
-
+uniques xss =
+  let xss' = map DS.fromList xss
+      grabUniques acc xs = (DS.union acc xs, DS.difference xs acc)
+  in snd $ mapAccumL grabUniques DS.empty xss'
 
 l 191 = 11
 l n = length $ takeWhile (not . DS.member n) chain_ends
 
-solveProblem bound = sum [ l n | n <- [1..bound] ]
+solveProblem bound = sum [l n | n <- [1 .. bound]]

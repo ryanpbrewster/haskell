@@ -1,4 +1,6 @@
-module Problems.P091 (solve) where
+module Problems.P091
+  ( solve
+  ) where
 
 {-
  - The points P (x1, y1) and Q (x2, y2) are plotted at integer co-ordinates and
@@ -12,7 +14,6 @@ module Problems.P091 (solve) where
  -
  - Given that 0 <= x1, y1, x2, y2 <= 50, how many right triangles can be formed?
  -}
-
 {-
  - There are 3n^2 trivial solutions (n^2 for P and Q on the axes, n^2 for P only,
  - and n^2 for Q only). The non-trivial solutions require non-axial points. Suppose
@@ -33,16 +34,16 @@ module Problems.P091 (solve) where
  -     (x2,y2) == (x1 - s*y1, y1 + s*x1)
  - instead (moving up and left instead of down and right). Just multiply by 2.
  -}
-
-
 solve :: String
 solve = show $ solveProblem 50
 
 numSolutions x y n = length $ takeWhile inBounds lattice_points
-    where g = gcd x y
-          x' = x `div` g
-          y' = y `div` g
-          lattice_points = [ (x+c*y', y-c*x') | c <- [1..]]
-          inBounds (p,q) = 0 <= p && p <= n && 0 <= q && q <= n
+  where
+    g = gcd x y
+    x' = x `div` g
+    y' = y `div` g
+    lattice_points = [(x + c * y', y - c * x') | c <- [1 ..]]
+    inBounds (p, q) = 0 <= p && p <= n && 0 <= q && q <= n
 
-solveProblem n = 3*n^2 + 2*(sum [numSolutions x y n | x <- [1..n], y <- [1..n]])
+solveProblem n =
+  3 * n ^ 2 + 2 * (sum [numSolutions x y n | x <- [1 .. n], y <- [1 .. n]])

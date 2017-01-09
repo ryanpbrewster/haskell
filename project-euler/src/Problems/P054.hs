@@ -1,5 +1,8 @@
-module Problems.P054 (process) where
+module Problems.P054
+  ( process
+  ) where
 
+import Data.List (sort, groupBy)
 {-
  - In the card game poker, a hand consists of five cards and are ranked, from
  - lowest to highest, in the following way:
@@ -42,75 +45,87 @@ module Problems.P054 (process) where
  -
  - How many hands does Player 1 win?
  -}
-
 import Data.Map (fromList, (!))
-import Data.List (sort, groupBy)
 import Data.Maybe (fromJust)
 
 type FileContents = String
 
 process :: FileContents -> String
-process txt =
-    show $ solveProblem txt
+process txt = show $ solveProblem txt
 
-solveProblem txt = let lns = [ map parseCard $ words ln | ln <- lines txt ]
-                       inputs = [ (take 5 ln, drop 5 ln) | ln <- lns ]
-                       anss = [ (classifyHand h1) > (classifyHand h2) | (h1,h2) <- inputs ]
-                   in length $ filter id anss
+solveProblem txt =
+  let lns = [map parseCard $ words ln | ln <- lines txt]
+      inputs = [(take 5 ln, drop 5 ln) | ln <- lns]
+      anss = [(classifyHand h1) > (classifyHand h2) | (h1, h2) <- inputs]
+  in length $ filter id anss
 
-data Card = Card { getRank :: Int, getSuit :: Int }
+data Card = Card
+  { getRank :: Int
+  , getSuit :: Int
+  }
+
 instance Show Card where
-    show (Card r s) = [rank_revmap ! r, suit_revmap ! s]
+  show (Card r s) = [rank_revmap ! r, suit_revmap ! s]
+
 instance Ord Card where
-    (Card r _) `compare` (Card r' _) = r `compare` r' -- suit is irrelevant
+  (Card r _) `compare` (Card r' _) = r `compare` r' -- suit is irrelevant
+
 instance Eq Card where
-    (Card r s) == (Card r' s') = r == r' && s == s'
+  (Card r s) == (Card r' s') = r == r' && s == s'
 
-rank_map    = fromList $ zip "23456789TJQKA" [0..]
-rank_revmap = fromList $ zip [0..] "23456789TJQKA"
-suit_map    = fromList $ zip "CDHS" [0..]
-suit_revmap = fromList $ zip [0..] "CDHS"
+rank_map = fromList $ zip "23456789TJQKA" [0 ..]
 
-parseCard [r,s] = Card (rank_map ! r) (suit_map ! s)
+rank_revmap = fromList $ zip [0 ..] "23456789TJQKA"
+
+suit_map = fromList $ zip "CDHS" [0 ..]
+
+suit_revmap = fromList $ zip [0 ..] "CDHS"
+
+parseCard [r, s] = Card (rank_map ! r) (suit_map ! s)
 
 same f a b = (f a) == (f b)
 
-data HandType = HighCard      [Card] -- descending order
-              | OnePair       [Card] -- pair first
-              | TwoPair       [Card] -- pairs first
-              | Trip          [Card] -- trip first
-              | Straight      [Card] -- descending order
-              | Flush         [Card] -- descending order
-              | FullHouse     [Card] -- trip, then pair
-              | Quad          [Card] -- quad first
-              | StraightFlush [Card] -- descending order
-              | RoyalFlush    [Card] -- descending order
-              deriving (Show, Ord, Eq)
+data HandType
+  = HighCard [Card] -- descending order
+  | OnePair [Card] -- pair first
+  | TwoPair [Card] -- pairs first
+  | Trip [Card] -- trip first
+  | Straight [Card] -- descending order
+  | Flush [Card] -- descending order
+  | FullHouse [Card] -- trip, then pair
+  | Quad [Card] -- quad first
+  | StraightFlush [Card] -- descending order
+  | RoyalFlush [Card] -- descending order
+  deriving (Show, Ord, Eq)
 
 classifyHand :: [Card] -> HandType
 classifyHand hand =
-     let by_rank    = reverse $ sort hand
-         (hi,lo)    = (head by_rank, last by_rank)
-         globs      = reverse $ sort [(length g,g) | g <- groupBy (same getRank) by_rank]
-         rank_count = map fst globs
-         by_count   = concat $ map snd globs
-         flush          = length (head $ groupBy (same getSuit) hand) == 5
-         straight       = length rank_count == 5 && getRank hi - getRank lo == 4
-         straight_flush = straight && flush
-         royal_flush    = straight_flush && getRank lo == rank_map ! 'T'
-         quad           = rank_count == [4,1]
-         full_house     = rank_count == [3,2]
-         two_pair       = rank_count == [2,2,1]
-         trip           = rank_count == [3,1,1]
-         one_pair       = rank_count == [2,1,1,1]
-     in fromJust $ lookup True [(royal_flush,    RoyalFlush    by_rank)
-                               ,(straight_flush, StraightFlush by_rank)
-                               ,(quad,           Quad          by_count)
-                               ,(full_house,     FullHouse     by_count)
-                               ,(flush,          Flush         by_rank)
-                               ,(straight,       Straight      by_rank)
-                               ,(trip,           Trip          by_count)
-                               ,(two_pair,       TwoPair       by_count)
-                               ,(one_pair,       OnePair       by_count)
-                               ,(True,           HighCard      by_rank)
-                               ]
+  let by_rank = reverse $ sort hand
+      (hi, lo) = (head by_rank, last by_rank)
+      globs =
+        reverse $ sort [(length g, g) | g <- groupBy (same getRank) by_rank]
+      rank_count = map fst globs
+      by_count = concat $ map snd globs
+      flush = length (head $ groupBy (same getSuit) hand) == 5
+      straight = length rank_count == 5 && getRank hi - getRank lo == 4
+      straight_flush = straight && flush
+      royal_flush = straight_flush && getRank lo == rank_map ! 'T'
+      quad = rank_count == [4, 1]
+      full_house = rank_count == [3, 2]
+      two_pair = rank_count == [2, 2, 1]
+      trip = rank_count == [3, 1, 1]
+      one_pair = rank_count == [2, 1, 1, 1]
+  in fromJust $
+     lookup
+       True
+       [ (royal_flush, RoyalFlush by_rank)
+       , (straight_flush, StraightFlush by_rank)
+       , (quad, Quad by_count)
+       , (full_house, FullHouse by_count)
+       , (flush, Flush by_rank)
+       , (straight, Straight by_rank)
+       , (trip, Trip by_count)
+       , (two_pair, TwoPair by_count)
+       , (one_pair, OnePair by_count)
+       , (True, HighCard by_rank)
+       ]

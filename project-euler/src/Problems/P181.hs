@@ -1,4 +1,9 @@
-module Problems.P181 (solve) where
+module Problems.P181
+  ( solve
+  ) where
+
+import Control.Monad
+import Control.Monad.ST
 -- 181.hs
 {-
  - Having three black objects B and one white object W they can be grouped in
@@ -9,7 +14,6 @@ module Problems.P181 (solve) where
  - In how many ways can sixty black objects B and forty white objects W be thus
  - grouped?
  -}
-
 {-
  - Partition (60,40) into subsets of
  -     {(1,0), (2,0), ..., (0,1), (1,1), (2,1), (0,40), (1,40), ...}
@@ -42,7 +46,6 @@ module Problems.P181 (solve) where
  - We can make this MUCH faster by using dynamic programming and mutable arrays
  - This is my first try doing this in Haskell. It'll be fun.
  -}
-
 {-
  - The imperative code looks like this, in C:
  -
@@ -63,10 +66,7 @@ module Problems.P181 (solve) where
  -         return ways[Nb][Nw];
  -     }
  -}
-
 import Data.Array.ST
-import Control.Monad.ST
-import Control.Monad
 
 solve :: String
 solve = show solveProblem
@@ -75,16 +75,17 @@ solveProblem = waysToGroup 60 40
 
 -- I do not exactly understand all the Monad magic going on here. The type
 -- signature for the array is important, though. It won't compile without it.
-waysToGroup nb nw = runST $ do
-    ways <- newArray ((0,0), (nb,nw)) 0 :: ST s (STUArray s (Int,Int) Int)
-    writeArray ways (0,0) 1
-    forM_ [0..nb] $ \b -> do
-        forM_ [0..nw] $ \w -> do
-            when (b>0 || w>0) $ do
-                forM_ [b..nb] $ \i -> do
-                    forM_ [w..nw] $ \j -> do
-                        prev <- readArray ways (i-b,j-w)
-                        cur <- readArray ways (i,j)
-                        writeArray ways (i,j) (prev+cur)
-    ans <- readArray ways (nb,nw)
+waysToGroup nb nw =
+  runST $ do
+    ways <- newArray ((0, 0), (nb, nw)) 0 :: ST s (STUArray s (Int, Int) Int)
+    writeArray ways (0, 0) 1
+    forM_ [0 .. nb] $ \b -> do
+      forM_ [0 .. nw] $ \w -> do
+        when (b > 0 || w > 0) $ do
+          forM_ [b .. nb] $ \i -> do
+            forM_ [w .. nw] $ \j -> do
+              prev <- readArray ways (i - b, j - w)
+              cur <- readArray ways (i, j)
+              writeArray ways (i, j) (prev + cur)
+    ans <- readArray ways (nb, nw)
     return ans

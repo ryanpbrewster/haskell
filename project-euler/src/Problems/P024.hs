@@ -1,4 +1,6 @@
-module Problems.P024 (solve) where
+module Problems.P024
+  ( solve
+  ) where
 
 {-
  - A permutation is an ordered arrangement of objects. For example, 3124 is one
@@ -11,19 +13,19 @@ module Problems.P024 (solve) where
  - What is the millionth lexicographic permutation of the digits 0, 1, 2, 3, 4,
  - 5, 6, 7, 8 and 9?
  -}
-
 import Data.List (delete)
 
 solve :: String
-solve = nthPermutation (1000000-1) "0123456789"
+solve = nthPermutation (1000000 - 1) "0123456789"
 
-factorial n = product [1..n]
+factorial n = product [1 .. n]
 
 -- Finds the n-th permutation of distinct items
 nthPermutation 0 xs = xs
-nthPermutation n xs = let r = factorial (length xs - 1)
-                          k = n `div` r
-                          e = xs !! k
-                          n' = n - k*r
-                          xs' = delete e xs
-                     in e:(nthPermutation n' xs')
+nthPermutation n xs =
+  let r = factorial (length xs - 1)
+      k = n `div` r
+      e = xs !! k
+      n' = n - k * r
+      xs' = delete e xs
+  in e : (nthPermutation n' xs')

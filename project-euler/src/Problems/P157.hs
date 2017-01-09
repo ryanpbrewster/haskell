@@ -1,4 +1,6 @@
-module Problems.P157 (solve) where
+module Problems.P157
+  ( solve
+  ) where
 
 {-
  - Consider the diophantine equation
@@ -13,7 +15,6 @@ module Problems.P157 (solve) where
  -
  - How many solutions has this equation for 1 ≤ n ≤ 9?
  -}
-
 {-
  - In a previous problem we solved for how many solutions the equation
  -     1/x + 1/y == 1/z
@@ -57,16 +58,16 @@ module Problems.P157 (solve) where
  - Thus, the number of solutions is:
  -     sum [ numDivisors (gcd x y) | (x,y) <- divisorPairs z^2 ]
  -}
-
 import Util.Prime (divisors)
 
 solve :: String
 solve = show solveProblem
 
-solveProblem = sum $ [ numSolutions (10^n) | n <- [1..9] ]
+solveProblem = sum $ [numSolutions (10 ^ n) | n <- [1 .. 9]]
 
-numSolutions z = let divs = divisors (z^2)
-                     abs = [ (a,b) | (a,b) <- zip divs (reverse divs), a <= b ]
-                     xys = [ (z+a, z+b) | (a,b) <- abs ]
-                     xy_sols = [ length $ divisors $ gcd x y | (x,y) <- xys ]
-                 in sum xy_sols
+numSolutions z =
+  let divs = divisors (z ^ 2)
+      abs = [(a, b) | (a, b) <- zip divs (reverse divs), a <= b]
+      xys = [(z + a, z + b) | (a, b) <- abs]
+      xy_sols = [length $ divisors $ gcd x y | (x, y) <- xys]
+  in sum xy_sols

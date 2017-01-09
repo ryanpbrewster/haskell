@@ -1,5 +1,8 @@
-module Problems.P110 (solve) where
+module Problems.P110
+  ( solve
+  ) where
 
+import Util.Math (fullCoinCombos)
 {-
  - In the following equation x, y, and z are positive integers.
  - 1/x + 1/y == 1/z
@@ -15,25 +18,25 @@ module Problems.P110 (solve) where
  - is well beyond the limitations of a brute force approach it requires
  - a clever implementation.
  -}
-
 {-
  - See 108.hs for an explanation of the code
  -}
-
 import Util.Prime (sigma, primes)
-import Util.Math (fullCoinCombos)
 
 solve :: String
-solve = show $ solveProblem (4*10^6)
+solve = show $ solveProblem (4 * 10 ^ 6)
 
-parts = fullCoinCombos [1..]
+parts = fullCoinCombos [1 ..]
 
-expsToInt :: Integral a => [a] -> Integer
+expsToInt
+  :: Integral a
+  => [a] -> Integer
 expsToInt = product . zipWith (^) primes
 
 ndivs = sigma 0
-numSolutions z = 1 + (ndivs (z^2)) `div` 2
+
+numSolutions z = 1 + (ndivs (z ^ 2)) `div` 2
 
 solveProblem bound =
-    let candidates = concat $ [ map expsToInt ps | ps <- parts ]
-    in minimum $ take 100 $ filter (\z -> numSolutions z > bound) candidates
+  let candidates = concat $ [map expsToInt ps | ps <- parts]
+  in minimum $ take 100 $ filter (\z -> numSolutions z > bound) candidates

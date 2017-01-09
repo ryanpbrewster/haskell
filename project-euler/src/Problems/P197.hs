@@ -1,4 +1,6 @@
-module Problems.P197 (solve) where
+module Problems.P197
+  ( solve
+  ) where
 
 {-
  - Given is the function f(x) = Floor[2^(30.403243784-x^2)] * 10^-9
@@ -8,7 +10,6 @@ module Problems.P197 (solve) where
  - Find u[n] + u[n+1] for n = 10^12.
  - Give your answer with 9 digits after the decimal point.
  -}
-
 {-
  - A few simple notes:
  -     f(x) = Floor[ 1.42*10^9 * 2^(-x^2) ] * 10^(-9)
@@ -19,15 +20,15 @@ module Problems.P197 (solve) where
  - That is, it just jumps back and forth between those two values forever.
  - Thus, u[n] + u[n+1] == 1.029461842 + 0.681175875 == 1.710637717
  -}
-
 import Text.Printf
 
 solve :: String
 solve = printf "%.9f\n" solveProblem
 
 f :: Double -> Double
-f x = (fromIntegral $ floor (1.42e9 * (2**(-x**2)))) * 1.0e-9
+f x = (fromIntegral $ floor (1.42e9 * (2 ** (-x ** 2)))) * 1.0e-9
 
-solveProblem = let u = iterate f (-1.0)
+solveProblem =
+  let u = iterate f (-1.0)
                    -- drop 1000 so that it converges
-               in sum $ take 2 $ drop 1000 $ u
+  in sum $ take 2 $ drop 1000 $ u

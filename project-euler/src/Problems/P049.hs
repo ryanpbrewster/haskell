@@ -1,5 +1,9 @@
-module Problems.P049 (solve) where
+module Problems.P049
+  ( solve
+  ) where
 
+import Data.List (groupBy, sort, sortBy)
+import Data.Ord (comparing)
 {-
  - The arithmetic sequence, 1487, 4817, 8147, in which each of the terms
  - increases by 3330, is unusual in two ways:
@@ -13,27 +17,27 @@ module Problems.P049 (solve) where
  - What 12-digit number do you form by concatenating the three terms in this
  - sequence?
  -}
-
 import qualified Util.Math as Math
 import qualified Util.Prime as Prime
-import Data.List (groupBy, sort, sortBy)
-import Data.Ord (comparing)
 
 solve :: String
 solve = concat $ map show solveProblem
 
-four_digit_primes = takeWhile (< 10^4) $ dropWhile (< 10^3) Prime.primes
+four_digit_primes = takeWhile (< 10 ^ 4) $ dropWhile (< 10 ^ 3) Prime.primes
 
 gatherBy cmp xs = groupBy (\x -> \y -> cmp x y == EQ) $ sortBy cmp xs
 
 pairs [] = []
-pairs (x:xs) = [ [x,y] | y <- xs ] ++ pairs xs
-findArithmeticSequences k xs = let x_seqs = map (makeSequence k) $ pairs xs
-                               in filter (all (`elem` xs)) x_seqs
+pairs (x:xs) = [[x, y] | y <- xs] ++ pairs xs
 
-makeSequence k [x0,x1] = [ x0 + i*(x1-x0) | i <- [0..k-1] ]
+findArithmeticSequences k xs =
+  let x_seqs = map (makeSequence k) $ pairs xs
+  in filter (all (`elem` xs)) x_seqs
 
-solveProblem = let cmp = comparing (sort . Math.integerDigits)
-                   eq_classes = gatherBy cmp four_digit_primes
-                   ans = concat $ map (findArithmeticSequences 3) eq_classes
-               in ans !! 1
+makeSequence k [x0, x1] = [x0 + i * (x1 - x0) | i <- [0 .. k - 1]]
+
+solveProblem =
+  let cmp = comparing (sort . Math.integerDigits)
+      eq_classes = gatherBy cmp four_digit_primes
+      ans = concat $ map (findArithmeticSequences 3) eq_classes
+  in ans !! 1

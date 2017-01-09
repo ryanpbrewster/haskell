@@ -1,4 +1,6 @@
-module Problems.P006 (solve) where
+module Problems.P006
+  ( solve
+  ) where
 
 {-
  - The sum of the squares of the first ten natural numbers is,
@@ -14,8 +16,7 @@ module Problems.P006 (solve) where
  - Find the difference between the sum of the squares of the first one
  - hundred natural numbers and the square of the sum.
  -}
-
 solve :: String
 solve = show $ solveProblem 100
 
-solveProblem n = (sum [1..n])^2 - (sum [x^2|x<-[1..n]])
+solveProblem n = (sum [1 .. n]) ^ 2 - (sum [x ^ 2 | x <- [1 .. n]])

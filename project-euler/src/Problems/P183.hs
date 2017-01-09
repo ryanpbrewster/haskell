@@ -1,5 +1,8 @@
-module Problems.P183 (solve) where
+module Problems.P183
+  ( solve
+  ) where
 
+import Data.List
 {-
  - Let N be a positive integer and let N be split into k equal parts, r = N/k,
  - so that N = r + r + ... + r.  Let P be the product of these parts,
@@ -24,7 +27,6 @@ module Problems.P183 (solve) where
  -
  - Find ΣD(N) for 5 ≤ N ≤ 10000.
  -}
-
 {-
  - M(N) = max (N/k)^k for any k
  - In general, this occurs at k = N/e (where e = 2.718...)
@@ -35,9 +37,7 @@ module Problems.P183 (solve) where
  - (N/k)^k and (N/k) have exactly the same prime factors in the denominator, so
  - we can check the much smaller denominator without losing anything.
  -}
-
 import Data.Ratio
-import Data.List
 
 import Util.Prime (factors)
 
@@ -47,15 +47,20 @@ solve = show solveProblem
 e :: Double
 e = exp 1.0
 
-terminatingDecimal d = null $ (nub $ factors d) \\ [2,5]
+terminatingDecimal d = null $ (nub $ factors d) \\ [2, 5]
 
-m n = let k = round ((fromIntegral n)/e)
-      in (n%k)^k
+m n =
+  let k = round ((fromIntegral n) / e)
+  in (n %k) ^ k
 
 -- m' is just for computational convenience
-m' n = let k = round ((fromIntegral n)/e)
-       in (n%k)
+m' n =
+  let k = round ((fromIntegral n) / e)
+  in (n %k)
 
-d n = if terminatingDecimal (denominator $ m' n) then (-n) else n
+d n =
+  if terminatingDecimal (denominator $ m' n)
+    then (-n)
+    else n
 
-solveProblem = sum $ map d [5..10000]
+solveProblem = sum $ map d [5 .. 10000]

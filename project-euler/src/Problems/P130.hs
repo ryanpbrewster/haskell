@@ -1,4 +1,6 @@
-module Problems.P130 (solve) where
+module Problems.P130
+  ( solve
+  ) where
 
 {-
  - A number consisting entirely of ones is called a repunit. We shall define
@@ -17,7 +19,6 @@ module Problems.P130 (solve) where
  - Find the sum of the first twenty-five composite values of n for which GCD(n,
  - 10) = 1 and n − 1 is divisible by A(n).
  -}
-
 import qualified Util.Prime as Prime
 
 solve :: String
@@ -25,12 +26,14 @@ solve = show $ solveProblem 25
 
 -- "a n" is taken from 129.hs. Look there for explanation.
 a n = aH n 1 1
+
 aH n 0 k = k
-aH n r k = let r' = (10*r+1) `mod` n
-           in aH n r' (k+1)
+aH n r k =
+  let r' = (10 * r + 1) `mod` n
+  in aH n r' (k + 1)
 
+legit n = (not $ Prime.test n) && ((n - 1) `mod` (a n) == 0)
 
-legit n = (not $ Prime.test n) && ((n-1) `mod` (a n) == 0)
-
-solveProblem count = let candidates = filter (\n -> gcd n 10 == 1) [3,5..]
-                     in sum $ take count $ filter legit candidates
+solveProblem count =
+  let candidates = filter (\n -> gcd n 10 == 1) [3,5 ..]
+  in sum $ take count $ filter legit candidates

@@ -1,4 +1,6 @@
-module Problems.P067 (process) where
+module Problems.P067
+  ( process
+  ) where
 
 {-
  - By starting at the top of the triangle below and moving to adjacent numbers
@@ -20,28 +22,27 @@ module Problems.P067 (process) where
  - would take over twenty billion years to check them all. There is an
  - efficient algorithm to solve it. ;o)
  -}
-
 import Util.List (chunksBy)
 
 type FileContents = String
 
 process :: FileContents -> String
-process txt =
-    show $ solveProblem $ map read $ words txt
+process txt = show $ solveProblem $ map read $ words txt
 
 -- addRows takes in two rows of length (x) and (x+1), and returns a
 -- row of length (x+1)
-addRows r1 r2 = let r1' = zipWith max ([0] ++ r1) (r1 ++ [0])
-                in zipWith (+) r1' r2
-solveProblem nums = maxTrianglePath $ chunksBy [1..] nums
+addRows r1 r2 =
+  let r1' = zipWith max ([0] ++ r1) (r1 ++ [0])
+  in zipWith (+) r1' r2
+
+solveProblem nums = maxTrianglePath $ chunksBy [1 ..] nums
+
 maxTrianglePath tri = maximum $ foldl1 addRows tri
-
-
-
-
 
 -- addRows' takes in two rows of length (x) and (x+1), and returns a
 -- row of length (x).
-addRows' r1 r2 = let r2' = zipWith max (init r2) (tail r2)
-                 in zipWith (+) r1 r2'
+addRows' r1 r2 =
+  let r2' = zipWith max (init r2) (tail r2)
+  in zipWith (+) r1 r2'
+
 maxTrianglePath' tri = head $ foldr1 addRows' tri

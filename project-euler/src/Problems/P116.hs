@@ -1,4 +1,6 @@
-module Problems.P116 (solve) where
+module Problems.P116
+  ( solve
+  ) where
 
 {-
  - A row of five black square tiles is to have a number of its tiles replaced
@@ -32,7 +34,6 @@ module Problems.P116 (solve) where
  - its tiles replaced with coloured oblong tiles chosen from red (length two),
  - green (length three), or blue (length four).
  -}
-
 {-
  - This is basically the same as 114
  - For red, you can either add a black tile or two red tiles,
@@ -41,13 +42,14 @@ module Problems.P116 (solve) where
  -     g[n] = g[n-1] + g[n-3]
  -     b[n] = b[n-1] + b[n-4]
  -}
-
 solve :: String
 solve = show $ solveProblem 50
 
-r = [1,1]     ++ zipWith (+) (r) (drop 1 r)
-g = [1,1,1]   ++ zipWith (+) (g) (drop 2 g)
-b = [1,1,1,1] ++ zipWith (+) (b) (drop 3 b)
+r = [1, 1] ++ zipWith (+) (r) (drop 1 r)
+
+g = [1, 1, 1] ++ zipWith (+) (g) (drop 2 g)
+
+b = [1, 1, 1, 1] ++ zipWith (+) (b) (drop 3 b)
 
 add3 x y z = x + y + z
 

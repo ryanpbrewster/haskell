@@ -1,4 +1,6 @@
-module Problems.P033 (solve) where
+module Problems.P033
+  ( solve
+  ) where
 
 {-
  - The fraction 49/98 is a curious fraction, as an inexperienced mathematician
@@ -14,30 +16,31 @@ module Problems.P033 (solve) where
  - If the product of these four fractions is given in its lowest common terms,
  - find the value of the denominator.
  -}
-
 import Data.Ratio
 
 solve :: String
 solve = show solveProblem
 
-solveProblem = let examples = nontrivialExamples
-                   reduced = [ n%d | [n,d] <- examples ]
-               in denominator $ product reduced
+solveProblem =
+  let examples = nontrivialExamples
+      reduced = [n %d | [n, d] <- examples]
+  in denominator $ product reduced
 
+nontrivialExamples =
+  [ [n, d]
+  | p <- [1 .. 9]
+  , q <- [1 .. 9]
+  , r <- [1 .. 9]
+  , s <- [1 .. 9]
+  , let n = round (10 * p + q)
+  , let d = round (10 * r + s)
+  , n < d
+  , isCurious p q r s
+  ]
 
-nontrivialExamples = [ [n,d] | p <- [1..9]
-                             , q <- [1..9]
-                             , r <- [1..9]
-                             , s <- [1..9]
-                             , let n = round (10*p + q)
-                             , let d = round (10*r + s)
-                             , n < d
-                             , isCurious p q r s ]
-
-
-isCurious a b c d | a == c && (10*a + b) / (10*c + d) == b / d = True
-                  | a == d && (10*a + b) / (10*c + d) == b / c = True
-                  | b == c && (10*a + b) / (10*c + d) == a / d = True
-                  | b == d && (10*a + b) / (10*c + d) == a / c = True
-                  | otherwise                                  = False
-
+isCurious a b c d
+  | a == c && (10 * a + b) / (10 * c + d) == b / d = True
+  | a == d && (10 * a + b) / (10 * c + d) == b / c = True
+  | b == c && (10 * a + b) / (10 * c + d) == a / d = True
+  | b == d && (10 * a + b) / (10 * c + d) == a / c = True
+  | otherwise = False

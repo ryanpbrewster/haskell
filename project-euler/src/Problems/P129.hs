@@ -1,4 +1,6 @@
-module Problems.P129 (solve) where
+module Problems.P129
+  ( solve
+  ) where
 
 {-
  - A number consisting entirely of ones is called a repunit. We shall define
@@ -12,9 +14,8 @@ module Problems.P129 (solve) where
  -
  - Find the least value of n for which A(n) first exceeds one-million.
  -}
-
 solve :: String
-solve = show $ solveProblem (10^6)
+solve = show $ solveProblem (10 ^ 6)
 
 a n = aH n 1 1
 
@@ -26,10 +27,12 @@ a n = aH n 1 1
 -- so
 --     R(k+1) `mod` n = (10*r + 1) `mod` n
 aH n 0 k = k
-aH n r k = let r' = (10*r+1) `mod` n
-           in aH n r' (k+1)
+aH n r k =
+  let r' = (10 * r + 1) `mod` n
+  in aH n r' (k + 1)
 
-solveProblem bound = let candidates = filter (\n -> gcd n 10 == 1 ) [bound..]
-                         an_pairs = zip candidates (map a candidates)
-                         ans = filter (\(n,an) -> an > bound) an_pairs
-                     in fst $ head ans
+solveProblem bound =
+  let candidates = filter (\n -> gcd n 10 == 1) [bound ..]
+      an_pairs = zip candidates (map a candidates)
+      ans = filter (\(n, an) -> an > bound) an_pairs
+  in fst $ head ans

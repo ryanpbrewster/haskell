@@ -1,5 +1,9 @@
-module Problems.P039 (solve) where
+module Problems.P039
+  ( solve
+  ) where
 
+import Data.List (maximumBy, sort, group)
+import Data.Ord (comparing)
 {-
  - If p is the perimeter of a right angle triangle with integral length sides,
  - {a,b,c}, there are exactly three solutions for p = 120.
@@ -8,17 +12,14 @@ module Problems.P039 (solve) where
  -
  - For which value of p <= 1000, is the number of solutions maximised?
  -}
-
 import Util.Math (primitiveTriples)
-import Data.List (maximumBy, sort, group)
-import Data.Ord (comparing)
 
 solve = show solveProblem
 
 solveProblem = generalProblem 1000
 
-generalProblem bound = 
-    let prims = takeWhile (\t -> sum t < bound) primitiveTriples -- take the relevant primitive triples
-        trips = [ map (k*) t | t <- prims, k <- [1..bound `div` (sum t)] ] -- generate the non-primitives
-        perims = map sum trips
-    in head $ maximumBy (comparing length) $ group $ sort $ perims
+generalProblem bound =
+  let prims = takeWhile (\t -> sum t < bound) primitiveTriples -- take the relevant primitive triples
+      trips = [map (k *) t | t <- prims, k <- [1 .. bound `div` (sum t)]] -- generate the non-primitives
+      perims = map sum trips
+  in head $ maximumBy (comparing length) $ group $ sort $ perims

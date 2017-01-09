@@ -1,4 +1,6 @@
-module Problems.P301 (solve) where
+module Problems.P301
+  ( solve
+  ) where
 
 {-
  - Nim is a game played with heaps of stones, where two players take it in
@@ -30,7 +32,6 @@ module Problems.P301 (solve) where
  -
  - For how many positive integers n <= 2^30 does X(n,2n,3n) = 0 ?
  -}
-
 {-
  - It is fairly well-known that X(a,b,c) == 0 iff a xor b xor c == 0
  - That is, you can always win if (foldl1 xor [p1,p2,p3,...]) == 0
@@ -57,10 +58,9 @@ module Problems.P301 (solve) where
  - Thus, f r = Fibonacci[r+2]
  - (( Note that this is only helpful when n <= 2^r. General bounds are hard. ))
  -}
-
 solve :: String
 solve = show $ solveProblem 30
 
-solveProblem n = fibs !! (n+2)
+solveProblem n = fibs !! (n + 2)
 
 fibs = 0 : 1 : zipWith (+) fibs (tail fibs)

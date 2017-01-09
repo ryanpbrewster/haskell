@@ -1,4 +1,6 @@
-module Problems.P042 (process) where
+module Problems.P042
+  ( process
+  ) where
 
 {-
  - The nth term of the sequence of triangle numbers is given by, tn = ½n(n+1);
@@ -14,7 +16,6 @@ module Problems.P042 (process) where
  - Using 042.in, a 16K text file containing nearly two-thousand common English
  - words, how many are triangle words?
  -}
-
 import Data.Array
 import Data.Char
 
@@ -24,11 +25,16 @@ process :: FileContents -> String
 process txt = show $ solveProblem (words txt)
 
 bound = 26 * 10
+
 charToDigit ch = 1 + ord ch - ord 'A'
+
 isTriangleWord w = isTriangle $ sum $ map charToDigit w
 
-triangle_numbers = takeWhile (<bound) [n*(n+1) `div` 2 | n <- [1..]]
-is_triangle = accumArray (||) False (1,bound) $ [ (t,True) | t <- triangle_numbers ]
+triangle_numbers = takeWhile (< bound) [n * (n + 1) `div` 2 | n <- [1 ..]]
+
+is_triangle =
+  accumArray (||) False (1, bound) $ [(t, True) | t <- triangle_numbers]
+
 isTriangle = (is_triangle !)
 
 solveProblem ws = length $ filter isTriangleWord ws

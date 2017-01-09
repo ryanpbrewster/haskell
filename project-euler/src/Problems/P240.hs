@@ -1,4 +1,6 @@
-module Problems.P240 (solve) where
+module Problems.P240
+  ( solve
+  ) where
 
 {-
  - There are 1111 ways in which five 6-sided dice (sides numbered 1 to 6) can
@@ -12,7 +14,6 @@ module Problems.P240 (solve) where
  - In how many ways can twenty 12-sided dice (sides numbered 1 to 12) be rolled
  - so that the top ten sum to 70?
  -}
-
 {-
  - There are <n> dice. You take the top <k> rolls, which must sum to <t>.
  - The dice each go from 1 to <d>.
@@ -57,26 +58,30 @@ partitions n k xs = partitions' n k (reverse $ sort xs)
 partitions' 0 0 xs = [[]]
 partitions' n 0 xs = []
 partitions' n k [] = []
-partitions' n k (x:xs) | k*x < n = []
-                       | otherwise = let with = partitions' (n-x) (k-1) (x:xs)
-                                         without = partitions' n k xs
-                                     in (map (x:) with) ++ without
+partitions' n k (x:xs)
+  | k * x < n = []
+  | otherwise =
+    let with = partitions' (n - x) (k - 1) (x : xs)
+        without = partitions' n k xs
+    in (map (x :) with) ++ without
 
-fact n = product [1..n]
+fact n = product [1 .. n]
+
 ways :: [Integer] -> Integer -> Integer -> Integer
-ways top rep n = let m = last top
-                     top' = top ++ replicate (fromInteger rep) m
-                     occ = fromIntegral $ length top'
-                     unocc = n - occ
-                     fact_lens = map (fromIntegral.fact.length) $ group top'
-                     shuffles = fact occ `div` product fact_lens
-                     free_choices = (m-1)^unocc
-                 in (binomial n occ) * shuffles * free_choices
+ways top rep n =
+  let m = last top
+      top' = top ++ replicate (fromInteger rep) m
+      occ = fromIntegral $ length top'
+      unocc = n - occ
+      fact_lens = map (fromIntegral . fact . length) $ group top'
+      shuffles = fact occ `div` product fact_lens
+      free_choices = (m - 1) ^ unocc
+  in (binomial n occ) * shuffles * free_choices
 
 -- I refer to "counts", because they ignore order.
 -- For instance, given a count of [3,3,2,1], the actual roll could be
 --     [1,2,3,3], [1,3,2,3], [1,3,3,2], [2,1,3,3], [2,3,1,3], [2,3,3,1], etc.
 solveProblem :: Integer -> Integer -> Integer -> Integer -> Integer
 solveProblem n k t d =
-    let good_tops = partitions t k [1..d] -- find the good top dice rolls
-    in sum [ ways top rep n | top <- good_tops, rep <- [0..n-k] ]
+  let good_tops = partitions t k [1 .. d] -- find the good top dice rolls
+  in sum [ways top rep n | top <- good_tops, rep <- [0 .. n - k]]

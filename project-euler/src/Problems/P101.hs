@@ -1,4 +1,6 @@
-module Problems.P101 (solve) where
+module Problems.P101
+  ( solve
+  ) where
 
 {-
  - If we are presented with the first k terms of a sequence it is impossible to
@@ -40,28 +42,28 @@ module Problems.P101 (solve) where
  -
  - Find the sum of FITs for the BOPs.
  -}
-
 import Data.List (inits)
 
 solve :: String
 solve = show (round solveProblem)
 
-solveProblem = sumFITs $ map fromIntegral [1,-1,1,-1,1,-1,1,-1,1,-1,1]
+solveProblem = sumFITs $ map fromIntegral [1, -1, 1, -1, 1, -1, 1, -1, 1, -1, 1]
 
 sumFITs :: [Double] -> Double
-sumFITs poly = let f x = sum $ zipWith (*) poly (iterate (x*) 1.0)
-                   xs = map fromIntegral [1..length poly]
-                   ys = map f xs
-                   pts = zip xs ys
-                   ops = map interpolatingPolynomial $ tail $ inits pts
-                   fits = [ op (x+1) | (op,x) <- init (zip ops xs) ]
-               in sum fits
+sumFITs poly =
+  let f x = sum $ zipWith (*) poly (iterate (x *) 1.0)
+      xs = map fromIntegral [1 .. length poly]
+      ys = map f xs
+      pts = zip xs ys
+      ops = map interpolatingPolynomial $ tail $ inits pts
+      fits = [op (x + 1) | (op, x) <- init (zip ops xs)]
+  in sum fits
 
 -- interpolatingPolynomial takes in a list of (xi,yi) and returns a Lagrange
 -- interpolating polynomial. See "lagrange_polynomial.hs" for further details.
 interpolatingPolynomial :: [(Double, Double)] -> (Double -> Double)
 interpolatingPolynomial pts =
-    let (xs,ys) = unzip pts
-        l xj x = product [ (x-xm)/(xj-xm) | xm <- xs, xm /= xj ]
-        f x = sum [ yj * (l xj) x | (xj,yj) <- pts ]
-    in f
+  let (xs, ys) = unzip pts
+      l xj x = product [(x - xm) / (xj - xm) | xm <- xs, xm /= xj]
+      f x = sum [yj * (l xj) x | (xj, yj) <- pts]
+  in f

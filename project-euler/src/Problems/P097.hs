@@ -1,4 +1,6 @@
-module Problems.P097 (solve) where
+module Problems.P097
+  ( solve
+  ) where
 
 {-
  - The first known prime found to exceed one million digits was discovered in
@@ -11,8 +13,7 @@ module Problems.P097 (solve) where
  -
  - Find the last ten digits of this prime number.
  -}
-
 solve :: String
 solve = show solveProblem
 
-solveProblem = (28433*2^7830457 + 1) `mod` (10^10)
+solveProblem = (28433 * 2 ^ 7830457 + 1) `mod` (10 ^ 10)

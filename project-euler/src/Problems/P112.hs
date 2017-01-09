@@ -1,4 +1,7 @@
-module Problems.P112 (solve) where
+module Problems.P112
+  ( solve
+  ) where
+
 -- 112.hs
 {-
  - Working from left-to-right if no digit is exceeded by the digit to its left
@@ -20,21 +23,29 @@ module Problems.P112 (solve) where
  - Find the least number for which the proportion of bouncy numbers is exactly
  - 99%.
  -}
-
 import Data.Ratio
 
 solve :: String
-solve = show $ solveProblem (99%100)
+solve = show $ solveProblem (99 % 100)
 
-solveProblem rat = let bouncyq = [ if isBouncy n then 1 else 0 | n <- [1..] ]
-                       bouncy_count = scanl1 (+) bouncyq
-                       bouncy_rats = zip bouncy_count [1..]
-                       anss = filter (\(c,t) -> (c%t) == rat) bouncy_rats
-                   in snd $ head anss
+solveProblem rat =
+  let bouncyq =
+        [ if isBouncy n
+          then 1
+          else 0
+        | n <- [1 ..]
+        ]
+      bouncy_count = scanl1 (+) bouncyq
+      bouncy_rats = zip bouncy_count [1 ..]
+      anss = filter (\(c, t) -> (c %t) == rat) bouncy_rats
+  in snd $ head anss
 
-isBouncy n = let ds = digits n
-                 diffs = zipWith (-) (init ds) (tail ds)
-             in not $ all (>=0) diffs || all (<=0) diffs
+isBouncy n =
+  let ds = digits n
+      diffs = zipWith (-) (init ds) (tail ds)
+  in not $ all (>= 0) diffs || all (<= 0) diffs
 
 digits 0 = []
-digits n = let (q,r) = n `divMod` 10 in r : digits q
+digits n =
+  let (q, r) = n `divMod` 10
+  in r : digits q

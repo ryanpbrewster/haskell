@@ -1,4 +1,6 @@
-module Problems.P025 (solve) where
+module Problems.P025
+  ( solve
+  ) where
 
 {-
  -
@@ -9,13 +11,13 @@ module Problems.P025 (solve) where
  -
  - What is the first term in the Fibonacci sequence to contain 1000 digits?
  -}
-
 solve :: String
 solve = show solveProblem
 
-fibs = 0:1:zipWith (+) fibs (tail fibs)
+fibs = 0 : 1 : zipWith (+) fibs (tail fibs)
 
 solveProblem = idxWithDigits 1000 fibs
 
 idxWithDigits d xs = length $ takeWhile (\x -> (length $ show x) < d) xs
+
 firstWithDigits d xs = head $ dropWhile (\x -> (length $ show x) < d) xs

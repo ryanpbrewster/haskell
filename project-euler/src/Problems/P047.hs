@@ -1,5 +1,8 @@
-module Problems.P047 (solve) where
+module Problems.P047
+  ( solve
+  ) where
 
+import qualified Data.Set as DS
 {-
  - The first two consecutive numbers to have two prime factors each, with all
  - four distinct, are:
@@ -15,22 +18,23 @@ module Problems.P047 (solve) where
  - Find the first four consecutive integers to have four distinct primes
  - factors. What is the first of these numbers?
  -}
-
 import qualified Util.Prime as Prime
-import qualified Data.Set as DS
 
 solve :: String
 solve = show solveProblem
 
 roll _ [] = []
-roll k xs = (take k xs):(roll k $ tail xs)
+roll k xs = (take k xs) : (roll k $ tail xs)
 
-kFactors k = let nn = [2..]
-                 ff = map (DS.fromList . Prime.factors) nn
-                 fss = roll k ff
-                 xs = zip nn fss
-             in [ n | (n, fs) <- xs
-                    , all (\e -> DS.size e == k) fs
-                    , all DS.null $ zipWith DS.intersection (tail fs) (init fs) ]
+kFactors k =
+  let nn = [2 ..]
+      ff = map (DS.fromList . Prime.factors) nn
+      fss = roll k ff
+      xs = zip nn fss
+  in [ n
+     | (n, fs) <- xs
+     , all (\e -> DS.size e == k) fs
+     , all DS.null $ zipWith DS.intersection (tail fs) (init fs)
+     ]
 
 solveProblem = head $ kFactors 4

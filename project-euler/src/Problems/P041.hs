@@ -1,4 +1,6 @@
-module Problems.P041 (solve) where
+module Problems.P041
+  ( solve
+  ) where
 
 {-
  - We shall say that an n-digit number is pandigital if it makes use of all the
@@ -7,7 +9,6 @@ module Problems.P041 (solve) where
  -
  - What is the largest n-digit pandigital prime that exists?
  -}
-
 {-
  - Some things to note:
  - If the sum of the digits is a multiple of 3 then the number is divisible by 3.
@@ -17,7 +18,6 @@ module Problems.P041 (solve) where
  -
  - Thus, we're probably looking for a 7-digit pandigital prime.
  -}
-
 import Data.List (permutations)
 import qualified Util.Math as Math
 import qualified Util.Prime as Prime
@@ -25,5 +25,6 @@ import qualified Util.Prime as Prime
 solve :: String
 solve = show solveProblem
 
-solveProblem = let possibilities = map Math.fromIntegerDigits $ permutations [1..7]
-               in maximum $ filter Prime.test possibilities
+solveProblem =
+  let possibilities = map Math.fromIntegerDigits $ permutations [1 .. 7]
+  in maximum $ filter Prime.test possibilities

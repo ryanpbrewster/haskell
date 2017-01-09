@@ -1,5 +1,8 @@
-module Problems.P209 (solve) where
+module Problems.P209
+  ( solve
+  ) where
 
+import Data.Bits
 {-
  - A k-input binary truth table is a map from k input bits (binary digits,
  - 0 [false] or 1 [true]) to 1 output bit. For example, the 2-input binary
@@ -24,7 +27,6 @@ module Problems.P209 (solve) where
  -
  - for all 6-bit inputs (a, b, c, d, e, f)?
  -}
-
 {-
  - So the function
  -     f([a,b,c,d,e,f]) = [b,c,d,e,f,a `xor` (b .&. c)]
@@ -62,36 +64,39 @@ module Problems.P209 (solve) where
  - Thus, the answer will be
  -     product $ map bs $ cycleLengths bijection
  -}
-
 import Data.List
-import Data.Bits
 
-import Util.Math (integerDigitsBy, fromIntegerDigitsBy)
 import Util.List (tuples)
+import Util.Math (integerDigitsBy, fromIntegerDigitsBy)
 
 solve :: String
 solve = show solveProblem
 
-fibs = 0:1:zipWith (+) fibs (tail fibs)
-bs = 0:zipWith (+) fibs (drop 2 fibs)
+fibs = 0 : 1 : zipWith (+) fibs (tail fibs)
 
-f :: Bits t => [t] -> [t]
-f [a,b,c,d,e,f] = [b,c,d,e,f, a `xor` (b .&. c)]
+bs = 0 : zipWith (+) fibs (drop 2 fibs)
+
+f
+  :: Bits t
+  => [t] -> [t]
+f [a, b, c, d, e, f] = [b, c, d, e, f, a `xor` (b .&. c)]
 
 padTo l xs = (replicate (l - length xs) 0) ++ xs
 
 inputs :: [[Int]] -- a list of bit-strings
-inputs  = map (padTo 6 . integerDigitsBy 2) [0..2^6-1]
+inputs = map (padTo 6 . integerDigitsBy 2) [0 .. 2 ^ 6 - 1]
+
 inputs' = map f inputs
 
 inps :: [Int] -- a list of ints which represent bit-strings
-inps  = map (fromIntegerDigitsBy 2) inputs
+inps = map (fromIntegerDigitsBy 2) inputs
+
 inps' = map (fromIntegerDigitsBy 2) inputs'
 
 findCycles f dom =
-    let cycle i = takeWhile (/= i) $ tail $ iterate f i
-        cycles = [ i:cycle i | i <- dom ]
-    in nub $ map sort cycles
+  let cycle i = takeWhile (/= i) $ tail $ iterate f i
+      cycles = [i : cycle i | i <- dom]
+  in nub $ map sort cycles
 
 input_cycles = findCycles (inps' !!) inps
 

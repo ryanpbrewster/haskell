@@ -1,4 +1,6 @@
-module Problems.P125 (solve) where
+module Problems.P125
+  ( solve
+  ) where
 
 {-
  - The palindromic number 595 is interesting because it can be written as the
@@ -12,22 +14,23 @@ module Problems.P125 (solve) where
  - Find the sum of all the numbers less than 10^8 that are both palindromic and
  - can be written as the sum of consecutive squares.
  -}
-
 import Data.List (nub, tails)
 
 import Util.Math (integerDigits)
 
 solve :: String
-solve = show $ solveProblem (10^8)
+solve = show $ solveProblem (10 ^ 8)
 
-isPalindromic n = let ds = integerDigits n
-                  in ds == reverse ds
+isPalindromic n =
+  let ds = integerDigits n
+  in ds == reverse ds
 
-squares = map (^2) [1..]
+squares = map (^ 2) [1 ..]
 
-cumsums bound xs = takeWhile (<bound) $ tail $ scanl1 (+) xs
+cumsums bound xs = takeWhile (< bound) $ tail $ scanl1 (+) xs
 
-candidates bound = let all_cumsums = map (cumsums bound) (tails squares)
-                   in concat $ takeWhile (not.null) all_cumsums
+candidates bound =
+  let all_cumsums = map (cumsums bound) (tails squares)
+  in concat $ takeWhile (not . null) all_cumsums
 
 solveProblem bound = sum $ nub $ filter isPalindromic $ candidates bound

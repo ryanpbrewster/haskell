@@ -1,4 +1,7 @@
-module Problems.P188 (solve) where
+module Problems.P188
+  ( solve
+  ) where
+
 -- 188.hs
 {-
  - The hyperexponentiation or tetration of a number a by a positive integer b,
@@ -12,7 +15,6 @@ module Problems.P188 (solve) where
  -
  - Find the last 8 digits of 1777↑↑1855.
  -}
-
 {-
  - Recall that
  -     a^(phi n) == 1 (mod n)
@@ -21,7 +23,6 @@ module Problems.P188 (solve) where
  -     a ^^ (k+1) `mod` n == a^( a^^k ) `mod` n
  -                        == a^( a^^k `mod` (phi n)) `mod` n
  -}
-
 import Util.Math (powerMod)
 import Util.Prime (phi)
 
@@ -29,7 +30,8 @@ solve :: String
 solve = show solveProblem
 
 tetrateMod a 0 _ = 1
-tetrateMod a b m = let t = tetrateMod a (b-1) (phi m)
-                   in powerMod a t m
+tetrateMod a b m =
+  let t = tetrateMod a (b - 1) (phi m)
+  in powerMod a t m
 
-solveProblem = tetrateMod 1777 1855 (10^8)
+solveProblem = tetrateMod 1777 1855 (10 ^ 8)

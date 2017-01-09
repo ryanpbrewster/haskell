@@ -1,4 +1,7 @@
-module Problems.P018 (process) where
+module Problems.P018
+  ( process
+  ) where
+
 {-
  - 018.hs
  - Project Euler problem 18
@@ -6,7 +9,6 @@ module Problems.P018 (process) where
  - Find the path from the top of the triangle to the bottom
  - which has the largest sum
  -}
-
 type FileContents = String
 
 process :: FileContents -> String
@@ -26,8 +28,9 @@ process txt = show $ problem018 txt
 --      The 9 inherits max(1,4) yielding 13
 --      The 2 inherits 4, yielding 6
 bestRow :: [Integer] -> [Integer] -> [Integer]
-bestRow a b = zipWith3 bestAdd b ([0]++a) (a++[0])
-              where bestAdd x y z = x + max y z
+bestRow a b = zipWith3 bestAdd b ([0] ++ a) (a ++ [0])
+  where
+    bestAdd x y z = x + max y z
 
 -- maxPath takes in the whole triangle and returns the best path
 -- It does this by propogating down the best choice you can make
@@ -37,5 +40,4 @@ maxPath (fr:sr:rest) = maxPath $ bestRow fr sr : rest
 maxPath tri = maximum $ head tri
 
 problem018 :: FileContents -> Integer
-problem018 txt =
-    maxPath [ map read (words line) | line <- lines txt ]
+problem018 txt = maxPath [map read (words line) | line <- lines txt]

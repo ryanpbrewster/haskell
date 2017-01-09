@@ -1,5 +1,8 @@
-module Problems.P203 (solve) where
+module Problems.P203
+  ( solve
+  ) where
 
+import Data.List (nub)
 {-
  - The binomial coefficients nCk can be arranged in triangular form, Pascal's
  - triangle, like this:
@@ -25,15 +28,15 @@ module Problems.P203 (solve) where
  - Find the sum of the distinct squarefree numbers in the first 51 rows of
  - Pascal's triangle.
  -}
-
 import Util.Math (pascalTriangle)
 import Util.Prime (factors)
-import Data.List (nub)
 
 solve :: String
 solve = show $ solveProblem 51
 
-isSquarefree n = let fs = factors n
-                 in (length $ nub fs) == (length fs)
+isSquarefree n =
+  let fs = factors n
+  in (length $ nub fs) == (length fs)
 
-solveProblem n = sum $ filter isSquarefree $ nub $ concat $ take n pascalTriangle
+solveProblem n =
+  sum $ filter isSquarefree $ nub $ concat $ take n pascalTriangle

@@ -1,5 +1,8 @@
-module Problems.P059 (process) where
+module Problems.P059
+  ( process
+  ) where
 
+import Data.Bits (xor)
 {-
  - Each character on a computer is assigned a unique code and the preferred
  - standard is ASCII (American Standard Code for Information Interchange). For
@@ -28,45 +31,42 @@ module Problems.P059 (process) where
  - decrypt the message and find the sum of the ASCII values in the original
  - text.
  -}
-
 import qualified Data.Char as DC
-import Data.Bits (xor)
 import Data.List (maximumBy)
 
 type FileContents = String
 
 process :: FileContents -> String
 process txt =
-  let
-    ciphertext' = map read $ lines txt
-    ciphertext  = map DC.chr ciphertext'
-  in
-    show $ solveProblem ciphertext
+  let ciphertext' = map read $ lines txt
+      ciphertext = map DC.chr ciphertext'
+  in show $ solveProblem ciphertext
 
 solveProblem ciphertext =
-    let shortciphertext = take 100 ciphertext
-        possible_keys = tuples 3 ['a'..'z']
-        possible_plaintexts = [ decipher shortciphertext key | key <- possible_keys ]
-        key = fst $ maximumBy metric $ zip possible_keys possible_plaintexts
-        plaintext = decipher ciphertext key
-    in sum $ map DC.ord plaintext
+  let shortciphertext = take 100 ciphertext
+      possible_keys = tuples 3 ['a' .. 'z']
+      possible_plaintexts =
+        [decipher shortciphertext key | key <- possible_keys]
+      key = fst $ maximumBy metric $ zip possible_keys possible_plaintexts
+      plaintext = decipher ciphertext key
+  in sum $ map DC.ord plaintext
 
 tuples 0 _ = [[]] -- only the empty tuple
-tuples k xs = [ x:t | t <- tuples (k-1) xs, x <- xs ]
+tuples k xs = [x : t | t <- tuples (k - 1) xs, x <- xs]
 
-decipher ciphertext key = let key' = map DC.ord $ cycle key
-                              ciphertext' = map DC.ord ciphertext
-                              plaintext' = zipWith xor key' ciphertext'
-                          in map DC.chr plaintext'
-
+decipher ciphertext key =
+  let key' = map DC.ord $ cycle key
+      ciphertext' = map DC.ord ciphertext
+      plaintext' = zipWith xor key' ciphertext'
+  in map DC.chr plaintext'
 
 -- compare plaintext1 vs. plaintext2
 metric kv1 kv2 = simpleFrequencyMetric (snd kv1) (snd kv2)
 
 simpleFrequencyMetric pt1 pt2 =
-    let score1 = sum $ map frequency pt1
-        score2 = sum $ map frequency pt2
-    in compare score1 score2
+  let score1 = sum $ map frequency pt1
+      score2 = sum $ map frequency pt2
+  in compare score1 score2
 
 frequency 'e' = 12
 frequency 't' = 9

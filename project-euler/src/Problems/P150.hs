@@ -1,4 +1,6 @@
-module Problems.P150 (solve) where
+module Problems.P150
+  ( solve
+  ) where
 
 {-
  - In a triangular array of positive and negative integers, we wish to find
@@ -36,7 +38,6 @@ module Problems.P150 (solve) where
  -
  - Find the smallest possible sub-triangle sum.
  -}
-
 import Data.Array.Unboxed
 
 import Util.List (chunksBy)
@@ -44,29 +45,34 @@ import Util.List (chunksBy)
 solve :: String
 solve = show solveProblem
 
-solveProblem = let tri = take 1000 $ chunksBy [1..] lcg
-               in minSum tri
+solveProblem =
+  let tri = take 1000 $ chunksBy [1 ..] lcg
+  in minSum tri
 
-triangleCumSums :: [[Int]] -> UArray (Int,Int) Int
-triangleCumSums tri = let n = length tri
-                          cumsums = [ scanl (+) 0 row | row <- tri ]
-                          idxs = [ (i,j) | i <- [1..n], j <- [0..i] ]
-                      in accumArray (+) 0 ((1,0),(n,n)) $ zip idxs (concat cumsums)
+triangleCumSums :: [[Int]] -> UArray (Int, Int) Int
+triangleCumSums tri =
+  let n = length tri
+      cumsums = [scanl (+) 0 row | row <- tri]
+      idxs = [(i, j) | i <- [1 .. n], j <- [0 .. i]]
+  in accumArray (+) 0 ((1, 0), (n, n)) $ zip idxs (concat cumsums)
 
 minSum tri =
-    let n = length tri
-        trics = triangleCumSums tri
-    in minimum [ minRootedSum trics (i,j) | i <- [1..n], j <- [1..i] ]
+  let n = length tri
+      trics = triangleCumSums tri
+  in minimum [minRootedSum trics (i, j) | i <- [1 .. n], j <- [1 .. i]]
 
 -- the minimum subtriangle sum with the root at (i,j)
 -- idealogically equivalent to:
 --     minimum [ subtriangleSum (i,j) h | h <- [1..length tri - i] ]
-minRootedSum trics (i,j) = minRootedSum' 0 0 0
-    where (_, (n,_)) = bounds trics
-          minRootedSum' k cm cs
-              | i + k > n = cm
-              | otherwise = let cs' = cs + trics ! (i+k,j+k) - trics ! (i+k,j-1)
-                            in minRootedSum' (k+1) (min cm cs') cs'
+minRootedSum trics (i, j) = minRootedSum' 0 0 0
+  where
+    (_, (n, _)) = bounds trics
+    minRootedSum' k cm cs
+      | i + k > n = cm
+      | otherwise =
+        let cs' = cs + trics ! (i + k, j + k) - trics ! (i + k, j - 1)
+        in minRootedSum' (k + 1) (min cm cs') cs'
 
-lcg = map (subtract (2^19)) $ tail $ iterate nextLCGTerm 0
-nextLCGTerm t = ((615949*t + 797807) `mod` (2^20))
+lcg = map (subtract (2 ^ 19)) $ tail $ iterate nextLCGTerm 0
+
+nextLCGTerm t = ((615949 * t + 797807) `mod` (2 ^ 20))

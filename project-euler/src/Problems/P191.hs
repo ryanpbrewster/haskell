@@ -1,4 +1,7 @@
-module Problems.P191 (solve) where
+module Problems.P191
+  ( solve
+  ) where
+
 -- 191.hs
 {-
  - A particular school offers cash rewards to children with good attendance and
@@ -19,11 +22,12 @@ module Problems.P191 (solve) where
  -
  - How many "prize" strings exist over a 30-day period?
  -}
-
 solve :: String
 solve = show solveProblem
 
-prize_strings = map sum $ iterate nextDay [1,0,0,0,0,0]
-    where nextDay [a0,a1,a2,la0,la1,la2] = [a0+a1+a2,a0,a1,a0+a1+a2+la0+la1+la2,la0,la1]
+prize_strings = map sum $ iterate nextDay [1, 0, 0, 0, 0, 0]
+  where
+    nextDay [a0, a1, a2, la0, la1, la2] =
+      [a0 + a1 + a2, a0, a1, a0 + a1 + a2 + la0 + la1 + la2, la0, la1]
 
 solveProblem = prize_strings !! 30

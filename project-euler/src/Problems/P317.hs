@@ -1,4 +1,7 @@
-module Problems.P317 (solve) where
+module Problems.P317
+  ( solve
+  ) where
+
 -- 317.hs
 {-
  - See 317.lhs for the problem statement and solution analysis.
@@ -14,4 +17,4 @@ solve :: String
 solve = printf "%.4f\n" (solveProblem 9.81 100.0 20.0)
 
 solveProblem :: Double -> Double -> Double -> Double
-solveProblem g h v0 = (0.25*pi/g**3) * (v0**3 + 2.0*g*h*v0)**2
+solveProblem g h v0 = (0.25 * pi / g ** 3) * (v0 ** 3 + 2.0 * g * h * v0) ** 2

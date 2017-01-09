@@ -1,4 +1,6 @@
-module Problems.P079 (process) where
+module Problems.P079
+  ( process
+  ) where
 
 {-
  - A common security method used for online banking is to ask the user for
@@ -12,26 +14,24 @@ module Problems.P079 (process) where
  - file so as to determine the shortest possible secret passcode of unknown
  - length.
  -}
-
 {-
  - In order to solve this, I'm going to assume that the passcode does not
  - have repeated digits.
  -}
-
 import Data.Char (digitToInt, intToDigit)
-import Data.Set (fromList, elems)
-import Data.List (intersect)
 import Data.Graph (buildG, topSort)
+import Data.List (intersect)
+import Data.Set (fromList, elems)
 
 process :: String -> String
 process txt =
-    let logins = [ map digitToInt ln | ln <- lines txt ]
-    in show $ solveProblem logins
+  let logins = [map digitToInt ln | ln <- lines txt]
+  in show $ solveProblem logins
 
 solveProblem logins =
-    let digit_set = elems $ fromList $ concat logins
-        bounds = (minimum digit_set, maximum digit_set)
-        edges = concat [ zip (init login) (tail login) | login <- logins ]
-        g = buildG bounds edges
-        passcode = intersect (topSort g) digit_set
-    in map intToDigit passcode
+  let digit_set = elems $ fromList $ concat logins
+      bounds = (minimum digit_set, maximum digit_set)
+      edges = concat [zip (init login) (tail login) | login <- logins]
+      g = buildG bounds edges
+      passcode = intersect (topSort g) digit_set
+  in map intToDigit passcode

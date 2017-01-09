@@ -1,5 +1,9 @@
-module Problems.P038 (solve) where
+module Problems.P038
+  ( solve
+  ) where
 
+import Data.List (sort)
+import Data.Maybe
 {-
  - Take the number 192 and multiply it by each of 1, 2, and 3:
  -
@@ -17,10 +21,7 @@ module Problems.P038 (solve) where
  - What is the largest 1 to 9 pandigital 9-digit number that can be formed as
  - the concatenated product of an integer with (1,2, ... , n) where n > 1?
  -}
-
 import qualified Util.Math as Math
-import Data.List (sort)
-import Data.Maybe
 
 solve :: String
 solve = show solveProblem
@@ -33,13 +34,15 @@ solve = show solveProblem
 -- If concatenating multiples of n does not yield exactly 9 digits
 -- then it returns Nothing
 digitConcatenation n =
-    let multiples = map (n*) [1..]
-        mdigits = map Math.integerDigits multiples
-        digits_len = map length mdigits
-        accum_digits = takeWhile (<= 9) $ scanl1 (+) digits_len
-    in if (last accum_digits) /= 9 then Nothing
-        else Just $ concat $ take (length accum_digits) mdigits
+  let multiples = map (n *) [1 ..]
+      mdigits = map Math.integerDigits multiples
+      digits_len = map length mdigits
+      accum_digits = takeWhile (<= 9) $ scanl1 (+) digits_len
+  in if (last accum_digits) /= 9
+       then Nothing
+       else Just $ concat $ take (length accum_digits) mdigits
 
-solveProblem = let digit_concatenations = mapMaybe digitConcatenation [1..10^4]
-                   pandigitals = filter (\ds -> sort ds == [1..9]) digit_concatenations
-               in maximum $ map Math.fromIntegerDigits pandigitals
+solveProblem =
+  let digit_concatenations = mapMaybe digitConcatenation [1 .. 10 ^ 4]
+      pandigitals = filter (\ds -> sort ds == [1 .. 9]) digit_concatenations
+  in maximum $ map Math.fromIntegerDigits pandigitals

@@ -1,6 +1,8 @@
-module Problems.P008 (process) where
--- 008.hs
+module Problems.P008
+  ( process
+  ) where
 
+-- 008.hs
 import Data.Char
 import Data.List (tails)
 
@@ -33,7 +35,6 @@ import Data.List (tails)
  - I put that awful block of number into 008.txt so you can read it in using
  - IO
  -}
-
 type FileContents = String
 
 process :: FileContents -> String

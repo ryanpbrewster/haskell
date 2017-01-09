@@ -1,4 +1,6 @@
-module Problems.P037 (solve) where
+module Problems.P037
+  ( solve
+  ) where
 
 {-
  - The number 3797 has an interesting property. Being prime itself, it is
@@ -11,25 +13,27 @@ module Problems.P037 (solve) where
  -
  - NOTE: 2, 3, 5, and 7 are not considered to be truncatable primes.
  -}
-
 {-
  - Small optimization: a truncatable prime must end in {3, 7}.
  - {0, 2, 4, 5, 6, 8} all directly mean that a number is divisible by 2 or 5
  - {1, 9} are not prime, so truncating will not work
  -}
-
 import Data.List (inits, tails)
-import qualified Util.Prime as Prime
 import qualified Util.Math as Math
+import qualified Util.Prime as Prime
 
 solve :: String
 solve = show solveProblem
 
-solveProblem = let possibles = concat [ [p+3, p+7] | p <- [10,20..] ]
-                   truncatable_primes = take 11 $ filter isTruncatable possibles
-               in sum truncatable_primes
+solveProblem =
+  let possibles = concat [[p + 3, p + 7] | p <- [10,20 ..]]
+      truncatable_primes = take 11 $ filter isTruncatable possibles
+  in sum truncatable_primes
 
 isTruncatable n = all Prime.bfTest $ (leftTruncations n) ++ (rightTruncations n)
 
-leftTruncations n  = map Math.fromIntegerDigits $ tail $ inits $ Math.integerDigits n
-rightTruncations n = map Math.fromIntegerDigits $ init $ tails $ Math.integerDigits n
+leftTruncations n =
+  map Math.fromIntegerDigits $ tail $ inits $ Math.integerDigits n
+
+rightTruncations n =
+  map Math.fromIntegerDigits $ init $ tails $ Math.integerDigits n

@@ -1,7 +1,8 @@
 module Problems.P027
-  (solve)
-  where
+  ( solve
+  ) where
 
+import Util.List (maximumBy)
 {-
  - Euler published the remarkable quadratic formula:
  -     n^2 + n + 41
@@ -37,21 +38,20 @@ module Problems.P027
 - so we can run a from (-b,999).
 -}
 import qualified Util.Prime as Prime
-import Util.List (maximumBy)
 
 solve :: String
 solve = show solveProblem
 
 bound = 999
 
-solveProblem = 
+solveProblem =
   let primes = takeWhile (<= bound) Prime.primes
-      coeffs = [(a,b)|b <- primes,a <- [-b .. bound]]
-      (a,b) = maximumBy consecutivePrimes coeffs
+      coeffs = [(a, b) | b <- primes, a <- [-b .. bound]]
+      (a, b) = maximumBy consecutivePrimes coeffs
   in a * b
 
-type Coefficients = (Integer,Integer) -- coefficients are pairs (a, b)
+type Coefficients = (Integer, Integer) -- coefficients are pairs (a, b)
 
 consecutivePrimes :: Coefficients -> Int
-consecutivePrimes (a,b) = 
-  length $ takeWhile Prime.test [b + n * (a + n)|n <- [0 ..]]
+consecutivePrimes (a, b) =
+  length $ takeWhile Prime.test [b + n * (a + n) | n <- [0 ..]]

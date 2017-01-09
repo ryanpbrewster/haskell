@@ -1,4 +1,6 @@
-module Problems.P057 (solve) where
+module Problems.P057
+  ( solve
+  ) where
 
 {-
  - It is possible to show that the square root of two can be expressed as an
@@ -20,7 +22,6 @@ module Problems.P057 (solve) where
  - In the first one-thousand expansions, how many fractions contain a numerator
  - with more digits than denominator?
  -}
-
 import Data.Ratio
 import Util.Math (fromContinuedFraction, integerDigits)
 
@@ -28,9 +29,11 @@ solve :: String
 solve = show solveProblem
 
 solveProblem = generalProblem 1000
+
 generalProblem num = length $ filter legit $ take num convergents
 
-convergents = iterate (\r -> (2+r)/(1+r)) (1%1)
-legit r = (intLen $ numerator r) > (intLen $ denominator r)
-intLen n = length $ integerDigits n
+convergents = iterate (\r -> (2 + r) / (1 + r)) (1 % 1)
 
+legit r = (intLen $ numerator r) > (intLen $ denominator r)
+
+intLen n = length $ integerDigits n

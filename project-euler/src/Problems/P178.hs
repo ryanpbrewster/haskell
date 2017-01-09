@@ -1,4 +1,7 @@
-module Problems.P178 (solve) where
+module Problems.P178
+  ( solve
+  ) where
+
 -- 178.hs
 {-
  -  Consider the number 45656.
@@ -14,7 +17,6 @@ module Problems.P178 (solve) where
  -
  -  How many pandigital step numbers less than 10^40 are there? 
  -}
-
 {-
  - Given a set of step numbers which all:
  -     have <n> digits
@@ -32,20 +34,31 @@ module Problems.P178 (solve) where
  -     <lo> = 0
  -     <hi> = 9
  -}
-
 import Data.Array
 
 solve :: String
 solve = show $ solveProblem 40
 
-solveProblem n = sum [ pandigitalStepNumbers stp | stp <- take n step_numbers ]
+solveProblem n = sum [pandigitalStepNumbers stp | stp <- take n step_numbers]
 
-pandigitalStepNumbers stp = sum [ stp ! (x,0,9) | x <- [1..9]]
+pandigitalStepNumbers stp = sum [stp ! (x, 0, 9) | x <- [1 .. 9]]
 
 step_numbers = iterate takeOneStep one_digit
-    where one_digit = accumArray (+) 0 ((0,0,0),(9,9,9)) [((i,i,i), 1) | i <- [0..9]]
+  where
+    one_digit =
+      accumArray (+) 0 ((0, 0, 0), (9, 9, 9)) [((i, i, i), 1) | i <- [0 .. 9]]
 
 takeOneStep stp =
-    let step_up   = [((x+1,l,max h (x+1)), stp ! (x,l,h)) | x <- [0..8], l <- [0..x], h <- [x..9]]
-        step_down = [((x-1,min l (x-1),h), stp ! (x,l,h)) | x <- [1..9], l <- [0..x], h <- [x..9]]
-    in accumArray (+) 0 ((0,0,0),(9,9,9)) $ step_up ++ step_down
+  let step_up =
+        [ ((x + 1, l, max h (x + 1)), stp ! (x, l, h))
+        | x <- [0 .. 8]
+        , l <- [0 .. x]
+        , h <- [x .. 9]
+        ]
+      step_down =
+        [ ((x - 1, min l (x - 1), h), stp ! (x, l, h))
+        | x <- [1 .. 9]
+        , l <- [0 .. x]
+        , h <- [x .. 9]
+        ]
+  in accumArray (+) 0 ((0, 0, 0), (9, 9, 9)) $ step_up ++ step_down

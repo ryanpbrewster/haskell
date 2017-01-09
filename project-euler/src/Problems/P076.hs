@@ -1,4 +1,6 @@
-module Problems.P076 (solve) where
+module Problems.P076
+  ( solve
+  ) where
 
 {-
  - It is possible to write five as a sum in exactly six different ways:
@@ -12,8 +14,7 @@ module Problems.P076 (solve) where
  -
  - How many different ways can one hundred be written as a sum of at least two positive integers?
  -}
-
 import Util.Math (coinCombos)
 
 solve :: String
-solve = show $ (coinCombos [1..99]) !! 100
+solve = show $ (coinCombos [1 .. 99]) !! 100

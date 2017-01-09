@@ -1,4 +1,6 @@
-module Problems.P056 (solve) where
+module Problems.P056
+  ( solve
+  ) where
 
 {-
  - A googol (10^100) is a massive number: one followed by one-hundred zeros;
@@ -8,12 +10,11 @@ module Problems.P056 (solve) where
  - Considering natural numbers of the form, a^b, where a, b < 100, what is the
  - maximum digital sum?
  -}
-
 import Util.Math (integerDigits)
 
 solve :: String
 solve = show solveProblem
 
-solveProblem = maximum $ map digitalSum [ a^b | a <- [1..99], b <- [1..99] ]
+solveProblem = maximum $ map digitalSum [a ^ b | a <- [1 .. 99], b <- [1 .. 99]]
 
 digitalSum = sum . integerDigits

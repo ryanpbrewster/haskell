@@ -1,5 +1,9 @@
-module Problems.P058 (solve) where
+module Problems.P058
+  ( solve
+  ) where
 
+import Data.Ratio
+import Util.List (chunks)
 {-
  - Starting with 1 and spiralling anticlockwise in the following way, a square
  - spiral with side length 7 is formed.
@@ -21,21 +25,26 @@ module Problems.P058 (solve) where
  - is the side length of the square spiral for which the ratio of primes along
  - both diagonals first falls below 10%?
  -}
-
 import qualified Util.Prime as Prime
-import Util.List (chunks)
-import Data.Ratio
 
 solve :: String
 solve = show solveProblem
 
-numberSpiralDiagonals = scanl (+) 1 $ concat $ map (replicate 4) [2,4..]
+numberSpiralDiagonals = scanl (+) 1 $ concat $ map (replicate 4) [2,4 ..]
 
 solveProblem = generalProblem 0.1
-generalProblem bound = let diagonals = tail numberSpiralDiagonals
-                           primes = map (\n -> if Prime.test n then 1 else 0) diagonals
-                           counts = scanl1 (+) $ map sum $ chunks 4 primes
-                           totals = [5,9..]
-                           ratios = zipWith (%) counts totals
-                           levels = 1 + (length $ takeWhile (>=bound) ratios)
-                        in 2*levels + 1
+
+generalProblem bound =
+  let diagonals = tail numberSpiralDiagonals
+      primes =
+        map
+          (\n ->
+             if Prime.test n
+               then 1
+               else 0)
+          diagonals
+      counts = scanl1 (+) $ map sum $ chunks 4 primes
+      totals = [5,9 ..]
+      ratios = zipWith (%) counts totals
+      levels = 1 + (length $ takeWhile (>= bound) ratios)
+  in 2 * levels + 1

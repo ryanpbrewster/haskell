@@ -1,4 +1,6 @@
-module Problems.P046 (solve) where
+module Problems.P046
+  ( solve
+  ) where
 
 {-
  - It was proposed by Christian Goldbach that every odd composite number can be
@@ -16,13 +18,14 @@ module Problems.P046 (solve) where
  - What is the smallest odd composite that cannot be written as the sum of
  - a prime and twice a square?
  -}
-
 import qualified Util.Prime as Prime
 
 solve :: String
 solve = show solveProblem
 
-fitsConjecture n = any Prime.test $ takeWhile (>0) [ n - 2*i^2 | i <- [0..] ]
+fitsConjecture n =
+  any Prime.test $ takeWhile (> 0) [n - 2 * i ^ 2 | i <- [0 ..]]
 
-solveProblem = let odd_composites = filter (not . Prime.test) [9,11..]
-               in head $ filter (not . fitsConjecture) odd_composites
+solveProblem =
+  let odd_composites = filter (not . Prime.test) [9,11 ..]
+  in head $ filter (not . fitsConjecture) odd_composites

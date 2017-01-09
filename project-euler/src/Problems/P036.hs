@@ -1,4 +1,6 @@
-module Problems.P036 (solve) where
+module Problems.P036
+  ( solve
+  ) where
 
 {-
  - The decimal number, 585 = 10010010012 (binary), is palindromic in both
@@ -10,20 +12,19 @@ module Problems.P036 (solve) where
  - (Please note that the palindromic number, in either base, may not include
  - leading zeros.)
  -}
-
 {-
  - One small optimization: only odd numbers can be palindromic in base 2
  -}
-
 import Util.Math (integerDigitsBy)
 
 solve :: String
 solve = show solveProblem
 
-solveProblem = generalProblem (10^6)
+solveProblem = generalProblem (10 ^ 6)
 
-generalProblem bound = sum $ filter legit [1,3..bound]
+generalProblem bound = sum $ filter legit [1,3 .. bound]
 
-legit n = isPalindromic (integerDigitsBy 10 n) && isPalindromic (integerDigitsBy 2 n)
+legit n =
+  isPalindromic (integerDigitsBy 10 n) && isPalindromic (integerDigitsBy 2 n)
 
 isPalindromic xs = xs == reverse xs

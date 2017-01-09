@@ -1,4 +1,6 @@
-module Problems.P055 (solve) where
+module Problems.P055
+  ( solve
+  ) where
 
 {-
  - If we take 47, reverse and add, 47 + 74 = 121, which is palindromic.
@@ -31,7 +33,6 @@ module Problems.P055 (solve) where
  - NOTE: Wording was modified slightly on 24 April 2007 to emphasise the
  - theoretical nature of Lychrel numbers.
  -}
-
 import Util.Math (integerDigits)
 
 solve :: String
@@ -39,15 +40,20 @@ solve = show solveProblem
 
 num_trials = 50
 
-accum x d = 10*x + d
+accum x d = 10 * x + d
+
 digitsToInt ds = foldl accum 0 ds
 
-isPalindromic n = let xs = integerDigits n
-                  in xs == reverse xs
-addReverse n = let xs = integerDigits n
-               in n + (digitsToInt $ reverse $ integerDigits n)
+isPalindromic n =
+  let xs = integerDigits n
+  in xs == reverse xs
 
-isLychrel n = let addrevs = take num_trials $ tail $ iterate addReverse n
-              in not $ any isPalindromic addrevs
+addReverse n =
+  let xs = integerDigits n
+  in n + (digitsToInt $ reverse $ integerDigits n)
 
-solveProblem = length $ filter isLychrel [1..10^4]
+isLychrel n =
+  let addrevs = take num_trials $ tail $ iterate addReverse n
+  in not $ any isPalindromic addrevs
+
+solveProblem = length $ filter isLychrel [1 .. 10 ^ 4]

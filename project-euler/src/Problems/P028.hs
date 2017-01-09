@@ -1,4 +1,6 @@
-module Problems.P028 (solve) where
+module Problems.P028
+  ( solve
+  ) where
 
 {-
  - Starting with the number 1 and moving to the right in a clockwise direction
@@ -15,7 +17,6 @@ module Problems.P028 (solve) where
  - What is the sum of the numbers on the diagonals in a 1001 by 1001 spiral
  - formed in the same way?
  -}
-
 {-
  - The downward diagonal looks like [1,3,7,13,21,...]
  - If you take the first difference, you see that it is
@@ -31,7 +32,6 @@ module Problems.P028 (solve) where
  - Thus,
  -     scanl (+) 1 $ concat [[x,x] | x <- [4,8..]]
  -}
-
 {-
  - Of course, this has a closed form.
  - The sum of the diagonals for the first `n` circles is:
@@ -39,15 +39,15 @@ module Problems.P028 (solve) where
  -     [1, 1+24, 1+24+76, 1+24+76+160, ...]
  -     1 + 2/3 n (13 + n (15 + 8 n)) /. n -> [1..]
  -}
-
 solve :: String
 solve = show solveProblem
 
 solveProblem = generalProblem 1001
 
-generalProblem n = sum $ take (2*n-1) numberSpiralDiagonals
+generalProblem n = sum $ take (2 * n - 1) numberSpiralDiagonals
 
-numberSpiralDiagonals = scanl (+) 1 $ concat $ map (replicate 4) [2,4..]
+numberSpiralDiagonals = scanl (+) 1 $ concat $ map (replicate 4) [2,4 ..]
 
-generalProblem' n = closedform $ (n-1) `div` 2
-closedform n = 1 + 2*n*(13+n*(15+8*n)) `div` 3
+generalProblem' n = closedform $ (n - 1) `div` 2
+
+closedform n = 1 + 2 * n * (13 + n * (15 + 8 * n)) `div` 3

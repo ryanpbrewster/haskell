@@ -1,4 +1,6 @@
-module Problems.P072 (solve) where
+module Problems.P072
+  ( solve
+  ) where
 
 {-
  - Consider the fraction, n/d, where n and d are positive integers. If n<d and
@@ -15,10 +17,9 @@ module Problems.P072 (solve) where
  - How many elements would be contained in the set of reduced proper fractions
  - for d ≤ 1,000,000?
  -}
-
 import qualified Util.Prime as Prime
 
 solve :: String
-solve = show $ solveProblem (10^6)
+solve = show $ solveProblem (10 ^ 6)
 
-solveProblem bound = sum [ Prime.phi d | d <- [2..bound] ]
+solveProblem bound = sum [Prime.phi d | d <- [2 .. bound]]

@@ -1,4 +1,6 @@
-module Problems.P149 (solve) where
+module Problems.P149
+  ( solve
+  ) where
 
 {-
  - Looking at the table below, it is easy to verify that the maximum possible
@@ -27,7 +29,6 @@ module Problems.P149 (solve) where
  - Finally, find the greatest sum of (any number of) adjacent entries in any
  - direction (horizontal, vertical, diagonal or anti-diagonal).
  -}
-
 import Data.List (transpose)
 
 import Util.List (chunks)
@@ -40,25 +41,30 @@ solve = show $ solveProblem 2000
 -- just start over (hence the `max x 0`)
 maxSubsequence xs = maximum $ scanl (\x -> \y -> y + max x 0) 0 xs
 
-
 allseqs rs = rows rs ++ cols rs ++ diags rs ++ adiags rs
-rows  rs  = rs
-cols  rs  = transpose rs
-diags rs  = diagonals [head rs] (tail rs)
+
+rows rs = rs
+
+cols rs = transpose rs
+
+diags rs = diagonals [head rs] (tail rs)
+
 adiags rs = diags $ reverse rs
 
 diagonals [] [] = []
-diagonals top bot = let d = map head top
-                        top' = takeWhile (not.null) $ map tail top
-                        (b,bs) = splitAt 1 bot
-                    in d:diagonals (b ++ top') bs
+diagonals top bot =
+  let d = map head top
+      top' = takeWhile (not . null) $ map tail top
+      (b, bs) = splitAt 1 bot
+  in d : diagonals (b ++ top') bs
 
-lfg = let m = 10^6
-          start = [100003 - 200003*k + 300007*k^3 | k <- [1..55]]
-          shift = subtract (m `div` 2) . (`mod` m)
-          ans = map shift $ start ++ zipWith (+) ans (drop 31 ans)
-      in ans
+lfg =
+  let m = 10 ^ 6
+      start = [100003 - 200003 * k + 300007 * k ^ 3 | k <- [1 .. 55]]
+      shift = subtract (m `div` 2) . (`mod` m)
+      ans = map shift $ start ++ zipWith (+) ans (drop 31 ans)
+  in ans
 
 solveProblem n =
-    let mat = take n $ chunks n lfg
-    in maximum $ map maxSubsequence $ allseqs mat
+  let mat = take n $ chunks n lfg
+  in maximum $ map maxSubsequence $ allseqs mat

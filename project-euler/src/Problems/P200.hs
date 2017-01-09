@@ -1,4 +1,8 @@
-module Problems.P200 (solve) where
+module Problems.P200
+  ( solve
+  ) where
+
+import Data.List (isInfixOf)
 -- 200.hs
 {-
  - We shall define a sqube to be a number of the form, p^2q^3, where p and
@@ -13,25 +17,26 @@ module Problems.P200 (solve) where
  -
  - Find the 200th prime-proof sqube containing the contiguous sub-string "200".
  -}
-
 import Util.List (mergeInf)
 import Util.Prime (primes, test)
-import Data.List (isInfixOf)
 
 solve :: String
 solve = show $ solveProblem 199
 
-squbes = mergeInf [ [p^2 * q^3 | p <- primes] | q <- primes ]
+squbes = mergeInf [[p ^ 2 * q ^ 3 | p <- primes] | q <- primes]
 
 -- digitPlaces 12345 == [(1,10000), (2,1000), (3,100), (4,10), (5,1)]
 digitPlaces n = digitPlaces' n 1
-    where digitPlaces' 0 _ = []
-          digitPlaces' n acc = let (q,r) = n `divMod` 10
-                               in (r,acc) : digitPlaces' q (10*acc)
+  where
+    digitPlaces' 0 _ = []
+    digitPlaces' n acc =
+      let (q, r) = n `divMod` 10
+      in (r, acc) : digitPlaces' q (10 * acc)
 
-isPrimeProof n = let ds = digitPlaces n
-                     all_changes = [ n + k*dp | (d,dp) <- ds, k <- [-d..9-d] ]
-                 in not $ any test all_changes
+isPrimeProof n =
+  let ds = digitPlaces n
+      all_changes = [n + k * dp | (d, dp) <- ds, k <- [-d .. 9 - d]]
+  in not $ any test all_changes
 
 answers = filter isPrimeProof $ filter (isInfixOf "200" . show) squbes
 

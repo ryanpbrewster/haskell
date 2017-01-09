@@ -1,4 +1,7 @@
-module Problems.P021 (solve) where
+module Problems.P021
+  ( solve
+  ) where
+
 {-
  - Project Euler problem 21
  -
@@ -9,8 +12,6 @@ module Problems.P021 (solve) where
  - An amicable pair is a pair of numbers, (a,b), such that
  - sigma1(a) == b, and sigma1(b) == a
  -}
-
-
 import qualified Util.Prime as Prime
 
 solve :: String
@@ -18,8 +19,5 @@ solve = show $ problem021 10000
 
 sig n = (Prime.sigma 1 n) - n
 
-problem021 n = sum [a+b| a <- [1..n],
-                         let b = sig a,
-                         a > b,
-                         b > 0,
-                         sig b == a]
+problem021 n =
+  sum [a + b | a <- [1 .. n], let b = sig a, a > b, b > 0, sig b == a]
