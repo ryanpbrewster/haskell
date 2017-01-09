@@ -1,4 +1,6 @@
-module Problems.P032 (solve) where
+module Problems.P032
+  (solve)
+  where
 
 {-
  - We shall say that an n-digit number is pandigital if it makes use of all the
@@ -13,22 +15,26 @@ module Problems.P032 (solve) where
  - obtained in more than one way so be sure to only include it once in your
  - sum.
  -}
-
 import Util.Math (integerDigits)
 import Data.List (sort, nub)
 
 solve :: String
 solve = show solveProblem
 
-third (_,_,c) = c
+uniqueDigits n = 
+  let digits = integerDigits n
+  in nub digits == digits
 
-uniqueDigits n = let digits = integerDigits n
-                 in nub digits == digits
+solveProblem = sum $ nub solutions
+  where solutions = 
+          concatMap pandigitalProducts
+                    [([1 .. 9],[1000 .. 9999]),([10 .. 99],[100 .. 999])]
+        pandigitalProducts (as,bs) = 
+          [a * b
+          |a <- filter uniqueDigits as
+          ,b <- filter uniqueDigits bs
+          ,isPandigitalProduct a b]
 
-solveProblem = sum $ nub $ map third $ [ (a,b,a*b) | a <- filter uniqueDigits [1..99]
-                                                   , b <- filter uniqueDigits [100..9999]
-                                                   , isPandigitalProduct a b ]
-
-isPandigitalProduct a b =
-    let digits = (integerDigits a) ++ (integerDigits b) ++ (integerDigits (a*b))
-    in sort digits == [1..9]
+isPandigitalProduct a b = 
+  let digits = integerDigits a ++ integerDigits b ++ integerDigits (a * b)
+  in sort digits == [1 .. 9]
