@@ -28,13 +28,9 @@ import Util.List (chunks)
 import qualified Util.Prime as Prime
 
 solve :: String
-solve = show solveProblem
+solve = show $ solveProblem 0.1
 
-numberSpiralDiagonals = scanl (+) 1 $ concat $ map (replicate 4) [2,4 ..]
-
-solveProblem = generalProblem 0.1
-
-generalProblem bound =
+solveProblem bound =
   let diagonals = tail numberSpiralDiagonals
       primes =
         map
@@ -48,3 +44,5 @@ generalProblem bound =
       ratios = zipWith (%) counts totals
       levels = 1 + (length $ takeWhile (>= bound) ratios)
   in 2 * levels + 1
+
+numberSpiralDiagonals = scanl (+) 1 $ concatMap (replicate 4) [2,4 ..]

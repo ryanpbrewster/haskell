@@ -23,14 +23,12 @@ module Problems.P057
  - with more digits than denominator?
  -}
 import Data.Ratio
-import Util.Math (fromContinuedFraction, integerDigits)
+import Util.Math (integerDigits)
 
 solve :: String
-solve = show solveProblem
+solve = show $ solveProblem 1000
 
-solveProblem = generalProblem 1000
-
-generalProblem num = length $ filter legit $ take num convergents
+solveProblem num = length $ filter legit $ take num convergents
 
 convergents = iterate (\r -> (2 + r) / (1 + r)) (1 % 1)
 

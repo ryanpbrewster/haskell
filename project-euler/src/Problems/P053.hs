@@ -23,4 +23,4 @@ import Util.Math (binomial)
 solve = show solveProblem
 
 solveProblem =
-  length $ filter (> 10 ^ 6) [binomial n k | n <- [1 .. 100], k <- [0 .. n]]
+  length $ filter (> 1e6) [binomial n k | n <- [1 .. 100], k <- [0 .. n]]

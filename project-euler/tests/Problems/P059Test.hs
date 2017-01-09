@@ -3,7 +3,8 @@ module Problems.P059Test
   ) where
 
 import Problems.P059
+import qualified TestData.P059
 import Test.Tasty.Discover (Assertion, (@?=))
 
 case_059_main :: Assertion
-case_059_main = process "foo" @?= "233168"
+case_059_main = process TestData.P059.txt @?= "107359"

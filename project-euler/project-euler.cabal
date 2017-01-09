@@ -202,12 +202,12 @@ test-suite project-euler-test
                      , Problems.P051Test
                      , Problems.P052Test
                      , Problems.P053Test
-                     , Problems.P054Test
+                     , Problems.P054Test , TestData.P054
                      , Problems.P055Test
                      , Problems.P056Test
                      , Problems.P057Test
                      , Problems.P058Test
-                     , Problems.P059Test
+                     , Problems.P059Test , TestData.P059
                      , Problems.P062Test
                      , Problems.P063Test
                      , Problems.P065Test

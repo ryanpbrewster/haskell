@@ -33,7 +33,7 @@ module Problems.P055
  - NOTE: Wording was modified slightly on 24 April 2007 to emphasise the
  - theoretical nature of Lychrel numbers.
  -}
-import Util.Math (integerDigits)
+import Util.Math (integerDigits, fromIntegerDigits)
 
 solve :: String
 solve = show solveProblem
@@ -49,11 +49,10 @@ isPalindromic n =
   in xs == reverse xs
 
 addReverse n =
-  let xs = integerDigits n
-  in n + (digitsToInt $ reverse $ integerDigits n)
+  n + (fromIntegerDigits $ reverse $ integerDigits n)
 
 isLychrel n =
   let addrevs = take num_trials $ tail $ iterate addReverse n
   in not $ any isPalindromic addrevs
 
-solveProblem = length $ filter isLychrel [1 .. 10 ^ 4]
+solveProblem = length $ filter isLychrel [1 .. 1e4]
