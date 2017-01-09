@@ -1,7 +1,10 @@
-module Problems.P035Test (case_035_main) where
+module Problems.P035Test (test_035) where
 
-import Test.Tasty.Discover (Assertion, (@?=))
+import Test.Tasty.Discover
 import Problems.P035
 
-case_035_main :: Assertion
-case_035_main = solve @?= "55"
+test_035 :: [TestTree]
+test_035 =
+  [ testCase "rotations" $ rotations 123 @?= [123, 312, 231]
+  , testCase "main" $ solve @?= "55"
+  ]
