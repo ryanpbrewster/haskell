@@ -10,6 +10,10 @@ module Util.Prime
   where
 
 import Data.List (foldl', genericLength, group, nub)
+import Data.Array (Array)
+import Data.Array.ST
+import Control.Monad
+import Control.Monad.ST
 
 bfTest n = n >= 2 && bfTrialDivisionTest n 2
   where bfTrialDivisionTest n k
@@ -26,7 +30,7 @@ test n = n >= 2 && trialDivisionTest n primes
           | n `mod` p == 0 = False
           | otherwise = trialDivisionTest n ps
 
--- This primes sieve was taken from Richard Bird's implementation of the Sieve of Eratosthenes, as
+-- This primes function was taken from Richard Bird's implementation of the Sieve of Eratosthenes, as
 -- declared in the epilogue of Melissa O'Neill's article "The Genuine Sieve of Eratosthenes" in J.
 -- Functional Programming.
 primes :: [Integer]
@@ -49,8 +53,15 @@ primes = 2 : 3 : 5 : 7 : minus (spin wheel23 11) composites
                   | x == y = x : merge' xs ys
                   | x > y = y : merge' (x : xs) ys
 
-sieve :: Int -> [Int]
-sieve bound = []
+sieve :: Int -> Array Int Bool
+sieve bound = runSTArray $ do
+  arr <- newArray (2, bound) True
+  forM_ [2..bound] $ \i -> do
+    is_prime <- readArray arr i
+    when is_prime $ do
+      forM_ [i*i, i*(i+1)..bound] $ \j -> do
+        writeArray arr j False
+  return arr
 
 -- Returns a list of the factors of n
 factors :: Integer -> [Integer]

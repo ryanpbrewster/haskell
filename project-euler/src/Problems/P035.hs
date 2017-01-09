@@ -1,4 +1,6 @@
-module Problems.P035 (solve) where
+module Problems.P035
+  (solve)
+  where
 
 {-
  - The number, 197, is called a circular prime because all rotations of the
@@ -9,25 +11,26 @@ module Problems.P035 (solve) where
  -
  - How many circular primes are there below one million?
  -}
-
 import Data.List (tails, inits)
 import qualified Util.Prime as Prime
-import qualified Util.Math as Math 
+import qualified Util.Math as Math
 
 solve :: String
-solve = show solveProblem
+solve = show $ solveProblem 1e6
 
-rotations xs = zipWith (++) (tails xs) (inits xs)
+rotations xs = 
+  zipWith (++)
+          (tails xs)
+          (inits xs)
 
 good digit = digit `elem` [1,3,7,9]
 
 isCircularPrime 2 = True
 isCircularPrime 5 = True
-isCircularPrime p = let digits = Math.integerDigits p
-                        rots   = map Math.fromIntegerDigits $ rotations digits
-                    in (all good digits) && (all Prime.test rots)
+isCircularPrime p = 
+  let digits = Math.integerDigits p
+      rots = map Math.fromIntegerDigits $ rotations digits
+  in all good digits && all Prime.test rots
 
-solveProblem = generalProblem (10^6)
-
-generalProblem bound = let low_primes = takeWhile (<bound) Prime.primes
-                       in length $ filter isCircularPrime low_primes
+solveProblem bound = 
+  length $ filter isCircularPrime $ takeWhile (< bound) Prime.primes
