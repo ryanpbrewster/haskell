@@ -15,16 +15,11 @@ module Problems.P036
 {-
  - One small optimization: only odd numbers can be palindromic in base 2
  -}
-import Util.Math (integerDigitsBy)
+import Util.Math (reverseDigitsBy)
 
 solve :: String
-solve = show solveProblem
+solve = show $ solveProblem 1e6
 
-solveProblem = generalProblem (10 ^ 6)
+solveProblem bound = sum $ filter legit [1,3 .. bound]
 
-generalProblem bound = sum $ filter legit [1,3 .. bound]
-
-legit n =
-  isPalindromic (integerDigitsBy 10 n) && isPalindromic (integerDigitsBy 2 n)
-
-isPalindromic xs = xs == reverse xs
+legit n = reverseDigitsBy 10 n == n && reverseDigitsBy 2 n == n

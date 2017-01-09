@@ -1,16 +1,18 @@
 module Util.Math
-  ( powerMod
-  , integerDigits
-  , integerDigitsBy
+  ( binomial
+  , coinCombos
+  , coinCombosP
   , fromIntegerDigits
   , fromIntegerDigitsBy
-  , binomial
-  , coinCombos
   , fullCoinCombos
-  , coinCombosP
   , fromContinuedFraction
-  , primitiveTriples
+  , integerDigits
+  , integerDigitsBy
   , pascalTriangle
+  , powerMod
+  , primitiveTriples
+  , reverseDigits
+  , reverseDigitsBy
   ) where
 
 import Data.List (nub, unfoldr)
@@ -32,6 +34,15 @@ integerDigitsBy base = unfoldr nextDigit
     nextDigit n =
       let (q, r) = n `divMod` base
       in Just (r, q)
+
+reverseDigits = reverseDigitsBy 10
+
+reverseDigitsBy :: Integer -> Integer -> Integer
+reverseDigitsBy base n = f n 0
+  where
+  f 0 y = y
+  f x y = let (q, r) = x `divMod` base in f q (base * y + r)
+  
 
 fromIntegerDigits = fromIntegerDigitsBy 10
 
