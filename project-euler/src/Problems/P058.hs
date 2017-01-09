@@ -31,18 +31,11 @@ solve :: String
 solve = show $ solveProblem 0.1
 
 solveProblem bound =
-  let diagonals = tail numberSpiralDiagonals
-      primes =
-        map
-          (\n ->
-             if Prime.test n
-               then 1
-               else 0)
-          diagonals
-      counts = scanl1 (+) $ map sum $ chunks 4 primes
+  let diagonals = chunks 4 $ tail numberSpiralDiagonals
+      prime_counts = scanl1 (+) $ map (length . filter Prime.test) diagonals
       totals = [5,9 ..]
-      ratios = zipWith (%) counts totals
-      levels = 1 + (length $ takeWhile (>= bound) ratios)
+      ratios = zipWith (%) prime_counts totals
+      levels = 1 + length (takeWhile (>= bound) ratios)
   in 2 * levels + 1
 
 numberSpiralDiagonals = scanl (+) 1 $ concatMap (replicate 4) [2,4 ..]
