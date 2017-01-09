@@ -6,8 +6,12 @@ module Problems.P010 (solve) where
  -}
 
 import qualified Util.Prime as Prime
+import Data.Array ((!))
 
 solve :: String
 solve = show $ solveProblem 2e6
 
-solveProblem bound = sum $ takeWhile (<bound) Prime.primes
+solveProblem bound = sum $ filter isPrime [2..bound]
+  where
+  isPrime n = sieve ! n
+  sieve = Prime.sieve bound
