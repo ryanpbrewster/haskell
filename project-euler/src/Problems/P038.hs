@@ -26,23 +26,16 @@ import qualified Util.Math as Math
 solve :: String
 solve = show solveProblem
 
--- Fuck, I can't make this look reasonable.
--- pandigitalConcatenation takes in an integer and returns
--- a (length 9) list of digits out of multiples of n
--- Ex. pandigitalConcatenation 9 == [9, 1,8, 2,7, 3,6, 4,5]
---
--- If concatenating multiples of n does not yield exactly 9 digits
--- then it returns Nothing
+solveProblem =
+  let digit_concatenations = mapMaybe digitConcatenation [1 .. 1e4]
+      pandigitals = filter (\ds -> sort ds == [1 .. 9]) digit_concatenations
+  in maximum $ map (Math.fromIntegerDigits . reverse) pandigitals
+
 digitConcatenation n =
   let multiples = map (n *) [1 ..]
-      mdigits = map Math.integerDigits multiples
+      mdigits = map (reverse . Math.integerDigits) multiples
       digits_len = map length mdigits
       accum_digits = takeWhile (<= 9) $ scanl1 (+) digits_len
   in if (last accum_digits) /= 9
        then Nothing
        else Just $ concat $ take (length accum_digits) mdigits
-
-solveProblem =
-  let digit_concatenations = mapMaybe digitConcatenation [1 .. 10 ^ 4]
-      pandigitals = filter (\ds -> sort ds == [1 .. 9]) digit_concatenations
-  in maximum $ map Math.fromIntegerDigits pandigitals
