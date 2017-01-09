@@ -1,7 +1,9 @@
-module Problems.P035Test (test_035) where
+module Problems.P035Test
+  ( test_035
+  ) where
 
-import Test.Tasty.Discover
 import Problems.P035
+import Test.Tasty.Discover
 
 test_035 :: [TestTree]
 test_035 =

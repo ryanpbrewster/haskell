@@ -1,7 +1,9 @@
-module Problems.P059Test (case_059_main) where
+module Problems.P059Test
+  ( case_059_main
+  ) where
 
-import Test.Tasty.Discover (Assertion, (@?=))
 import Problems.P059
+import Test.Tasty.Discover (Assertion, (@?=))
 
 case_059_main :: Assertion
 case_059_main = process "foo" @?= "233168"

@@ -1,7 +1,9 @@
-module Problems.P011Test (case_011_main) where
+module Problems.P011Test
+  ( case_011_main
+  ) where
 
-import Test.Tasty.Discover (Assertion, (@?=))
 import Problems.P011
+import Test.Tasty.Discover (Assertion, (@?=))
 import qualified TestData.P011
 
 case_011_main :: Assertion
