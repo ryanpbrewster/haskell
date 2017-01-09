@@ -1,14 +1,17 @@
 module Util.List
   ( chunks
   , chunksBy
+  , imerge
   , maximumBy
   , merge
   , mergeInf
   , ordTuples
+  , palindromes
   , sublists
   , tuples
   ) where
 
+import Control.Monad (replicateM)
 import Data.List (foldl')
 
 -- chunks 3 [1..] == [ [1,2,3], [4,5,6], [7,8,9], ... ]
@@ -22,6 +25,13 @@ chunksBy _ [] = []
 chunksBy (k:ks) xs =
   let (front, back) = splitAt k xs
   in front : chunksBy ks back
+
+imerge xs [] = []
+imerge [] ys = []
+imerge (x:xs) (y:ys)
+  | x < y = imerge xs (y : ys)
+  | x == y = x : imerge xs ys
+  | x > y = imerge (x : xs) ys
 
 maximumBy
   :: Ord b
@@ -55,6 +65,13 @@ ordTuples pred 0 _ = [[]] -- only the empty tuple
 ordTuples pred 1 xs = [[x] | x <- xs]
 ordTuples pred k xs =
   [x : t | t <- ordTuples pred (k - 1) xs, x <- xs, x `pred` (head t)]
+
+palindromes :: [a] -> [[a]]
+palindromes alphabet =
+  concatMap palindromify [replicateM n alphabet | n <- [1 ..]]
+  where
+    palindromify xs =
+      [x ++ reverse (init x) | x <- xs] ++ [x ++ reverse x | x <- xs]
 
 -- similar to tuples, but maintains order
 -- `sublists 2` will retrieve all distinct pairs from a list

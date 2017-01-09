@@ -2,6 +2,7 @@ module Problems.P036
   ( solve
   ) where
 
+import Util.List (imerge, palindromes)
 {-
  - The decimal number, 585 = 10010010012 (binary), is palindromic in both
  - bases.
@@ -13,13 +14,18 @@ module Problems.P036
  - leading zeros.)
  -}
 {-
- - One small optimization: only odd numbers can be palindromic in base 2
+ - We can directly construct palindromes in each base. Then we just find the common elements.
  -}
-import Util.Math (reverseDigitsBy)
+import Util.Math (fromIntegerDigitsBy)
 
 solve :: String
 solve = show $ solveProblem 1e6
 
-solveProblem bound = sum $ filter legit [1,3 .. bound]
+solveProblem bound = sum $ takeWhile (< bound) (multibasePalindromes [2, 10])
 
-legit n = reverseDigitsBy 10 n == n && reverseDigitsBy 2 n == n
+multibasePalindromes [] = []
+multibasePalindromes bases = foldr1 imerge (map basePalindromes bases)
+
+basePalindromes b =
+  map (fromIntegerDigitsBy b) $
+  filter (\xs -> head xs > 0) $ palindromes [0 .. b - 1]
