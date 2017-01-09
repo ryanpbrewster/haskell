@@ -19,7 +19,7 @@ module Problems.P050
 import qualified Util.Prime as Prime
 
 solve :: String
-solve = show solveProblem
+solve = show $ solveProblem 1e6
 
 roll _ [] = []
 roll k xs = (take k xs) : (roll k $ tail xs)
@@ -33,20 +33,12 @@ elementsRequired (x:xs) targ
   | targ <= 0 = 0
   | otherwise = 1 + elementsRequired xs (targ - x)
 
-generalProblem bound =
+solveProblem bound =
   let primes = takeWhile (< bound) Prime.primes
       len = elementsRequired primes bound
-      sols =
-        concat
-          [ pss
-          | k <- [len,len - 1 .. 1]
-          , let pss = findSolutions k primes bound
-          ]
+      sols = concat [findSolutions k primes bound | k <- [len,len - 1 .. 1]]
   in sum $ head sols
 
 findSolutions k primes bound =
-  let pss = roll k primes
-      pss' = takeWhile (\ps -> sum ps < bound) pss
-  in filter (\ps -> Prime.test $ sum ps) pss'
-
-solveProblem = generalProblem (round 1e6)
+  let candidates = takeWhile (\ps -> sum ps < bound) (roll k primes)
+  in filter (Prime.test . sum) candidates

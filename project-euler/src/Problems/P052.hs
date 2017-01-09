@@ -3,6 +3,7 @@ module Problems.P052
   ) where
 
 import Data.List (sort)
+
 {-
  - It can be seen that the number, 125874, and its double, 251748, contain
  - exactly the same digits, but in a different order.
@@ -15,11 +16,20 @@ import Util.Math (integerDigits)
 solve :: String
 solve = show solveProblem
 
-sols =
-  [ x
-  | x <- [1 ..]
-  , let xdigits = sort $ integerDigits x
-  , all (== xdigits) [sort $ integerDigits (k * x) | k <- [2 .. 6]]
-  ]
+solveProblem = head $ sameDigitsFamilies 6
 
-solveProblem = head sols
+-- The entire family has to have the same number of digits, so 10^k <= x <= n*x < 10^(k+1)
+sameDigitsFamilies :: Int -> [Int]
+sameDigitsFamilies n =
+  let orders_of_magnitude = iterate (10 *) 1
+      candidates =
+        concatMap (\k -> [k .. (10 * k - 1) `div` n]) orders_of_magnitude
+  in filter (familyHasSameDigits n) candidates
+
+-- Does x start a family {i*x} where each element has the same digits for i = [1..n]
+familyHasSameDigits :: Int -> Int -> Bool
+familyHasSameDigits n x =
+  let digits = sort $ integerDigits $ fromIntegral x
+  in all
+       (== digits)
+       [sort $ integerDigits $ fromIntegral (i * x) | i <- [2 .. n]]

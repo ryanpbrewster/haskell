@@ -4,6 +4,7 @@ module Problems.P051
 
 import Data.Array
 import qualified Util.Math as Math
+
 {-
  - By replacing the 1st digit of the 2-digit number *3, it turns out that six
  - of the nine possible values: 13, 23, 43, 53, 73, and 83, are all prime.
@@ -34,14 +35,8 @@ import qualified Util.Prime as Prime
 solve :: String
 solve = show solveProblem
 
-isPrime' = (is_prime' !)
-
-is_prime' =
-  accumArray
-    (||)
-    False
-    (0, 10 ^ 6)
-    [(p, True) | p <- takeWhile (< 10 ^ 6) Prime.primes]
+isPrime n = n >= 2 && sieve ! n
+  where sieve = Prime.sieve 1e6
 
 -- Given a core and a mask, generates all the primes in that family
 -- Ex: primeFamily 20 1 -> [23, 29] since those are the only primes of the form 2*
@@ -53,12 +48,10 @@ primeFamily core mask =
               then [0 .. 9]
               else [1 .. 9]
         ]
-  in filter isPrime' family
+  in filter isPrime family
 
 -- Pads a list to size `s`. Does so by padding on the left with zeros.
-padTo s xs =
-  let zero_pad = take (s - length xs) $ repeat 0
-  in zero_pad ++ xs
+padTo s xs = (replicate (s - length xs) 0) ++ xs
 
 -- all the core/mask pairs of size s
 -- Ex. coreMaskPairs 5 would include [12030, 101] and [55550, 1]
