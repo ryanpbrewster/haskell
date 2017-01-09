@@ -4,4 +4,4 @@ import Test.Tasty.Discover (Assertion, (@?=))
 import Problems.P041
 
 case_041_main :: Assertion
-case_041_main = solve @?= "233168"
+case_041_main = solve @?= "7652413"

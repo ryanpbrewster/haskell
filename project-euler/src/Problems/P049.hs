@@ -20,7 +20,7 @@ import Data.List (groupBy, sort, sortBy)
 import Data.Ord (comparing)
 
 solve :: String
-solve = show solveProblem
+solve = concat $ map show solveProblem
 
 four_digit_primes = takeWhile (< 10^4) $ dropWhile (< 10^3) Prime.primes
 
@@ -36,4 +36,4 @@ makeSequence k [x0,x1] = [ x0 + i*(x1-x0) | i <- [0..k-1] ]
 solveProblem = let cmp = comparing (sort . Math.integerDigits)
                    eq_classes = gatherBy cmp four_digit_primes
                    ans = concat $ map (findArithmeticSequences 3) eq_classes
-               in concat $ map show $ ans !! 1
+               in ans !! 1

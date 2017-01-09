@@ -19,12 +19,15 @@ import Data.List (inits)
 solve :: String
 solve = show solveProblem
 
+pent :: Integer -> Integer
+pent i = i * (3 * i - 1) `div` 2
+
 pents :: [Integer]
-pents = [ n*(3*n-1) `div` 2 | n <- [1..] ]
+pents = map pent [1..]
 
 isPent :: Integer -> Bool
 isPent k = let n = round $ (1.0 + sqrt (1.0 + 24.0*(fromIntegral k))) / 6.0 
-           in n*(3*n-1) `div` 2 == k
+           in pent n == k
 
 sols = [ (x,x') | xs <- tail $ inits pents
                 , let x' = last xs
