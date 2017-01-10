@@ -4,4 +4,4 @@ packages:
 - '.'
 extra-deps:
 - tasty-discover-1.0.1
-resolver: lts-7.14
+resolver: lts-7.2
