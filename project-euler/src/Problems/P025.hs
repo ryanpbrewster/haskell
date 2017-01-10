@@ -16,8 +16,9 @@ solve = show solveProblem
 
 fibs = 0 : 1 : zipWith (+) fibs (tail fibs)
 
+solveProblem :: Int
 solveProblem = idxWithDigits 1000 fibs
 
-idxWithDigits d xs = length $ takeWhile (\x -> (length $ show x) < d) xs
+idxWithDigits d xs = length $ takeWhile (\x -> length (show x) < d) xs
 
-firstWithDigits d xs = head $ dropWhile (\x -> (length $ show x) < d) xs
+firstWithDigits d xs = head $ dropWhile (\x -> length (show x) < d) xs

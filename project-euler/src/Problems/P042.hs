@@ -30,10 +30,10 @@ charToDigit ch = 1 + ord ch - ord 'A'
 
 isTriangleWord w = isTriangle $ sum $ map charToDigit w
 
-triangle_numbers = takeWhile (< bound) [n * (n + 1) `div` 2 | n <- [1 ..]]
+triangleNumbers = takeWhile (< bound) [n * (n + 1) `div` 2 | n <- [1 ..]]
 
 is_triangle =
-  accumArray (||) False (1, bound) $ [(t, True) | t <- triangle_numbers]
+  accumArray (||) False (1, bound) $ zip triangleNumbers (repeat True)
 
 isTriangle = (is_triangle !)
 

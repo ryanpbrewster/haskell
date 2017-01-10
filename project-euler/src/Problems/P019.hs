@@ -20,7 +20,7 @@ module Problems.P019
 solve :: String
 solve = show problem019
 
-count e xs = length $ filter (\x -> x == e) xs
+count e xs = length $ filter (== e) xs
 
 -- Sakamoto's algorithm
 -- From Wikipedia

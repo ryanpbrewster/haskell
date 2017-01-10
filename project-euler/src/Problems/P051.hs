@@ -51,7 +51,7 @@ primeFamily core mask =
   in filter isPrime family
 
 -- Pads a list to size `s`. Does so by padding on the left with zeros.
-padTo s xs = (replicate (s - length xs) 0) ++ xs
+padTo s xs = replicate (s - length xs) 0 ++ xs
 
 -- all the core/mask pairs of size s
 -- Ex. coreMaskPairs 5 would include [12030, 101] and [55550, 1]

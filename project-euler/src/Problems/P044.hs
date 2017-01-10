@@ -28,7 +28,7 @@ pents = map pent [1 ..]
 
 isPent :: Integer -> Bool
 isPent k =
-  let n = round $ (1.0 + sqrt (1.0 + 24.0 * (fromIntegral k))) / 6.0
+  let n = round $ (1.0 + sqrt (1.0 + 24.0 * fromIntegral k)) / 6.0
   in pent n == k
 
 sols =
@@ -40,5 +40,5 @@ sols =
   ]
 
 solveProblem =
-  let (x, x') = head $ sols
+  let (x, x') = head sols
   in x' - x

@@ -11,6 +11,7 @@ module Problems.P004
 solve :: String
 solve = show $ solveProblem 3
 
+isPalindromic :: Show t => t -> Bool
 isPalindromic x =
   let s = show x
   in s == reverse s
@@ -19,6 +20,6 @@ isPalindromic x =
 -- numbers
 solveProblem digits =
   let lo = 10 ^ (digits - 1)
-      hi = 10 ^ (digits) - 1
+      hi = 10 ^ digits - 1
   in maximum
        [x | a <- [lo .. hi], b <- [a .. hi], let x = a * b, isPalindromic x]

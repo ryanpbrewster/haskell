@@ -17,12 +17,10 @@ module Problems.P050
  - consecutive primes?
  -}
 import qualified Util.Prime as Prime
+import Util.List (scoop)
 
 solve :: String
 solve = show $ solveProblem 1e6
-
-roll _ [] = []
-roll k xs = (take k xs) : (roll k $ tail xs)
 
 -- elementsRequired xs targ
 -- How many elements from xs are required before we sum to targ?
@@ -40,5 +38,5 @@ solveProblem bound =
   in sum $ head sols
 
 findSolutions k primes bound =
-  let candidates = takeWhile (\ps -> sum ps < bound) (roll k primes)
+  let candidates = takeWhile (\ps -> sum ps < bound) (scoop k primes)
   in filter (Prime.test . sum) candidates

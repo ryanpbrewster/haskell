@@ -21,7 +21,7 @@ module Problems.P028
  - The downward diagonal looks like [1,3,7,13,21,...]
  - If you take the first difference, you see that it is
  -     [2, 4, 6, 8, ...] == [2,4..]
- - So we can reconstruct it via 
+ - So we can reconstruct it via
  -     [1, 1+2, 1+2+4, 1+2+4+6, ...]
  -     scanl (+) 1 [2,4,6,8,...]
  -     scanl (+) 1 [2,4..]
@@ -40,14 +40,16 @@ module Problems.P028
  -     1 + 2/3 n (13 + n (15 + 8 n)) /. n -> [1..]
  -}
 solve :: String
-solve = show solveProblem
+solve = show $ solveProblem 1001
 
-solveProblem = generalProblem 1001
+solveProblem :: Int -> Integer
+solveProblem n = sum $ take (2 * n - 1) numberSpiralDiagonals
 
-generalProblem n = sum $ take (2 * n - 1) numberSpiralDiagonals
+numberSpiralDiagonals :: [Integer]
+numberSpiralDiagonals = scanl (+) 1 $ concatMap (replicate 4) [2,4 ..]
 
-numberSpiralDiagonals = scanl (+) 1 $ concat $ map (replicate 4) [2,4 ..]
+solveProblem' :: Integral a => a -> a
+solveProblem' n = closedform $ (n - 1) `div` 2
 
-generalProblem' n = closedform $ (n - 1) `div` 2
-
+closedform :: Integral a => a -> a
 closedform n = 1 + 2 * n * (13 + n * (15 + 8 * n)) `div` 3

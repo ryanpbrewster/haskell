@@ -28,15 +28,18 @@ import Util.Math (integerDigits)
 solve :: String
 solve = show solveProblem
 
+ordTuples :: Ord t => [t] -> Int -> [[t]]
 ordTuples _ 0 = [[]]
 ordTuples xs k =
   let tups = ordTuples xs (k - 1)
   in [x : t | t <- tups, x <- xs, null t || x <= head t]
 
+legit :: [Integer] -> Bool
 legit tup =
   let ans = sum $ map (^ 5) tup
-  in tup == (sort $ integerDigits ans)
+  in tup == sort (integerDigits ans)
 
+solveProblem :: Integer
 solveProblem =
   let sols = filter legit $ concat [ordTuples [0 .. 9] k | k <- [2 .. 6]]
-  in sum $ [sum $ map (^ 5) sol | sol <- sols]
+  in sum [sum $ map (^ 5) sol | sol <- sols]

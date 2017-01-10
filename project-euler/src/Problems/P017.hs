@@ -45,8 +45,8 @@ hprefix =
 sthousand = "onethousand"
 
 problem017 =
-  let singles = [ss | ss <- sprefix]
-      teens = [st | st <- tprefix]
+  let singles = sprefix
+      teens = tprefix
       doubles =
         singles ++ teens ++ dprefix ++ [sd ++ ss | sd <- dprefix, ss <- singles]
       triples =
@@ -62,7 +62,7 @@ decompose x
   | x < 1000 =
     case x `mod` 100 of
       0 -> decompose (x `div` 100) ++ " hundred "
-      otherwise ->
+      _ ->
         decompose (x `div` 100) ++ " hundred and " ++ decompose (x `mod` 100)
   | x == 1000 = "one thousand"
   | otherwise = error "decompose is only defined for [1..1000]"

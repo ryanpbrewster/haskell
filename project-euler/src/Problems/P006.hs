@@ -19,4 +19,4 @@ module Problems.P006
 solve :: String
 solve = show $ solveProblem 100
 
-solveProblem n = (sum [1 .. n]) ^ 2 - (sum [x ^ 2 | x <- [1 .. n]])
+solveProblem n = sum [1 .. n] ^ 2 - sum [x ^ 2 | x <- [1 .. n]]

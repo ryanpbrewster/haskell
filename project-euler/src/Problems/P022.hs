@@ -21,4 +21,4 @@ solveProblem txt =
   let names = sort $ lines txt
   in sum [i * value (names !! (i - 1)) | i <- [1 .. length names]]
 
-value str = sum [(ord ch) - (ord 'A') + 1 | ch <- str]
+value str = sum [ord ch - ord 'A' + 1 | ch <- str]

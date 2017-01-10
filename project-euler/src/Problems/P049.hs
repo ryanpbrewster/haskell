@@ -2,8 +2,8 @@ module Problems.P049
   ( solve
   ) where
 
-import Data.List (groupBy, sort, sortBy)
-import Data.Ord (comparing)
+import Data.List (sort, tails)
+import GHC.Exts (groupWith)
 {-
  - The arithmetic sequence, 1487, 4817, 8147, in which each of the terms
  - increases by 3330, is unusual in two ways:
@@ -21,23 +21,20 @@ import qualified Util.Math as Math
 import qualified Util.Prime as Prime
 
 solve :: String
-solve = concat $ map show solveProblem
+solve = concatMap show solveProblem
 
-four_digit_primes = takeWhile (< 10 ^ 4) $ dropWhile (< 10 ^ 3) Prime.primes
+fourDigitPrimes = takeWhile (< 1e4) $ dropWhile (< 1e3) Prime.primes
 
-gatherBy cmp xs = groupBy (\x -> \y -> cmp x y == EQ) $ sortBy cmp xs
-
-pairs [] = []
-pairs (x:xs) = [[x, y] | y <- xs] ++ pairs xs
+pairs :: [t] -> [(t, t)]
+pairs xs = [(x, y) | (x:ys) <- tails xs, y <- ys]
 
 findArithmeticSequences k xs =
   let x_seqs = map (makeSequence k) $ pairs xs
   in filter (all (`elem` xs)) x_seqs
 
-makeSequence k [x0, x1] = [x0 + i * (x1 - x0) | i <- [0 .. k - 1]]
+makeSequence k (x0, x1) = [x0 + i * (x1 - x0) | i <- [0 .. k - 1]]
 
 solveProblem =
-  let cmp = comparing (sort . Math.integerDigits)
-      eq_classes = gatherBy cmp four_digit_primes
-      ans = concat $ map (findArithmeticSequences 3) eq_classes
+  let eq_classes = groupWith (sort . Math.integerDigits) fourDigitPrimes
+      ans = concatMap (findArithmeticSequences 3) eq_classes
   in ans !! 1

@@ -16,22 +16,25 @@ import Data.Ord (comparing)
 import Util.Math (integerDigits)
 
 solve :: String
-solve = show solveProblem
+solve = show $ solveProblem 5
 
+cubes :: [Integer]
 cubes = map (^ 3) [1 ..]
 
+cubesBySize :: [[Integer]]
 cubesBySize = sortIntoBins [10 ^ n | n <- [0 ..]] cubes
 
+sortIntoBins :: Ord t => [t] -> [t] -> [[t]]
 sortIntoBins (hi:ss) xs =
   let (left, right) = span (< hi) xs
   in left : sortIntoBins ss right
 
-gatherBy cmp xs = groupBy (\x -> \y -> cmp x y == EQ) $ sortBy cmp xs
+gatherBy :: (t -> t -> Ordering) -> [t] -> [[t]]
+gatherBy cmp xs = groupBy (\x y -> cmp x y == EQ) $ sortBy cmp xs
 
-generalProblem size =
+solveProblem :: Int -> Integer
+solveProblem size =
   let cmp = comparing (sort . integerDigits)
-      cube_families = concat $ map (gatherBy cmp) cubesBySize
+      cube_families = concatMap (gatherBy cmp) cubesBySize
       good_families = filter (\fam -> length fam == size) cube_families
   in minimum $ head good_families
-
-solveProblem = generalProblem 5

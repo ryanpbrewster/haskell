@@ -28,8 +28,8 @@ ordTuples xs k =
 
 legit tup =
   let ans = sum $ map factorial tup
-  in tup == (sort $ integerDigits ans)
+  in tup == sort (integerDigits ans)
 
 solveProblem =
   let sols = filter legit $ concat [ordTuples [0 .. 9] k | k <- [2 .. 7]]
-  in sum $ [sum $ map factorial sol | sol <- sols]
+  in sum [sum $ map factorial sol | sol <- sols]

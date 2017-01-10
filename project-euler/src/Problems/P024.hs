@@ -28,4 +28,4 @@ nthPermutation n xs =
       e = xs !! k
       n' = n - k * r
       xs' = delete e xs
-  in e : (nthPermutation n' xs')
+  in e : nthPermutation n' xs'

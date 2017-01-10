@@ -10,7 +10,7 @@ import Data.Maybe
  -     192 * 1 = 192
  -     192 * 2 = 384
  -     192 * 3 = 576
- - 
+ -
  - By concatenating each product we get the 1 to 9 pandigital, 192384576. We
  - will call 192384576 the concatenated product of 192 and (1,2,3)
  -
@@ -36,6 +36,6 @@ digitConcatenation n =
       mdigits = map (reverse . Math.integerDigits) multiples
       digits_len = map length mdigits
       accum_digits = takeWhile (<= 9) $ scanl1 (+) digits_len
-  in if (last accum_digits) /= 9
+  in if last accum_digits /= 9
        then Nothing
        else Just $ concat $ take (length accum_digits) mdigits

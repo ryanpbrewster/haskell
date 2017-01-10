@@ -28,7 +28,7 @@ process txt = show $ problem018 txt
 --      The 9 inherits max(1,4) yielding 13
 --      The 2 inherits 4, yielding 6
 bestRow :: [Integer] -> [Integer] -> [Integer]
-bestRow a b = zipWith3 bestAdd b ([0] ++ a) (a ++ [0])
+bestRow a b = zipWith3 bestAdd b (0 : a) (a ++ [0])
   where
     bestAdd x y z = x + max y z
 

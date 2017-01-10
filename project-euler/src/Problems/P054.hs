@@ -2,7 +2,8 @@ module Problems.P054
   ( process
   ) where
 
-import Data.List (sort, groupBy)
+import Data.List (sort, groupBy, sortOn)
+import Data.Ord (Down(..))
 {-
  - In the card game poker, a hand consists of five cards and are ranked, from
  - lowest to highest, in the following way:
@@ -55,9 +56,9 @@ process txt = show $ solveProblem txt
 
 solveProblem txt =
   let lns = [map parseCard $ words ln | ln <- lines txt]
-      inputs = [(take 5 ln, drop 5 ln) | ln <- lns]
-      anss = [(classifyHand h1) > (classifyHand h2) | (h1, h2) <- inputs]
-  in length $ filter id anss
+      inputs = map (splitAt 5) lns
+      player1Wins (h1, h2) = classifyHand h1 > classifyHand h2
+  in length $ filter player1Wins inputs
 
 data Card = Card
   { getRank :: Int
@@ -65,7 +66,7 @@ data Card = Card
   }
 
 instance Show Card where
-  show (Card r s) = [rank_revmap ! r, suit_revmap ! s]
+  show (Card r s) = [rankRevmap ! r, suitRevmap ! s]
 
 instance Ord Card where
   (Card r _) `compare` (Card r' _) = r `compare` r' -- suit is irrelevant
@@ -73,17 +74,17 @@ instance Ord Card where
 instance Eq Card where
   (Card r s) == (Card r' s') = r == r' && s == s'
 
-rank_map = fromList $ zip "23456789TJQKA" [0 ..]
+rankMap = fromList $ zip "23456789TJQKA" [0 ..]
 
-rank_revmap = fromList $ zip [0 ..] "23456789TJQKA"
+rankRevmap = fromList $ zip [0 ..] "23456789TJQKA"
 
-suit_map = fromList $ zip "CDHS" [0 ..]
+suitMap = fromList $ zip "CDHS" [0 ..]
 
-suit_revmap = fromList $ zip [0 ..] "CDHS"
+suitRevmap = fromList $ zip [0 ..] "CDHS"
 
-parseCard [r, s] = Card (rank_map ! r) (suit_map ! s)
+parseCard [r, s] = Card (rankMap ! r) (suitMap ! s)
 
-same f a b = (f a) == (f b)
+same f a b = f a == f b
 
 data HandType
   = HighCard [Card] -- descending order
@@ -100,16 +101,16 @@ data HandType
 
 classifyHand :: [Card] -> HandType
 classifyHand hand =
-  let by_rank = reverse $ sort hand
+  let by_rank = sortOn Down hand
       (hi, lo) = (head by_rank, last by_rank)
       globs =
-        reverse $ sort [(length g, g) | g <- groupBy (same getRank) by_rank]
+        sortOn Down [(length g, g) | g <- groupBy (same getRank) by_rank]
       rank_count = map fst globs
-      by_count = concat $ map snd globs
+      by_count = concatMap snd globs
       flush = length (head $ groupBy (same getSuit) hand) == 5
       straight = length rank_count == 5 && getRank hi - getRank lo == 4
       straight_flush = straight && flush
-      royal_flush = straight_flush && getRank lo == rank_map ! 'T'
+      royal_flush = straight_flush && getRank lo == rankMap ! 'T'
       quad = rank_count == [4, 1]
       full_house = rank_count == [3, 2]
       two_pair = rank_count == [2, 2, 1]

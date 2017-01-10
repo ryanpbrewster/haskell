@@ -28,10 +28,14 @@ import Util.Math (integerDigits)
 solve :: String
 solve = show $ solveProblem 1000
 
+solveProblem :: Int -> Int
 solveProblem num = length $ filter legit $ take num convergents
 
+convergents :: [Ratio Integer]
 convergents = iterate (\r -> (2 + r) / (1 + r)) (1 % 1)
 
-legit r = (intLen $ numerator r) > (intLen $ denominator r)
+legit :: Ratio Integer -> Bool
+legit r = intLen (numerator r) > intLen (denominator r)
 
+intLen :: Integer -> Int
 intLen n = length $ integerDigits n

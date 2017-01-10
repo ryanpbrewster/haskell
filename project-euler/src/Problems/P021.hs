@@ -17,7 +17,7 @@ import qualified Util.Prime as Prime
 solve :: String
 solve = show $ problem021 10000
 
-sig n = (Prime.sigma 1 n) - n
+sig n = Prime.sigma 1 n - n
 
 problem021 n =
   sum [a + b | a <- [1 .. n], let b = sig a, a > b, b > 0, sig b == a]

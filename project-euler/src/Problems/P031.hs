@@ -38,7 +38,7 @@ module Problems.P031
 solve :: String
 solve = show solveProblem
 
-ways [] = 1 : cycle [0] -- can only make 0
+ways [] = 1 : repeat 0 -- can only make 0
 ways (x:xs) =
   let others = ways xs
       (start, rest) = splitAt x others -- x doesn't matter for [0..x-1]

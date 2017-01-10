@@ -3,7 +3,7 @@ module Problems.P026
   ) where
 
 import Data.Function (on)
-import Data.List (nub, maximumBy, (\\))
+import Data.List (nub, (\\))
 import Util.Math (powerMod)
 {-
  - A unit fraction contains 1 in the numerator. The decimal representation of the
@@ -26,17 +26,18 @@ import Util.Math (powerMod)
  - in its decimal fraction part.
  -}
 import Util.Prime (factors)
+import Util.List (maximumBy)
 
 solve :: String
-solve = show solveProblem
+solve = show $ solveProblem 999
 
-carmichael p = 1 + (length $ takeWhile (/= 1) [powerMod 10 n p | n <- [1 ..]])
+solveProblem :: Integer -> Integer
+solveProblem bound = maximumBy repetandLength [1..bound]
 
+carmichael :: Integral a => a -> Int
+carmichael p = 1 + length (takeWhile (/= 1) [powerMod 10 n p | n <- [1 ..]])
+
+repetandLength :: Integer -> Int
 repetandLength d =
-  let good_factors = (nub $ factors d) \\ [2, 5]
-  in foldl lcm 1 [carmichael p | p <- good_factors]
-
-solveProblem =
-  let repetand_lengths = [(d, repetandLength d) | d <- [1 .. 999]]
-      (d, r) = maximumBy (compare `on` snd) repetand_lengths
-  in d
+  let good_factors = nub (factors d) \\ [2, 5]
+  in foldl lcm 1 $ map carmichael good_factors

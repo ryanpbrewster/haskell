@@ -25,13 +25,10 @@ module Problems.P043
  -}
 import Data.List (permutations)
 import Util.Math (fromIntegerDigits)
+import Util.List (scoop)
 
 solve :: String
 solve = show solveProblem
-
-scoop k xs
-  | length xs <= k = [xs]
-  | otherwise = (take k xs) : (scoop k $ tail xs)
 
 legit digits =
   let substrings = map (fromIntegerDigits . reverse) (scoop 3 digits)

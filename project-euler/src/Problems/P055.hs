@@ -38,21 +38,21 @@ import Util.Math (integerDigits, fromIntegerDigits)
 solve :: String
 solve = show solveProblem
 
-num_trials = 50
+numTrials = 50
 
-accum x d = 10 * x + d
-
-digitsToInt ds = foldl accum 0 ds
+digitsToInt :: [Integer] -> Integer
+digitsToInt = foldl accum 0
+  where accum x d = 10 * x + d
 
 isPalindromic n =
   let xs = integerDigits n
   in xs == reverse xs
 
 addReverse n =
-  n + (fromIntegerDigits $ reverse $ integerDigits n)
+  n + fromIntegerDigits (reverse $ integerDigits n)
 
 isLychrel n =
-  let addrevs = take num_trials $ tail $ iterate addReverse n
+  let addrevs = take numTrials $ tail $ iterate addReverse n
   in not $ any isPalindromic addrevs
 
 solveProblem = length $ filter isLychrel [1 .. 1e4]

@@ -19,22 +19,19 @@ import qualified Data.Set as DS
  - factors. What is the first of these numbers?
  -}
 import qualified Util.Prime as Prime
+import Util.List (scoop)
 
 solve :: String
-solve = show solveProblem
+solve = show $ head $ kFactors 4
 
-roll _ [] = []
-roll k xs = (take k xs) : (roll k $ tail xs)
-
+kFactors :: Int -> [Integer]
 kFactors k =
   let nn = [2 ..]
       ff = map (DS.fromList . Prime.factors) nn
-      fss = roll k ff
+      fss = scoop k ff
       xs = zip nn fss
   in [ n
      | (n, fs) <- xs
      , all (\e -> DS.size e == k) fs
      , all DS.null $ zipWith DS.intersection (tail fs) (init fs)
      ]
-
-solveProblem = head $ kFactors 4

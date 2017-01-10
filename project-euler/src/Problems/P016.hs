@@ -13,8 +13,8 @@ problem016 n b = sum $ integerDigits n b
 
 integerDigits :: Integer -> Integer -> [Integer]
 integerDigits n b
-  | b <= 1 = error $ "Trying to expand in base " ++ (show b) ++ " < 2"
+  | b <= 1 = error $ "Trying to expand in base " ++ show b ++ " < 2"
   | n < b = [n]
   | otherwise =
     let (q, r) = n `divMod` b
-    in (integerDigits q b) ++ [r]
+    in integerDigits q b ++ [r]
