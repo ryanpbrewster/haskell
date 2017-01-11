@@ -85,6 +85,7 @@ library
                      , Problems.P063
                      , Problems.P065
                      , Problems.P067
+                     , Problems.P069
                      , Problems.P072
                      , Problems.P076
                      , Problems.P077
@@ -212,6 +213,7 @@ test-suite project-euler-test
                      , Problems.P063Test
                      , Problems.P065Test
                      , Problems.P067Test , TestData.P067
+                     , Problems.P069Test
                      , Problems.P072Test
                      , Problems.P076Test
                      , Problems.P077Test
