@@ -10,8 +10,7 @@ module Problems.P062
  - Find the smallest cube for which exactly five permutations of its digits are
  - cube.
  -}
-import Data.List (groupBy, sort, sortBy)
-import Data.Ord (comparing)
+import Data.List (groupBy, sort, sortOn)
 
 import Util.Math (integerDigits)
 
@@ -21,20 +20,22 @@ solve = show $ solveProblem 5
 cubes :: [Integer]
 cubes = map (^ 3) [1 ..]
 
+powersOfTen :: [Integer]
+powersOfTen = iterate (10*) 1
+
 cubesBySize :: [[Integer]]
-cubesBySize = sortIntoBins [10 ^ n | n <- [0 ..]] cubes
+cubesBySize = sortIntoBins powersOfTen cubes
 
 sortIntoBins :: Ord t => [t] -> [t] -> [[t]]
 sortIntoBins (hi:ss) xs =
   let (left, right) = span (< hi) xs
   in left : sortIntoBins ss right
 
-gatherBy :: (t -> t -> Ordering) -> [t] -> [[t]]
-gatherBy cmp xs = groupBy (\x y -> cmp x y == EQ) $ sortBy cmp xs
+gatherBy :: Ord b => (a -> b) -> [a] -> [[a]]
+gatherBy f xs = groupBy (\x y -> f x == f y) $ sortOn f xs
 
 solveProblem :: Int -> Integer
 solveProblem size =
-  let cmp = comparing (sort . integerDigits)
-      cube_families = concatMap (gatherBy cmp) cubesBySize
+  let cube_families = concatMap (gatherBy (sort . integerDigits)) cubesBySize
       good_families = filter (\fam -> length fam == size) cube_families
   in minimum $ head good_families

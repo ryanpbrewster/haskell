@@ -211,7 +211,7 @@ test-suite project-euler-test
                      , Problems.P062Test
                      , Problems.P063Test
                      , Problems.P065Test
-                     , Problems.P067Test
+                     , Problems.P067Test , TestData.P067
                      , Problems.P072Test
                      , Problems.P076Test
                      , Problems.P077Test
