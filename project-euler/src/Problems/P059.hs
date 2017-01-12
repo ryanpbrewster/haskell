@@ -31,43 +31,45 @@ import Data.Bits (xor)
  - decrypt the message and find the sum of the ASCII values in the original
  - text.
  -}
-import qualified Data.Char as DC
-import Data.List (maximumBy)
+import Data.Char (chr, ord)
+import Util.List (maximumBy, tuples)
 
 type FileContents = String
+newtype Key = Key String
+newtype CipherText = CipherText String
+newtype PlainText = PlainText String
 
 process :: FileContents -> String
 process txt =
-  let ciphertext' = map read $ lines txt
-      ciphertext = map DC.chr ciphertext'
+  let ciphertext = CipherText $ map (chr . read) (lines txt)
   in show $ solveProblem ciphertext
 
+solveProblem :: CipherText -> Int
 solveProblem ciphertext =
-  let shortciphertext = take 100 ciphertext
-      possible_keys = tuples 3 ['a' .. 'z']
-      possible_plaintexts =
-        [decipher shortciphertext key | key <- possible_keys]
-      key = fst $ maximumBy metric $ zip possible_keys possible_plaintexts
-      plaintext = decipher ciphertext key
-  in sum $ map DC.ord plaintext
+  let possible_keys = map Key $ tuples 3 ['a' .. 'z']
+      best_key = maximumBy (metric . (`decipher` sample ciphertext)) possible_keys
+  in sumChars (best_key `decipher` ciphertext)
 
-tuples 0 _ = [[]] -- only the empty tuple
-tuples k xs = [x : t | t <- tuples (k - 1) xs, x <- xs]
+sample :: CipherText -> CipherText
+sample (CipherText txt) = CipherText (take 100 txt)
 
-decipher ciphertext key =
-  let key' = map DC.ord $ cycle key
-      ciphertext' = map DC.ord ciphertext
-      plaintext' = zipWith xor key' ciphertext'
-  in map DC.chr plaintext'
+sumChars :: PlainText -> Int
+sumChars (PlainText txt) = sum $ map ord txt
 
--- compare plaintext1 vs. plaintext2
-metric kv1 kv2 = simpleFrequencyMetric (snd kv1) (snd kv2)
+decipher :: Key -> CipherText -> PlainText
+decipher (Key k) (CipherText c) =
+  PlainText $ zipWith cipherScheme c (cycle k)
+  where
+    cipherScheme cipherChar keyChar =
+      chr $ xor (ord cipherChar) (ord keyChar)
 
-simpleFrequencyMetric pt1 pt2 =
-  let score1 = sum $ map frequency pt1
-      score2 = sum $ map frequency pt2
-  in compare score1 score2
+metric :: PlainText -> Int
+metric = simpleFrequencyMetric
 
+simpleFrequencyMetric :: PlainText -> Int
+simpleFrequencyMetric (PlainText txt) = sum $ map frequency txt
+
+frequency :: Char -> Int
 frequency 'e' = 12
 frequency 't' = 9
 frequency 'a' = 8
