@@ -217,12 +217,12 @@ test-suite project-euler-test
                      , Problems.P072Test
                      , Problems.P076Test
                      , Problems.P077Test
-                     , Problems.P079Test
+                     , Problems.P079Test , TestData.P079
                      , Problems.P085Test
                      , Problems.P087Test
                      , Problems.P091Test
                      , Problems.P097Test
-                     , Problems.P099Test
+                     , Problems.P099Test , TestData.P099
                      , Problems.P101Test
                      , Problems.P108Test
                      , Problems.P110Test
