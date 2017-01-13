@@ -16,16 +16,16 @@ module Problems.P087
  - square, prime cube, and prime fourth power?
  -}
 
-import qualified Data.Set as S
-import qualified Util.Prime as Prime
+import Util.Prime (primes)
+import Data.Set (fromList, size)
 
 solve :: String
 solve = show $ solveProblem 50e6
 
 solveProblem bound =
-  S.size $ S.fromList
+  size $ fromList
         [ p2 + p3 + p4
-        | p4 <- takeWhile (< bound) $ map (^ 4) Prime.primes
-        , p3 <- takeWhile (< bound - p4) $ map (^ 3) Prime.primes
-        , p2 <- takeWhile (< bound - p4 - p3) $ map (^ 2) Prime.primes
+        | p4 <- takeWhile (< bound) $ map (^ 4) primes
+        , p3 <- takeWhile (< bound - p4) $ map (^ 3) primes
+        , p2 <- takeWhile (< bound - p4 - p3) $ map (^ 2) primes
         ]
