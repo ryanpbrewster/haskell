@@ -2,7 +2,6 @@ module Problems.P087
   ( solve
   ) where
 
-import qualified Data.Set as DS
 {-
  - The smallest number expressible as the sum of a prime square, prime cube,
  - and prime fourth power is 28. In fact, there are exactly four numbers below
@@ -16,18 +15,17 @@ import qualified Data.Set as DS
  - How many numbers below fifty million can be expressed as the sum of a prime
  - square, prime cube, and prime fourth power?
  -}
+
+import qualified Data.Set as S
 import qualified Util.Prime as Prime
 
 solve :: String
-solve = show solveProblem
+solve = show $ solveProblem 50e6
 
-solveProblem = generalProblem (50 * 10 ^ 6)
-
-generalProblem bound =
-  let can_make =
+solveProblem bound =
+  S.size $ S.fromList
         [ p2 + p3 + p4
-        | p2 <- takeWhile (< bound) $ map (^ 2) Prime.primes
-        , p3 <- takeWhile (< bound - p2) $ map (^ 3) Prime.primes
-        , p4 <- takeWhile (< bound - p2 - p3) $ map (^ 4) Prime.primes
+        | p4 <- takeWhile (< bound) $ map (^ 4) Prime.primes
+        , p3 <- takeWhile (< bound - p4) $ map (^ 3) Prime.primes
+        , p2 <- takeWhile (< bound - p4 - p3) $ map (^ 2) Prime.primes
         ]
-  in DS.size $ DS.fromList can_make
