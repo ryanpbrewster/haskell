@@ -2,6 +2,7 @@ module Problems.P092
   ( solve
   , bruteForceSolve
   , memoizedSolve
+  , numDigitsSolve
   ) where
 
 {-
@@ -19,9 +20,21 @@ module Problems.P092
 
 import Data.Array
 import Util.Math (integerDigits)
+import Data.Map (Map)
+import qualified Data.Map as M
 
 solve :: String
-solve = show $ memoizedSolve 10e6
+solve = show $ numDigitsSolve 7
+
+numDigitsSolve num_digits =
+   let counts = sumCounts num_digits $ map (^2) [0..9]
+   in sum [ v | (k, v) <- M.toList counts, squareChainTerminator k == 89 ]
+
+sumCounts :: Int -> [Int] -> Map Int Int
+sumCounts 0 _ = M.singleton 0 1
+sumCounts n xs =
+   let counts = sumCounts (n-1) xs
+   in M.fromListWith (+) [ (k + x, v) | x <- xs, (k, v) <- M.toList counts ]
 
 memoizedSolve :: Int -> Int
 memoizedSolve bound = length $ filter (== 89) $ map (memo !) [1..bound]
@@ -35,10 +48,11 @@ memoizedSolve bound = length $ filter (== 89) $ map (memo !) [1..bound]
 
 bruteForceSolve :: Int -> Int
 bruteForceSolve bound = length $ filter (== 89) $ map squareChainTerminator [1..bound]
-  where
-  squareChainTerminator 1 = 1
-  squareChainTerminator 89 = 89
-  squareChainTerminator n = squareChainTerminator $ next n
+
+squareChainTerminator 0 = 0
+squareChainTerminator 1 = 1
+squareChainTerminator 89 = 89
+squareChainTerminator n = squareChainTerminator $ next n
 
 next :: Int -> Int
 next n = fromIntegral $ sum $ map (^2) $ integerDigits $ fromIntegral n
