@@ -20,18 +20,16 @@ module Problems.P079
  -}
 import Data.Char (digitToInt, intToDigit)
 import Data.Graph (buildG, topSort)
-import Data.List (intersect)
-import Data.Set (fromList, elems)
+import Data.List (intersect, nub)
 
 process :: String -> String
 process txt =
   let logins = [map digitToInt ln | ln <- lines txt]
-  in show $ solveProblem logins
+  in map intToDigit (solveProblem logins)
 
 solveProblem logins =
-  let digit_set = elems $ fromList $ concat logins
+  let digit_set = nub $ concat logins
       bounds = (minimum digit_set, maximum digit_set)
       edges = concat [zip (init login) (tail login) | login <- logins]
       g = buildG bounds edges
-      passcode = intersect (topSort g) digit_set
-  in map intToDigit passcode
+  in intersect (topSort g) digit_set
