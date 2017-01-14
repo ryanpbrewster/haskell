@@ -1,9 +1,12 @@
 module Problems.P072Test
-  ( case_072_main
+  ( test_072
   ) where
 
 import Problems.P072
-import Test.Tasty.Discover (Assertion, (@?=))
+import Test.Tasty.Discover
 
-case_072_main :: Assertion
-case_072_main = solve @?= "303963552391"
+test_072 :: [TestTree]
+test_072 =
+  [ testCase "correctness" $ fastSolve (10^4) @?= bruteForceSolve (10^4)
+  , testCase "main" $ solve @?= "303963552391"
+  ]
