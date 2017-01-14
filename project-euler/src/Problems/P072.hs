@@ -20,7 +20,7 @@ module Problems.P072
  - for d ≤ 1,000,000?
  -}
 
-import Data.Array
+import Data.Array.Unboxed
 import Data.Array.ST
 import Control.Monad
 import Control.Monad.ST
@@ -38,9 +38,9 @@ fastSolve bound = sum $ map (fromIntegral . phi) [2..bound]
   memo = totients bound
   phi n = memo ! n
 
-totients :: Int -> Array Int Int
-totients bound = runSTArray $ do
-  smallestPrimeFactorArray <- newArray (2, bound) 0 :: ST s (STArray s Int Int)
+totients :: Int -> UArray Int Int
+totients bound = runSTUArray $ do
+  smallestPrimeFactorArray <- newArray (2, bound) 0 :: ST s (STUArray s Int Int)
   forM_ [2..bound] $ \i -> do
     pi <- readArray smallestPrimeFactorArray i
     when (pi == 0) $ do
@@ -48,7 +48,7 @@ totients bound = runSTArray $ do
       forM_ [i*i, i*(i+1) .. bound] $ \j -> do
         writeArray smallestPrimeFactorArray j i
 
-  totientsArray <- newArray (1, bound) 1 :: ST s (STArray s Int Int)
+  totientsArray <- newArray (1, bound) 1 :: ST s (STUArray s Int Int)
   forM_ [2..bound] $ \i -> do
     p <- readArray smallestPrimeFactorArray i
     let j = i `div` p
