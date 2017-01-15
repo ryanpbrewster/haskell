@@ -2,6 +2,7 @@ module Util.Math
   ( binomial
   , coinCombos
   , coinCombosP
+  , factorial
   , fromIntegerDigits
   , fromIntegerDigitsBy
   , fullCoinCombos
@@ -16,6 +17,8 @@ module Util.Math
   ) where
 
 import Data.List (nub, unfoldr)
+
+factorial n = product [2..n]
 
 powerMod _ 0 _ = 1
 powerMod x y m
