@@ -27,22 +27,11 @@ import Util.List (chunksBy)
 type FileContents = String
 
 process :: FileContents -> String
-process txt = show $ solveProblem $ map read $ words txt
+process txt = show $ solveProblem $ chunksBy [1 ..] $ map read $ words txt
 
--- addRows takes in two rows of length (x) and (x+1), and returns a
--- row of length (x+1)
-addRows r1 r2 =
-  let r1' = zipWith max ([0] ++ r1) (r1 ++ [0])
-  in zipWith (+) r1' r2
+type Triangle a = [[a]]
 
-solveProblem nums = maxTrianglePath $ chunksBy [1 ..] nums
-
-maxTrianglePath tri = maximum $ foldl1 addRows tri
-
--- addRows' takes in two rows of length (x) and (x+1), and returns a
--- row of length (x).
-addRows' r1 r2 =
-  let r2' = zipWith max (init r2) (tail r2)
-  in zipWith (+) r1 r2'
-
-maxTrianglePath' tri = head $ foldr1 addRows' tri
+solveProblem :: Triangle Int -> Int
+solveProblem tri = head $ foldr1 addRows tri
+  where
+    addRows r1 r2 = zipWith (+) r1 $ zipWith max (init r2) (tail r2)
