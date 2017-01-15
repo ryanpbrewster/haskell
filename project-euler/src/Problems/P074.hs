@@ -33,9 +33,12 @@ import Data.Maybe
 import qualified Data.IntMap as M
 
 solve :: String
-solve = show $ solveProblem 60 1e6
+solve = show $ solveProblem 60
 
-solveProblem num_terms bound =
+-- We have too much hardcoded stuff in here, it's a bummer
+bound = 1e6
+
+solveProblem num_terms =
   length $ filter (== num_terms) $ map chainLength [1..bound]
   where
   chainLength = (memo !)
