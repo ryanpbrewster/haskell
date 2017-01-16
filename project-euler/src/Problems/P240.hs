@@ -49,7 +49,8 @@ import Util.List (tuples, ordTuples)
 import Util.Math (binomial)
 
 solve :: String
-solve = show $ solveProblem 20 10 70 12
+solve = "unsolved"
+-- solve = show $ solveProblem 20 10 70 12
 
 -- find all the partitions of n into exactly k elements of xs (repeats allowed)
 -- xs must be all positive integers

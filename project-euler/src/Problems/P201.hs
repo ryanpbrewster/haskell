@@ -50,7 +50,8 @@ import Data.Array.ST
 import Data.Array.Unboxed
 
 solve :: String
-solve = show $ solveProblem 100 50
+solve = "unsolved"
+--solve = show $ solveProblem 100 50
 
 solveProblem :: Int -> Int -> Int
 solveProblem n k = sumOfUniqueSubsetSums (map (^ 2) [1 .. n]) k

@@ -70,7 +70,7 @@ import Util.List (tuples)
 import Util.Math (integerDigitsBy, fromIntegerDigitsBy)
 
 solve :: String
-solve = show solveProblem
+solve = "unsolved"
 
 fibs = 0 : 1 : zipWith (+) fibs (tail fibs)
 

@@ -17,7 +17,8 @@ import Control.Monad
 import Control.Monad.ST
 
 solve :: String
-solve = show solveProblem
+solve = "unsolved"
+-- solve = show solveProblem
 
 d = 16
 
