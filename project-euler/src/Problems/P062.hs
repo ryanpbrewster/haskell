@@ -1,5 +1,6 @@
 module Problems.P062
   ( solve
+  , solveProblem
   ) where
 
 {-
