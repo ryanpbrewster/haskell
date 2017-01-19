@@ -58,9 +58,11 @@ fromIntegerDigitsBy base = foldr acc 0
 
 -- binomial n k == n!/k!(n-k)!
 --              == n*(n-1)*...*(n-k+1)/(1*2*...*k)
-binomial n k =
-  let k' = min k (n - k)
-  in (product [n - k' + 1 .. n]) `div` (product [1 .. k'])
+binomial n k
+  | k < 0 || k > n = 0
+  | otherwise =
+    let k' = min k (n - k)
+    in (product [n - k' + 1 .. n]) `div` (product [1 .. k'])
 
 {-
  - Coin combinations deals with problems like:

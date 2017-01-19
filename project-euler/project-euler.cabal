@@ -141,6 +141,7 @@ library
                      , Problems.P250
                      , Problems.P301
                      , Problems.P317
+                     , Problems.P493
   default-language:    Haskell2010
 
 executable project-euler-exe
@@ -274,6 +275,7 @@ test-suite project-euler-test
                      , Problems.P250Test
                      , Problems.P301Test
                      , Problems.P317Test
+                     , Problems.P493Test
   build-depends:       base
                      , project-euler
                      , tasty
