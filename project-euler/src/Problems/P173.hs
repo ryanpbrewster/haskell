@@ -25,43 +25,43 @@ module Problems.P173
  - Using up to one million tiles how many different square laminae can be
  - formed?
  -}
-
 {-
- - Let L_{a,b} be the lamina where the side-length of the innermost layer is
+ - Let L_{a,b} be the lamina where the side-length of the "hole"
  - `a` and the side-length of the outermost layer is `b`. Thus, the two
- - examples with 32 square tiles are L_{4,6} and L_{9,9}. Observe that L_{a,b}
+ - examples with 32 square tiles are L_{2,6} and L_{7,9}. Observe that L_{a,b}
  - necessarily requires that:
  -
- -   a <= b
+ -   a < b
  -   b - a is even
  -
- - The lamina with innermost sidelength `a` and `k` layers total has tilecount
- -   T(a, k) = Sum[ 4*(a + 2*i - 3) | i <- [1..k] ]
- -           = 4 * { (a-3)*k + 2*k*(k+1)/2 }
- -           = 4 * { (a-3)*k + k^2 + k }
- -           = 4k * (a + k - 2)
+ - The lamina with "hole" sidelength `a` and total layers `k` has tilecount
+ -   T(a, k) = (a+2*k)^2 - a^2 = 4*k*(k+a)
  -
- - For instance, L_{4,6} has tilecount T(4,2) = 4*2*(4+2-2) = 32
+ - For instance, L_{2,6} has tilecount T(2,2) = 4*2*4 = 32 tiles, as expected.
  -
  - Solving T(a, k) == x for k yields
- -   N[a, x] = 1/2 * (2 - a + sqrt[a^2 - 4a + x + 4]),
+ -   4*k*(k+a) == x --> k^2 + a*k - x/4 == 0
+ -
+ -   --> N[a, x] = 1/2 * (sqrt[a^2 + x] - a)
  -
  - So there are Floor[N[a, x]] laminae with innermost layer sidelength a that
  - can be formed with up to x tiles. Thus, we need to find
  -
- -   Sum[Floor[N[a, x]], {a, 3, x/4 + 1}]
+ -   Sum[Floor[N[a, x]], {a, 1, x/4}]
  -
  -}
 solve :: String
 solve = show $ solveProblem 1e6
 
 type SideLength = Integer
+
 type TileCount = Integer
 
 solveProblem :: TileCount -> Int
-solveProblem maxTiles = sum $ map (layersPossible maxTiles) [3..1 + maxTiles `div` 4]
+solveProblem maxTiles =
+  sum $ map (layersPossible maxTiles) [1 .. maxTiles `div` 4]
 
 layersPossible :: TileCount -> SideLength -> Int
 layersPossible x a = floor $ n (fromIntegral a) (fromIntegral x)
   where
-  n a x = 0.5 * (2.0 - a + sqrt (a*a - 4.0*a + x + 4.0))
+    n a x = 0.5 * (sqrt (a * a + x) - a)
