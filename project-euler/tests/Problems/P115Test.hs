@@ -1,9 +1,13 @@
 module Problems.P115Test
-  ( case_115_main
+  ( test_115
   ) where
 
 import Problems.P115
-import Test.Tasty.Discover (Assertion, (@?=))
+import Test.Tasty.Discover
 
-case_115_main :: Assertion
-case_115_main = solve @?= "233168"
+test_115 :: [TestTree]
+test_115 =
+  [ testCase "small 3" $ solveProblem 3 @?= 30
+  , testCase "small 10" $ solveProblem 10 @?= 57
+  , testCase "main" $ solve @?= "168"
+  ]
