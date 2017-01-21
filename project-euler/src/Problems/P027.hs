@@ -3,6 +3,7 @@ module Problems.P027
   ) where
 
 import Util.List (maximumBy)
+
 {-
  - Euler published the remarkable quadratic formula:
  -     n^2 + n + 41

@@ -19,7 +19,6 @@ module Problems.P071
  - ascending order of size, find the numerator of the fraction immediately to
  - the left of 3/7.
  -}
-
 import Data.Ratio
 
 solve :: String
@@ -27,11 +26,11 @@ solve = show $ numerator $ fareyNeighbor 1e6 (3 % 7)
 
 -- find the element of F_bound that is directly before `v`
 fareyNeighbor :: Int -> Ratio Int -> Ratio Int
-fareyNeighbor bound v = bsearch (0%1) (1%1)
+fareyNeighbor bound v = bsearch (0 % 1) (1 % 1)
   where
-  bsearch lo hi
-    | denominator mid > bound = lo
-    | v <= mid                = bsearch lo mid
-    | otherwise               = bsearch mid hi
-    where
-    mid = (numerator lo + numerator hi) % (denominator lo + denominator hi)
+    bsearch lo hi
+      | denominator mid > bound = lo
+      | v <= mid = bsearch lo mid
+      | otherwise = bsearch mid hi
+      where
+        mid = (numerator lo + numerator hi) % (denominator lo + denominator hi)

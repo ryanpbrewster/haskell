@@ -25,7 +25,6 @@ module Problems.P115
  - For m = 50, find the least value of n for which the fill-count function
  - first exceeds one million.
  -}
-
 solve :: String
 solve = show $ solveProblem 50
 
@@ -33,5 +32,5 @@ solveProblem minRed = length $ takeWhile (<= 1e6) (ways minRed)
 
 ways minRed = zipWith (+) reds blacks
   where
-  reds = replicate minRed 0 ++ zipWith (+) blacks (drop (minRed - 1) reds)
-  blacks = 1 : zipWith (+) blacks reds
+    reds = replicate minRed 0 ++ zipWith (+) blacks (drop (minRed - 1) reds)
+    blacks = 1 : zipWith (+) blacks reds

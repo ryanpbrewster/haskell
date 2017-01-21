@@ -62,7 +62,9 @@ mergeInf = foldr merge2Sorted []
 -- ordTuples yields all the k-tuples where all adjacent elements in the tuple
 -- obey the predicate. For example, if pred == (<) then all tuples will be in
 -- strictly ascending order (as each element will be (<) than its neighbor)
-ordTuples :: (Num t, Eq t) => (a -> a -> Bool) -> t -> [a] -> [[a]]
+ordTuples
+  :: (Num t, Eq t)
+  => (a -> a -> Bool) -> t -> [a] -> [[a]]
 ordTuples pred 0 _ = [[]] -- only the empty tuple
 ordTuples pred 1 xs = [[x] | x <- xs]
 ordTuples pred k xs =

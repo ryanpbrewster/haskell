@@ -5,6 +5,8 @@ module Problems.P026
 import Data.Function (on)
 import Data.List (nub, (\\))
 import Util.Math (powerMod)
+
+import Util.List (maximumBy)
 {-
  - A unit fraction contains 1 in the numerator. The decimal representation of the
  - unit fractions with denominators 2 to 10 are given:
@@ -26,15 +28,16 @@ import Util.Math (powerMod)
  - in its decimal fraction part.
  -}
 import Util.Prime (factors)
-import Util.List (maximumBy)
 
 solve :: String
 solve = show $ solveProblem 999
 
 solveProblem :: Integer -> Integer
-solveProblem bound = maximumBy repetandLength [1..bound]
+solveProblem bound = maximumBy repetandLength [1 .. bound]
 
-carmichael :: Integral a => a -> Int
+carmichael
+  :: Integral a
+  => a -> Int
 carmichael p = 1 + length (takeWhile (/= 1) [powerMod 10 n p | n <- [1 ..]])
 
 repetandLength :: Integer -> Int

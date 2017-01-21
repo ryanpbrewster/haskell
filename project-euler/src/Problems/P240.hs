@@ -50,8 +50,8 @@ import Util.Math (binomial)
 
 solve :: String
 solve = "unsolved"
--- solve = show $ solveProblem 20 10 70 12
 
+-- solve = show $ solveProblem 20 10 70 12
 -- find all the partitions of n into exactly k elements of xs (repeats allowed)
 -- xs must be all positive integers
 partitions n k xs = partitions' n k (reverse $ sort xs)

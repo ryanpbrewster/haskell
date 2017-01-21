@@ -3,6 +3,7 @@ module Problems.P200
   ) where
 
 import Data.List (isInfixOf)
+
 -- 200.hs
 {-
  - We shall define a sqube to be a number of the form, p^2q^3, where p and

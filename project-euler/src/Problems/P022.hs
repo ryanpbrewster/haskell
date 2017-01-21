@@ -3,6 +3,7 @@ module Problems.P022
   ) where
 
 import Data.Char
+
 {-
  - Read in the file 022.in
  - Sort it

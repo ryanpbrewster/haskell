@@ -3,6 +3,7 @@ module Problems.P110
   ) where
 
 import Util.Math (fullCoinCombos)
+
 {-
  - In the following equation x, y, and z are positive integers.
  - 1/x + 1/y == 1/z

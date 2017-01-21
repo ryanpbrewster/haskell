@@ -17,37 +17,39 @@ module Problems.P092
 
  - How many starting numbers below ten million will arrive at 89?
  -}
-
 import Data.Array
-import Util.Math (integerDigits)
 import Data.Map (Map)
 import qualified Data.Map as M
+import Util.Math (integerDigits)
 
 solve :: String
 solve = show $ numDigitsSolve 7
 
 numDigitsSolve num_digits =
-   let counts = sumCounts num_digits $ map (^2) [0..9]
-   in sum [ v | (k, v) <- M.toList counts, squareChainTerminator k == 89 ]
+  let counts = sumCounts num_digits $ map (^ 2) [0 .. 9]
+  in sum [v | (k, v) <- M.toList counts, squareChainTerminator k == 89]
 
 sumCounts :: Int -> [Int] -> Map Int Int
 sumCounts 0 _ = M.singleton 0 1
 sumCounts n xs =
-   let counts = sumCounts (n-1) xs
-   in M.fromListWith (+) [ (k + x, v) | x <- xs, (k, v) <- M.toList counts ]
+  let counts = sumCounts (n - 1) xs
+  in M.fromListWith (+) [(k + x, v) | x <- xs, (k, v) <- M.toList counts]
 
 memoizedSolve :: Int -> Int
-memoizedSolve bound = length $ filter (== 89) $ map (memo !) [1..bound]
+memoizedSolve bound = length $ filter (== 89) $ map (memo !) [1 .. bound]
   where
-    memo = listArray (1, bound) $ map f [1..bound]
+    memo = listArray (1, bound) $ map f [1 .. bound]
     f 1 = 1
     f 89 = 89
     f n =
       let n' = next n
-      in if n' <= bound then memo ! n' else f n'
+      in if n' <= bound
+           then memo ! n'
+           else f n'
 
 bruteForceSolve :: Int -> Int
-bruteForceSolve bound = length $ filter (== 89) $ map squareChainTerminator [1..bound]
+bruteForceSolve bound =
+  length $ filter (== 89) $ map squareChainTerminator [1 .. bound]
 
 squareChainTerminator 0 = 0
 squareChainTerminator 1 = 1
@@ -55,4 +57,4 @@ squareChainTerminator 89 = 89
 squareChainTerminator n = squareChainTerminator $ next n
 
 next :: Int -> Int
-next n = fromIntegral $ sum $ map (^2) $ integerDigits $ fromIntegral n
+next n = fromIntegral $ sum $ map (^ 2) $ integerDigits $ fromIntegral n

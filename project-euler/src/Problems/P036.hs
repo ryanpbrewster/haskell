@@ -3,6 +3,7 @@ module Problems.P036
   ) where
 
 import Util.List (imerge, palindromes)
+
 {-
  - The decimal number, 585 = 10010010012 (binary), is palindromic in both
  - bases.

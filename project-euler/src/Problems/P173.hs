@@ -50,6 +50,9 @@ solve :: String
 solve = show $ solveProblem 1e6
 
 solveProblem maxTiles =
-  sum $ map (layersPossible maxTiles) (takeWhile (\k -> 4*k*(k+1) <= maxTiles) [1..])
+  sum $
+  map
+    (layersPossible maxTiles)
+    (takeWhile (\k -> 4 * k * (k + 1) <= maxTiles) [1 ..])
 
-layersPossible x k = x `div` (4*k) - k
+layersPossible x k = x `div` (4 * k) - k

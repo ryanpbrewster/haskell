@@ -22,17 +22,21 @@ cubes :: [Integer]
 cubes = map (^ 3) [1 ..]
 
 powersOfTen :: [Integer]
-powersOfTen = iterate (10*) 1
+powersOfTen = iterate (10 *) 1
 
 cubesBySize :: [[Integer]]
 cubesBySize = sortIntoBins powersOfTen cubes
 
-sortIntoBins :: Ord t => [t] -> [t] -> [[t]]
+sortIntoBins
+  :: Ord t
+  => [t] -> [t] -> [[t]]
 sortIntoBins (hi:ss) xs =
   let (left, right) = span (< hi) xs
   in left : sortIntoBins ss right
 
-gatherBy :: Ord b => (a -> b) -> [a] -> [[a]]
+gatherBy
+  :: Ord b
+  => (a -> b) -> [a] -> [[a]]
 gatherBy f xs = groupBy (\x y -> f x == f y) $ sortOn f xs
 
 solveProblem :: Int -> Integer

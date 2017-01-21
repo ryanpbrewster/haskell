@@ -24,8 +24,8 @@ module Problems.P043
  - permutations.
  -}
 import Data.List (permutations)
-import Util.Math (fromIntegerDigits)
 import Util.List (scoop)
+import Util.Math (fromIntegerDigits)
 
 solve :: String
 solve = show solveProblem

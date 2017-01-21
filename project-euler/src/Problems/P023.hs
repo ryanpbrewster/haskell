@@ -3,6 +3,7 @@ module Problems.P023
   ) where
 
 import Data.Array
+
 -- 023.hs Uses a slightly different strategy than 023_first.hs
 --
 -- Instead of constructing all the possible sums first, then summing over the false elements, let's

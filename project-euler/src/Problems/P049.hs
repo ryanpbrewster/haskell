@@ -4,6 +4,7 @@ module Problems.P049
 
 import Data.List (sort, tails)
 import GHC.Exts (groupWith)
+
 {-
  - The arithmetic sequence, 1487, 4817, 8147, in which each of the terms
  - increases by 3330, is unusual in two ways:

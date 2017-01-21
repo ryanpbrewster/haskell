@@ -6,4 +6,4 @@ import Problems.P174
 import Test.Tasty.Discover
 
 test_174 :: [TestTree]
-test_174 = [ testCase "main" $ solve @?= "209566" ]
+test_174 = [testCase "main" $ solve @?= "209566"]

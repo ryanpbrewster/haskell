@@ -3,6 +3,7 @@ module Problems.P059
   ) where
 
 import Data.Bits (xor)
+
 {-
  - Each character on a computer is assigned a unique code and the preferred
  - standard is ASCII (American Standard Code for Information Interchange). For
@@ -35,9 +36,15 @@ import Data.Char (chr, ord)
 import Util.List (maximumBy, tuples)
 
 type FileContents = String
-newtype Key = Key String
-newtype CipherText = CipherText String
-newtype PlainText = PlainText String
+
+newtype Key =
+  Key String
+
+newtype CipherText =
+  CipherText String
+
+newtype PlainText =
+  PlainText String
 
 process :: FileContents -> String
 process txt =
@@ -47,7 +54,8 @@ process txt =
 solveProblem :: CipherText -> Int
 solveProblem ciphertext =
   let possible_keys = map Key $ tuples 3 ['a' .. 'z']
-      best_key = maximumBy (metric . (`decipher` sample ciphertext)) possible_keys
+      best_key =
+        maximumBy (metric . (`decipher` sample ciphertext)) possible_keys
   in sumChars (best_key `decipher` ciphertext)
 
 sample :: CipherText -> CipherText
@@ -57,11 +65,9 @@ sumChars :: PlainText -> Int
 sumChars (PlainText txt) = sum $ map ord txt
 
 decipher :: Key -> CipherText -> PlainText
-decipher (Key k) (CipherText c) =
-  PlainText $ zipWith cipherScheme c (cycle k)
+decipher (Key k) (CipherText c) = PlainText $ zipWith cipherScheme c (cycle k)
   where
-    cipherScheme cipherChar keyChar =
-      chr $ xor (ord cipherChar) (ord keyChar)
+    cipherScheme cipherChar keyChar = chr $ xor (ord cipherChar) (ord keyChar)
 
 metric :: PlainText -> Int
 metric = simpleFrequencyMetric

@@ -5,6 +5,7 @@ module Problems.P066
 
 import Data.List (find)
 import Data.Maybe (fromJust)
+
 {-
  - Consider quadratic Diophantine equations of the form:
  -

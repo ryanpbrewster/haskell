@@ -17,13 +17,14 @@ module Problems.P073
  - How many fractions lie between 1/3 and 1/2 in the sorted set of reduced
  - proper fractions for d ≤ 12,000?
  -}
-
 solve :: String
 solve = show $ solveProblem 12e3
 
 solveProblem :: Int -> Int
 solveProblem bound = farey (1, 3) (1, 2)
   where
-  farey (a, b) (e, f) =
-    let (c, d) = (a + e, b + f)
-    in if d > bound then 0 else 1 + farey (a, b) (c, d) + farey (c, d) (e, f)
+    farey (a, b) (e, f) =
+      let (c, d) = (a + e, b + f)
+      in if d > bound
+           then 0
+           else 1 + farey (a, b) (c, d) + farey (c, d) (e, f)

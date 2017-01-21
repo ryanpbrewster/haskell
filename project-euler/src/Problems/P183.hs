@@ -3,6 +3,7 @@ module Problems.P183
   ) where
 
 import Data.List
+
 {-
  - Let N be a positive integer and let N be split into k equal parts, r = N/k,
  - so that N = r + r + ... + r.  Let P be the product of these parts,

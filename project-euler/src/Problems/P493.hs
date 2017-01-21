@@ -5,6 +5,7 @@ module Problems.P493
 
 import Data.Ratio
 import Numeric (fromRat, showFFloat)
+
 {-
  - 70 colored balls are placed in an urn, 10 for each of the seven rainbow
  - colors.
@@ -42,6 +43,6 @@ solve = showFFloat (Just 9) (fromRat $ solveProblem (replicate 7 10) 20) ""
 solveProblem :: [Integer] -> Integer -> Rational
 solveProblem ns t =
   let m = sum ns
-  in sum [ 1 % 1 - (m - ni) `choose` t % m `choose` t | ni <- ns ]
+  in sum [1 % 1 - (m - ni) `choose` t % m `choose` t | ni <- ns]
 
 choose = binomial

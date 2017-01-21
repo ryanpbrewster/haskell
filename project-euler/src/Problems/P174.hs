@@ -19,23 +19,22 @@ module Problems.P174
  -
  - What is ∑ N(n) for 1 ≤ n ≤ 10?
  -}
-
 import qualified Data.Array as A
 import qualified Data.Map as M
 
 solve :: String
-solve = show $ sum $ map numLaminae [1..10]
+solve = show $ sum $ map numLaminae [1 .. 10]
 
 bound = 1e6
 
 numLaminae n = M.findWithDefault 0 n tally
   where
-  waysToForm = A.accumArray (+) 0 (1, bound) $ zip allLaminae (repeat 1)
-  tally = M.fromListWith (+) $ zip (A.elems waysToForm) (repeat 1)
+    waysToForm = A.accumArray (+) 0 (1, bound) $ zip allLaminae (repeat 1)
+    tally = M.fromListWith (+) $ zip (A.elems waysToForm) (repeat 1)
 
-allLaminae = [ 4 * k * (k + a) | k <- layers, a <- holes k ]
+allLaminae = [4 * k * (k + a) | k <- layers, a <- holes k]
   where
-    layers = takeWhile (\k -> area 1 k <= bound) [1..]
-    holes k = takeWhile (\a -> area a k <= bound) [1..]
+    layers = takeWhile (\k -> area 1 k <= bound) [1 ..]
+    holes k = takeWhile (\a -> area a k <= bound) [1 ..]
 
 area a k = 4 * k * (k + a)

@@ -27,10 +27,9 @@ module Problems.P074
  - How many chains, with a starting number below one million, contain exactly
  - sixty non-repeating terms?
  -}
-
 import Data.Array
-import Data.Maybe
 import qualified Data.IntMap as M
+import Data.Maybe
 
 solve :: String
 solve = show $ solveProblem 60
@@ -39,18 +38,22 @@ solve = show $ solveProblem 60
 bound = 1e6
 
 solveProblem num_terms =
-  length $ filter (== num_terms) $ map chainLength [1..bound]
+  length $ filter (== num_terms) $ map chainLength [1 .. bound]
   where
-  chainLength = (memo !)
-  memo = listArray (0, bound) $ map f [0..bound]
-  f n = fromMaybe (g n) (M.lookup n hardcoded)
-  g n = let n' = next n in 1 + if n' <= bound then memo ! n' else f n'
+    chainLength = (memo !)
+    memo = listArray (0, bound) $ map f [0 .. bound]
+    f n = fromMaybe (g n) (M.lookup n hardcoded)
+    g n =
+      let n' = next n
+      in 1 +
+         if n' <= bound
+           then memo ! n'
+           else f n'
 
 hardcoded =
   M.fromList $
-    zip [0, 1, 2, 145, 40585]    (repeat 1) ++
-    zip [871, 45361, 872, 45362] (repeat 2) ++
-    zip [169, 363601, 1454]      (repeat 3)
+  zip [0, 1, 2, 145, 40585] (repeat 1) ++
+  zip [871, 45361, 872, 45362] (repeat 2) ++ zip [169, 363601, 1454] (repeat 3)
 
 next :: Int -> Int
 next 0 = 0
@@ -60,4 +63,4 @@ next n =
 
 factorial = (factorials !)
   where
-  factorials = listArray (0, 9) $ scanl (*) 1 [1..9]
+    factorials = listArray (0, 9) $ scanl (*) 1 [1 .. 9]

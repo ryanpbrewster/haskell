@@ -3,6 +3,7 @@ module Problems.P209
   ) where
 
 import Data.Bits
+
 {-
  - A k-input binary truth table is a map from k input bits (binary digits,
  - 0 [false] or 1 [true]) to 1 output bit. For example, the 2-input binary

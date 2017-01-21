@@ -3,6 +3,7 @@ module Problems.P204
   ) where
 
 import qualified Data.Set as DS
+
 {-
  - A Hamming number is a positive number which has no prime factor larger than
  - 5.  So the first few Hamming numbers are 1, 2, 3, 4, 5, 6, 8, 9, 10, 12, 15.

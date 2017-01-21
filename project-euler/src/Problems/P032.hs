@@ -3,6 +3,7 @@ module Problems.P032
   ) where
 
 import Data.List (sort, nub)
+
 {-
  - We shall say that an n-digit number is pandigital if it makes use of all the
  - digits 1 to n exactly once; for example, the 5-digit number, 15234, is

@@ -18,10 +18,13 @@ slowSolve bound = maximumBy collatz [1 .. bound]
 fastSolve :: Int -> Int
 fastSolve bound = maximumBy (memo !) [1 .. bound]
   where
-  memo = listArray (1, bound) (1 : map f [2..bound])
-  f n =
-    let n' = next n
-    in 1 + if n' <= bound then memo ! n' else f n'
+    memo = listArray (1, bound) (1 : map f [2 .. bound])
+    f n =
+      let n' = next n
+      in 1 +
+         if n' <= bound
+           then memo ! n'
+           else f n'
 
 collatz :: Int -> Int
 collatz 1 = 1

@@ -4,6 +4,7 @@ module Problems.P054
 
 import Data.List (sort, groupBy, sortOn)
 import Data.Ord (Down(..))
+
 {-
  - In the card game poker, a hand consists of five cards and are ranked, from
  - lowest to highest, in the following way:
@@ -103,8 +104,7 @@ classifyHand :: [Card] -> HandType
 classifyHand hand =
   let by_rank = sortOn Down hand
       (hi, lo) = (head by_rank, last by_rank)
-      globs =
-        sortOn Down [(length g, g) | g <- groupBy (same getRank) by_rank]
+      globs = sortOn Down [(length g, g) | g <- groupBy (same getRank) by_rank]
       rank_count = map fst globs
       by_count = concatMap snd globs
       flush = length (head $ groupBy (same getSuit) hand) == 5

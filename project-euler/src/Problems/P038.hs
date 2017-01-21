@@ -4,6 +4,7 @@ module Problems.P038
 
 import Data.List (sort)
 import Data.Maybe
+
 {-
  - Take the number 192 and multiply it by each of 1, 2, and 3:
  -

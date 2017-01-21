@@ -3,6 +3,7 @@ module Problems.P203
   ) where
 
 import Data.List (nub)
+
 {-
  - The binomial coefficients nCk can be arranged in triangular form, Pascal's
  - triangle, like this:

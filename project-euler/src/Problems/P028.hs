@@ -48,8 +48,12 @@ solveProblem n = sum $ take (2 * n - 1) numberSpiralDiagonals
 numberSpiralDiagonals :: [Integer]
 numberSpiralDiagonals = scanl (+) 1 $ concatMap (replicate 4) [2,4 ..]
 
-solveProblem' :: Integral a => a -> a
+solveProblem'
+  :: Integral a
+  => a -> a
 solveProblem' n = closedform $ (n - 1) `div` 2
 
-closedform :: Integral a => a -> a
+closedform
+  :: Integral a
+  => a -> a
 closedform n = 1 + 2 * n * (13 + n * (15 + 8 * n)) `div` 3

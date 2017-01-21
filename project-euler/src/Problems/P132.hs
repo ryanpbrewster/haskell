@@ -3,6 +3,7 @@ module Problems.P132
   ) where
 
 import Util.Math (powerMod)
+
 -- 132.hs
 {-
  - A number consisting entirely of ones is called a repunit. We shall define

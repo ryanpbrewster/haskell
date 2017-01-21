@@ -62,7 +62,6 @@ decompose x
   | x < 1000 =
     case x `mod` 100 of
       0 -> decompose (x `div` 100) ++ " hundred "
-      _ ->
-        decompose (x `div` 100) ++ " hundred and " ++ decompose (x `mod` 100)
+      _ -> decompose (x `div` 100) ++ " hundred and " ++ decompose (x `mod` 100)
   | x == 1000 = "one thousand"
   | otherwise = error "decompose is only defined for [1..1000]"

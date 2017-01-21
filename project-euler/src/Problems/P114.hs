@@ -15,14 +15,13 @@ module Problems.P114
  - general it is permitted to mix block sizes. For example, on a row measuring
  - eight units in length you could use red (3), black (1), and red (4).
  -}
-
 solve :: String
-solve = show $ ways !! 50 
+solve = show $ ways !! 50
 
 ways :: [Integer]
 ways = zipWith (+) reds blacks
   where
-  reds = replicate minRed 0 ++ zipWith (+) blacks (drop (minRed - 1) reds)
-  blacks = 1 : zipWith (+) blacks reds
+    reds = replicate minRed 0 ++ zipWith (+) blacks (drop (minRed - 1) reds)
+    blacks = 1 : zipWith (+) blacks reds
 
 minRed = 3

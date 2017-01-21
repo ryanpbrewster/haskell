@@ -2,8 +2,8 @@ module Problems.P071Test
   ( test_071
   ) where
 
-import Problems.P071
 import Data.Ratio
+import Problems.P071
 
 import Test.Tasty.Discover
 

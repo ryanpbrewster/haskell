@@ -11,7 +11,9 @@ module Problems.P004
 solve :: String
 solve = show $ solveProblem 3
 
-isPalindromic :: Show t => t -> Bool
+isPalindromic
+  :: Show t
+  => t -> Bool
 isPalindromic x =
   let s = show x
   in s == reverse s

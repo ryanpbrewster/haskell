@@ -2,6 +2,7 @@ module Problems.P050
   ( solve
   ) where
 
+import Util.List (scoop)
 -- 050.hs
 {-
  - The prime 41, can be written as the sum of six consecutive primes:
@@ -17,7 +18,6 @@ module Problems.P050
  - consecutive primes?
  -}
 import qualified Util.Prime as Prime
-import Util.List (scoop)
 
 solve :: String
 solve = show $ solveProblem 1e6

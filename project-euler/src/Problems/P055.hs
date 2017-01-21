@@ -42,14 +42,14 @@ numTrials = 50
 
 digitsToInt :: [Integer] -> Integer
 digitsToInt = foldl accum 0
-  where accum x d = 10 * x + d
+  where
+    accum x d = 10 * x + d
 
 isPalindromic n =
   let xs = integerDigits n
   in xs == reverse xs
 
-addReverse n =
-  n + fromIntegerDigits (reverse $ integerDigits n)
+addReverse n = n + fromIntegerDigits (reverse $ integerDigits n)
 
 isLychrel n =
   let addrevs = take numTrials $ tail $ iterate addReverse n

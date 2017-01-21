@@ -4,6 +4,7 @@ module Problems.P181
 
 import Control.Monad
 import Control.Monad.ST
+
 -- 181.hs
 {-
  - Having three black objects B and one white object W they can be grouped in

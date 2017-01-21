@@ -1,4 +1,7 @@
-module Problems.P069 (solve, solveProblem) where
+module Problems.P069
+  ( solve
+  , solveProblem
+  ) where
 
 import Util.Prime (primes)
 

@@ -36,7 +36,8 @@ solve :: String
 solve = show solveProblem
 
 isPrime n = n >= 2 && sieve ! n
-  where sieve = Prime.sieve 1e6
+  where
+    sieve = Prime.sieve 1e6
 
 -- Given a core and a mask, generates all the primes in that family
 -- Ex: primeFamily 20 1 -> [23, 29] since those are the only primes of the form 2*

@@ -18,7 +18,7 @@ module Util.Math
 
 import Data.List (nub, unfoldr)
 
-factorial n = product [2..n]
+factorial n = product [2 .. n]
 
 powerMod _ 0 _ = 1
 powerMod x y m
@@ -43,9 +43,10 @@ reverseDigits = reverseDigitsBy 10
 reverseDigitsBy :: Integer -> Integer -> Integer
 reverseDigitsBy base n = f n 0
   where
-  f 0 y = y
-  f x y = let (q, r) = x `divMod` base in f q (base * y + r)
-  
+    f 0 y = y
+    f x y =
+      let (q, r) = x `divMod` base
+      in f q (base * y + r)
 
 fromIntegerDigits = fromIntegerDigitsBy 10
 

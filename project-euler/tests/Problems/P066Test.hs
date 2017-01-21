@@ -7,6 +7,4 @@ import Test.Tasty.Discover
 
 test_066 :: [TestTree]
 test_066 =
-  [ testCase "small" $ solveProblem 7 @?= 5
-  , testCase "main" $ solve @?= "661"
-  ]
+  [testCase "small" $ solveProblem 7 @?= 5, testCase "main" $ solve @?= "661"]

@@ -3,6 +3,8 @@ module Problems.P047
   ) where
 
 import qualified Data.Set as DS
+
+import Util.List (scoop)
 {-
  - The first two consecutive numbers to have two prime factors each, with all
  - four distinct, are:
@@ -19,7 +21,6 @@ import qualified Data.Set as DS
  - factors. What is the first of these numbers?
  -}
 import qualified Util.Prime as Prime
-import Util.List (scoop)
 
 solve :: String
 solve = show $ head $ kFactors 4

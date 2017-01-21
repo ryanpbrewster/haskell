@@ -18,8 +18,8 @@ import Control.Monad.ST
 
 solve :: String
 solve = "unsolved"
--- solve = show solveProblem
 
+-- solve = show solveProblem
 d = 16
 
 primes = map fromInteger Prime.primes

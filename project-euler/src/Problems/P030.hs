@@ -3,6 +3,7 @@ module Problems.P030
   ) where
 
 import Data.List (sort)
+
 {-
  - Surprisingly there are only three numbers that can be written as the sum of
  - fourth powers of their digits:
@@ -28,7 +29,9 @@ import Util.Math (integerDigits)
 solve :: String
 solve = show solveProblem
 
-ordTuples :: Ord t => [t] -> Int -> [[t]]
+ordTuples
+  :: Ord t
+  => [t] -> Int -> [[t]]
 ordTuples _ 0 = [[]]
 ordTuples xs k =
   let tups = ordTuples xs (k - 1)
