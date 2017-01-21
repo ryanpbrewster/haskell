@@ -122,6 +122,7 @@ library
                      , Problems.P157
                      , Problems.P164
                      , Problems.P173
+                     , Problems.P174
                      , Problems.P178
                      , Problems.P181
                      , Problems.P183
@@ -257,6 +258,7 @@ test-suite project-euler-test
                      , Problems.P157Test
                      , Problems.P164Test
                      , Problems.P173Test
+                     , Problems.P174Test
                      , Problems.P178Test
                      , Problems.P181Test
                      , Problems.P183Test
