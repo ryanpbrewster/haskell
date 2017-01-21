@@ -39,29 +39,17 @@ module Problems.P173
  -
  - For instance, L_{2,6} has tilecount T(2,2) = 4*2*4 = 32 tiles, as expected.
  -
- - Solving T(a, k) == x for k yields
- -   4*k*(k+a) == x --> k^2 + a*k - x/4 == 0
+ - How many laminae with exactly `k` layers exist with T(a, k) <= x?
+ -   T(a, k) = 4*k*(k+a) <= x --> a <= x/(4k) - k
  -
- -   --> N[a, x] = 1/2 * (sqrt[a^2 + x] - a)
- -
- - So there are Floor[N[a, x]] laminae with innermost layer sidelength a that
- - can be formed with up to x tiles. Thus, we need to find
- -
- -   Sum[Floor[N[a, x]], {a, 1, x/4}]
+ - We can put a bound on k, because a >= 1 and T(1, k) <= x
+ -  --> 4*k*(k+1) <= x --> 4*k^2 < x
  -
  -}
 solve :: String
 solve = show $ solveProblem 1e6
 
-type SideLength = Integer
-
-type TileCount = Integer
-
-solveProblem :: TileCount -> Int
 solveProblem maxTiles =
-  sum $ map (layersPossible maxTiles) [1 .. maxTiles `div` 4]
+  sum $ map (layersPossible maxTiles) (takeWhile (\k -> 4*k*(k+1) <= maxTiles) [1..])
 
-layersPossible :: TileCount -> SideLength -> Int
-layersPossible x a = floor $ n (fromIntegral a) (fromIntegral x)
-  where
-    n a x = 0.5 * (sqrt (a * a + x) - a)
+layersPossible x k = x `div` (4*k) - k
