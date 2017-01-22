@@ -102,6 +102,7 @@ library
                      , Problems.P097
                      , Problems.P099
                      , Problems.P101
+                     , Problems.P102
                      , Problems.P108
                      , Problems.P110
                      , Problems.P112
@@ -238,6 +239,7 @@ test-suite project-euler-test
                      , Problems.P097Test
                      , Problems.P099Test , TestData.P099
                      , Problems.P101Test
+                     , Problems.P102Test , TestData.P102
                      , Problems.P108Test
                      , Problems.P110Test
                      , Problems.P112Test
